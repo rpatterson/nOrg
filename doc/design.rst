@@ -24,6 +24,17 @@ hierarchy of nodes: flexible, arbitrary, and inexpensive
     relationships.  This is the core that most makes `org-mode`_ so
     awesome.
 
+nodes have history
+    Nodes may change variously throughout the lifetime of the
+    hierarchy and that change history may be reviewed and used for
+    other operations.
+
+nodes have a lifetime unique identity
+    Since it should be easy both to move nodes around and to change a
+    node's title/subject and it's important to track node history,
+    each node has a unique identity that is constant throughout that
+    node's history.
+
 hierarchy mixed with or independent of directory tree
     When working on a project, the files containing node content may
     be tied to the project directory structure such that the node
