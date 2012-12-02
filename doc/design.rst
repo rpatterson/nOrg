@@ -81,3 +81,14 @@ history managed through version control
     principle, that node content should have no regard for history but
     should be in a format in which history can be easily reflected and
     used.
+
+
+.. _`MIME parts`: http://en.wikipedia.org/wiki/Multipurpose_Internet_Mail_Extensions#Multipart_messages
+
+.. _`Emacs`: http://www.gnu.org/software/emacs/
+.. _`Emacs modes`: http://www.gnu.org/software/emacs/manual/html_node/emacs/Modes.html#Modes
+
+.. _`org-mode`: http://orgmode.org/
+.. _`org-mode properties`: http://orgmode.org/org.html#Properties-and-Columns
+.. _`org-mode clocktime`: http://orgmode.org/org.html#Clocking-work-time
+.. _`org-mode effort estimates`: http://orgmode.org/org.html#Effort-estimates
