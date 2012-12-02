@@ -41,7 +41,7 @@ nodes contain arbitrary structured data: fields/properties
     field set and are similar to those used in emails.  There may also
     be arbitrary fields which correspond to `org-mode properties`_.
 
-property definitions are controlled in the node heirarchy
+property definitions are controlled in the node hierarchy
     When using arbitrary fields as properties containing structured
     data, the structure of the data in that field is controlled by
     other fields or properties which override each other going up the
