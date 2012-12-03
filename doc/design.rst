@@ -99,6 +99,11 @@ nodes are like emails
     be as email-like as possible and a node should be able to be sent
     as an email by only adding headers.
 
+collaboration with security
+    Nodes may be assigned to entities, be they individuals, groups,
+    etc..  Assignment is not considered *accepted*, however, unless
+    the assignment is cryptographically signed by the entity.
+
 
 .. _`MIME parts`: http://en.wikipedia.org/wiki/Multipurpose_Internet_Mail_Extensions#Multipart_messages
 .. _`Message-Id field`: http://tools.ietf.org/html/rfc5322#section-3.6.4
