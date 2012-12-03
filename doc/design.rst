@@ -2,21 +2,11 @@
 Principles
 ==========
 
-Most of the design principles are taken from what makes the `Emacs`_
-organizing mode, `org-mode`_, great to work with and so powerful to
-use.  Originally, I think it was valuable that `org-mode`_ files were
-just specially formatted plain text `org-mode`_ just built on that
-format like other `Emacs modes`_.  As the `org-mode`_ feature set
-became much more powerful, however, the complexity of the format made
-`org-mode`_ files unreadable as plain text and makes the software much
-more difficult to work with.  Also, having all the power of
-`org-mode`_ bound to `Emacs`_ greatly limits the options for
-integrating it with other systems or extending it.  Finally, there are
-several pieces of `org-mode`_ that have grown organically which could
-be much more powerful if they were more abstracted and flexible.  For
-all these reasons, the design principles are largely similar to
-`org-mode`_ but seek to clearly define a simple core format or
-protocol.
+At its core, this software aims to define a simple, re-usable and
+extensible format which can be used to describe projects, thoughts,
+tasks, collaboration, delegation and many other purposes.  To that
+end, it's important to define and describe the principles guiding that
+format.
 
 hierarchy of nodes: flexible, arbitrary, and inexpensive
     It should be easy to make child nodes, move nodes up and down the
@@ -113,6 +103,24 @@ collaboration with security
     Nodes may be assigned to entities, be they individuals, groups,
     etc..  Assignment is not considered *accepted*, however, unless
     the assignment is cryptographically signed by the entity.
+
+Derivation and Deviation from `org-mode`_
+=========================================
+
+Most of the design principles are taken from what makes the `Emacs`_
+organizing mode, `org-mode`_, great to work with and so powerful to
+use.  Originally, I think it was valuable that `org-mode`_ files were
+just specially formatted plain text `org-mode`_ just built on that
+format like other `Emacs modes`_.  As the `org-mode`_ feature set
+became much more powerful, however, the complexity of the format made
+`org-mode`_ files unreadable as plain text and makes the software much
+more difficult to work with.  Also, having all the power of
+`org-mode`_ bound to `Emacs`_ greatly limits the options for
+integrating it with other systems or extending it.  Finally, there are
+several pieces of `org-mode`_ that have grown organically which could
+be much more powerful if they were more abstracted and flexible.  For
+all these reasons, the design principles are largely similar to
+`org-mode`_ but seek to clearly define a simple core format.
 
 
 .. _`MIME parts`: http://en.wikipedia.org/wiki/Multipurpose_Internet_Mail_Extensions#Multipart_messages
