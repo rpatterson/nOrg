@@ -27,13 +27,15 @@ hierarchy of nodes: flexible, arbitrary, and inexpensive
 nodes have history
     Nodes may change variously throughout the lifetime of the
     hierarchy and that change history may be reviewed and used for
-    other operations.
+    other operations.  This is provided with some inconsistency by
+    `org-mode`_.
 
 nodes have a lifetime unique identity
     Since it should be easy both to move nodes around and to change a
     node's title/subject and it's important to track node history,
     each node has a unique identity that is constant throughout that
-    node's history.
+    node's history.  This is provided by a property in `org-mode`_ but
+    inconsistently used.
 
 hierarchy mixed with or independent of directory tree
     When working on a project, the files containing node content may
@@ -43,7 +45,9 @@ hierarchy mixed with or independent of directory tree
     e.g. managing a software project alongside the source code.  In
     the case where node hierarchy is *not* related to project content,
     hidden directories may also be used to contain that portion of the
-    node hierarchy.  Both approaches can be mixed in the same hierarchy.
+    node hierarchy.  Both approaches can be mixed in the same
+    hierarchy.  This is something that `org-mode`_ can't realistically
+    provide given that a whole tree is contained in one file.
 
 nodes contain arbitrary structured data: fields/properties
     At a minimum, a node contains a ``Subject`` field which serves as
@@ -56,7 +60,10 @@ property definitions are controlled in the node hierarchy
     When using arbitrary fields as properties containing structured
     data, the structure of the data in that field is controlled by
     other fields or properties which override each other going up the
-    node hierarchy much like an object-oriented class hierarchy.
+    node hierarchy much like an object-oriented class hierarchy.  This
+    is provided only in parts by `org-mode`_ and isn't as consistent
+    or flexible as it would need to be to do many structured data
+    operations on a tree.
 
 properties may aggregate arbitrarily
     Some core/fixed fields and arbitrary properties may also define
@@ -77,7 +84,8 @@ nodes may contain unstructured content: e.g. body text
 nodes are files
     Every node is a file such that tracking node content changes,
     structured or otherwise, across history can be reviewed more
-    discretely.
+    discretely.  This is the primary departure from `org-mode`_ in
+    which a whole hierarchy is in a file.
 
 node content is text/diffable
     All node content should be in a format as human-readable as
@@ -85,13 +93,15 @@ node content is text/diffable
     in fields and/or properties.  In other words, definitions of
     structured data and their aggregation should trade readability
     over parse-ability where possible.  This facilitates reviewing or
-    analysing structured data across history.
+    analyzing structured data across history.  This is somewhat
+    possible with `org-mode`_ though through a variety of different
+    formats and structures which have to be parsed making it hard to
+    make use of.
 
 history managed through version control
-    Many of the other design principles are in support of this
-    principle, that node content should have no regard for history but
-    should be in a format in which history can be easily reflected and
-    used.
+    Node content should have no regard for history but should be in a
+    format in which history can be easily reflected and used.  Many of
+    the other design principles are in support of this.
 
 nodes are like emails
     To ease integration with other systems and since emails and email
