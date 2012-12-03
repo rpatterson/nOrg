@@ -123,6 +123,47 @@ all these reasons, the design principles are largely similar to
 `org-mode`_ but seek to clearly define a simple core format.
 
 
+======
+Format
+======
+
+The following describes and defines a format that serves the principles.
+
+nodes formatted as `MIME messages`_
+    Each node formatted as one `MIME message`_.
+    
+node fields and properties are `MIME header fields`_
+    Fields used by the core software should re-use standard header
+    fields as much as possible.  Where a field is clearly specific to
+    the core software, it will begin with a 'TODO-' prefix.  Arbitrary
+    node properties should begin with the 'X-' prefix.
+
+nodes are files
+    TODO nodes are file in a project hierarchy with an extension
+    TODO node hierarchy may be contained in a hidden directory
+    TODO the node corresponding to a directory in a project hierarchy
+
+non-textual MIME parts are separate files next to node
+    In the hidden directory *or* in the project directory.
+
+node state graphs
+    ??? model just the next states possible through fields/properties
+    or explicitly model transitions as well?  It's my experience that
+    defining transitions is a less-than-fruitful cognitive burden.
+
+node identity through the `Message-Id field`_
+    TODO ensure uniqueness from lazy ``Message-ID``s from emails
+
+node field sets may be signed as *fixed* by entities
+    Stored in a lower MIME part, preferably last, are cryptographic
+    signatures of a set of node fields and other MIME parts.  These
+    serve to *lock* those fields and parts for those entities
+    signaling the need for reviewing changes by those entities.  Which
+    fields/parts are locked can be configured on a per-entity basis
+    and inherited up the hierarchy, where those configurations are
+    also cryptographically signed.
+
+
 .. _`MIME parts`: http://en.wikipedia.org/wiki/Multipurpose_Internet_Mail_Extensions#Multipart_messages
 .. _`Message-Id field`: http://tools.ietf.org/html/rfc5322#section-3.6.4
 
