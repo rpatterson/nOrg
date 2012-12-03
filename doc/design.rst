@@ -93,8 +93,15 @@ history managed through version control
     should be in a format in which history can be easily reflected and
     used.
 
+nodes are like emails
+    To ease integration with other systems and since emails and email
+    queues are often used as todo/task lists, the node format should
+    be as email-like as possible and a node should be able to be sent
+    as an email by only adding headers.
+
 
 .. _`MIME parts`: http://en.wikipedia.org/wiki/Multipurpose_Internet_Mail_Extensions#Multipart_messages
+.. _`Message-Id field`: http://tools.ietf.org/html/rfc5322#section-3.6.4
 
 .. _`Emacs`: http://www.gnu.org/software/emacs/
 .. _`Emacs modes`: http://www.gnu.org/software/emacs/manual/html_node/emacs/Modes.html#Modes
