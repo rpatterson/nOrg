@@ -3,23 +3,14 @@
 Forgit Core
 ===========
 
-TODO Demonstrate and document the core concepts of forgit.
-
 The core includes a python module with functions corresponding to the
 CLI commands.  The underlying python library for providing the CLI is
 thoroughly tested so we only test the python implementation.
 
-We start in a working directory for the new project.
-
-    >>> import os
-    >>> from forgit import testing
-    >>> testing.forgit_dir == os.getcwd()
-    True
-
-Since a project has arbitrary hierarchy, we can't assume the current
-directory is the intended base level of the project before the project
-has been initialized.  IOW, project initialization is the way to
-declare what the root of the project is.
+Since a project has arbitrary hierarchy, we can't make assumptions
+about the intended base level of the project before the project has
+been initialized.  IOW, project initialization is the way to declare
+what the root of the project is.
 
 Before a project is initialized, any command will raise a helpful
 error.
@@ -32,9 +23,11 @@ error.
     TODO
 
 A directory can be initialized as a forgit project using the 'init'
-command.  When successful, nothing is returned.
+command.  When successful, the root node is returned.
 
-    >>> core.init()
+    >>> root = core.init()
+    >>> root
+    <Node at />
 
 The status command will return a structure representing the current
 state of the project.  If there are no pending actions, nothing is
@@ -58,9 +51,17 @@ been initialized raises a helpful error.
     ...TODOtmp/foo
 
 Create a new node.  If no parent node is given, the root node is
-assumed.
+assumed.  The only required argument is the "Subject" of the node.
+The new node is returned.
 
-    >>> core.mknode('Foo Client')
+    >>> foo_client_node = root.add_node('Foo Client')
+    >>> foo_client_node
+    <Node at /foo-client>
+
+Nodes can be created within other nodes.  Nodes can also be created
+with other properties and a body as keyword arguments.
+
+    >>> foo
 
 If the init command is given a directory as an argument, it will
 initialize that directory instead.
