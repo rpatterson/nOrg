@@ -132,6 +132,15 @@ The following describes and defines a format that serves the principles.
 
 nodes formatted as `MIME messages`_
     Each node formatted as one `MIME message`_.
+
+node identity through the `Message-Id field`_
+    Each node has an identity that is constant throughout it's life
+    allowing it to be edited, moved, or otherwise mutated across time
+    without losing it's unique history.  The `Message-Id field`_ field
+    is used to store this identity as per the standard.  Since nodes
+    may be created from emails, care must be taken to correct
+    ``Message-Id``s from email clients that don't create securely
+    unique ids.
     
 node fields and properties are `MIME header fields`_
     Fields used by the core software should re-use standard header
@@ -160,8 +169,6 @@ nodes are files
     TODO nodes are files in a project hierarchy with an extension
     TODO node hierarchy may be contained in a hidden directory
     TODO the node corresponding to a directory in a project hierarchy
-
-node identity through the `Message-Id field`_
     TODO may need to rely on the specific implementation/tool for
          efficiently finding nodes
     TODO child node order field, unordered nodes
@@ -181,7 +188,6 @@ node identity through the `Message-Id field`_
     foo/baz/.nog/.nog
     foo/baz/.nog/some-image.png
     foo/baz/.nog/baz-subnode.nog
-    TODO ensure uniqueness from lazy ``Message-ID``s from emails
 
 non-textual MIME parts are separate files next to node
     TODO In the hidden directory *or* in the project directory for
