@@ -142,20 +142,55 @@ node fields and properties are `MIME header fields`_
     itself`_ rather than helping.
 
 nodes are files
-    TODO nodes are file in a project hierarchy with an extension
-    TODO node hierarchy may be contained in a hidden directory
-    TODO the node corresponding to a directory in a project hierarchy
-
-non-textual MIME parts are separate files next to node
-    In the hidden directory *or* in the project directory.
-
+    Nodes are files in a directory hierarchy where the directory
+    hierarchy has a loose coupling to the node hierarchy in order to
+    accommodate a flexible relationship to external structure such as
+    source code in a software project.
 node state graphs
     ??? model just the next states possible through fields/properties
     or explicitly model transitions as well?  It's my experience that
     defining transitions is a less-than-fruitful cognitive burden.
 
+
+    If a node corresponds cleanly to a project-related file, the node
+    should have the same name as that file appending a '.nod'
+    extension or replacing the files extension.  If a level in the
+    hierarchy contains multiple files with the same name but different
+    extensions that each should have different nodes, then the hidden
+    directory format below should be used.
+
+    ??? Maybe just mandate the hidden directory approach to avoid
+    confusion
+
+    TODO nodes are files in a project hierarchy with an extension
+    TODO node hierarchy may be contained in a hidden directory
+    TODO the node corresponding to a directory in a project hierarchy
+
 node identity through the `Message-Id field`_
+    TODO may need to rely on the specific implementation/tool for
+         efficiently finding nodes
+    TODO child node order field, unordered nodes
+
+    foo/
+    foo/.nog
+    foo/bar.py
+    foo/bar.nog
+    foo/qux.py
+    foo/qux.nog/
+    foo/qux.nog/.nog
+    foo/qux.nog/some-document.pdf
+    foo/qux.nog/qux-subnode.nog
+    foo/baz/
+    foo/baz/bah.py
+    foo/baz/.nog/
+    foo/baz/.nog/.nog
+    foo/baz/.nog/some-image.png
+    foo/baz/.nog/baz-subnode.nog
     TODO ensure uniqueness from lazy ``Message-ID``s from emails
+
+non-textual MIME parts are separate files next to node
+    TODO In the hidden directory *or* in the project directory for
+    binary documents, images, etc..
 
 node field sets may be signed as *fixed* by entities
     Stored in a lower MIME part, preferably last, are cryptographic
