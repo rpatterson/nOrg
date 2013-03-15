@@ -1,3 +1,10 @@
+=====
+Goals
+=====
+
+TODO
+
+
 ==========
 Principles
 ==========
@@ -262,6 +269,14 @@ TODO separate assignment from private key posession
 
     ??? entity identity is managed *within* the hierarchy via signed
     field sets
+
+====
+TODO
+====
+
+* branches/merging, relation to aggregation
+* relative links
+* MIME part addresses
 
 
 .. _`MIME parts`: http://en.wikipedia.org/wiki/Multipurpose_Internet_Mail_Extensions#Multipart_messages
