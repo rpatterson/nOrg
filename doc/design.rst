@@ -181,20 +181,20 @@ nodes are files
     TODO child node order field, unordered nodes
 
     foo/
-    foo/.nog
+    foo/.nod
     foo/bar.py
-    foo/bar.nog
+    foo/bar.nod
     foo/qux.py
-    foo/qux.nog/
-    foo/qux.nog/.nog
-    foo/qux.nog/some-document.pdf
-    foo/qux.nog/qux-subnode.nog
+    foo/qux.nod/
+    foo/qux.nod/.nod
+    foo/qux.nod/some-document.pdf
+    foo/qux.nod/qux-subnode.nod
     foo/baz/
     foo/baz/bah.py
-    foo/baz/.nog/
-    foo/baz/.nog/.nog
-    foo/baz/.nog/some-image.png
-    foo/baz/.nog/baz-subnode.nog
+    foo/baz/.nod/
+    foo/baz/.nod/.nod
+    foo/baz/.nod/some-image.png
+    foo/baz/.nod/baz-subnode.nod
 
 non-textual MIME parts are separate files next to node
     TODO In the hidden directory *or* in the project directory for
