@@ -136,8 +136,10 @@ nodes formatted as `MIME messages`_
 node fields and properties are `MIME header fields`_
     Fields used by the core software should re-use standard header
     fields as much as possible.  Where a field is clearly specific to
-    the core software, it will begin with a 'TODO-' prefix.  Arbitrary
-    node properties should begin with the 'X-' prefix.
+    the core software, it will begin with a 'NORG-' prefix.  Arbitrary
+    node properties should begin with the 'PROPERTY-' prefix.  Do not
+    use the ``X-`` prefix as the `'X-' prefix has became a problem
+    itself`_ rather than helping.
 
 nodes are files
     TODO nodes are file in a project hierarchy with an extension
@@ -167,6 +169,7 @@ node field sets may be signed as *fixed* by entities
 
 .. _`MIME parts`: http://en.wikipedia.org/wiki/Multipurpose_Internet_Mail_Extensions#Multipart_messages
 .. _`Message-Id field`: http://tools.ietf.org/html/rfc5322#section-3.6.4
+.. _`'X-' prefix has become a problem itself`: http://tools.ietf.org/html/rfc6648
 
 .. _`Emacs`: http://www.gnu.org/software/emacs/
 .. _`Emacs modes`: http://www.gnu.org/software/emacs/manual/html_node/emacs/Modes.html#Modes
