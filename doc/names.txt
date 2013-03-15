@@ -1,0 +1,47 @@
+gitoit
+
+* google: none
+
+forgit
+
+* google: slang for "legit"+"for real"
+
+gittoit
+
+* gooogle: usernames
+
+gititdone
+
+* google: snarky slang references contrasted to giterdone
+* Disa +1
+
+organit
+
+* google: none
+
+bouncelist
+
+* Disa +10
+* -10 email bounce lists
+
+listtree
+
+norg, noorg, n-org, nog
+
+* various domains available
+* nog extension seems available
+
+
+Taken
+=====
+
+giterdone
+
+* google: southern redneck slang
+* gitorious: Git overlay on the File-Browser plugin for gedit. Similar
+  to Subclipse or TortoiseSVN.
+
+orgit
+
+* org-mode: a wiki powered by git and Emacs Org-Mode
+* ORGIT Software Corporation is located in Downers Grove, IL
