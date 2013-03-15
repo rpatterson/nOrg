@@ -146,11 +146,6 @@ nodes are files
     hierarchy has a loose coupling to the node hierarchy in order to
     accommodate a flexible relationship to external structure such as
     source code in a software project.
-node state graphs
-    ??? model just the next states possible through fields/properties
-    or explicitly model transitions as well?  It's my experience that
-    defining transitions is a less-than-fruitful cognitive burden.
-
 
     If a node corresponds cleanly to a project-related file, the node
     should have the same name as that file appending a '.nod'
@@ -191,6 +186,18 @@ node identity through the `Message-Id field`_
 non-textual MIME parts are separate files next to node
     TODO In the hidden directory *or* in the project directory for
     binary documents, images, etc..
+
+node state graphs
+    ??? model just the next states possible through fields/properties
+    or explicitly model transitions as well?  It's my experience that
+    defining transitions is a less-than-fruitful cognitive burden.
+    
+    OTOH relying only on property/field hierarchy to define
+    next-states may require supporting some form of variable
+    interpolation which may conflict with cryptographic signing.
+
+    Is there some need to capture different ways to transition from
+    state A to state B that is not already captured in other metadata?
 
 node field sets may be signed as *fixed* by entities
     Stored in a lower MIME part, preferably last, are cryptographic
