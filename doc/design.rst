@@ -199,14 +199,63 @@ node state graphs
     Is there some need to capture different ways to transition from
     state A to state B that is not already captured in other metadata?
 
-node field sets may be signed as *fixed* by entities
-    Stored in a lower MIME part, preferably last, are cryptographic
-    signatures of a set of node fields and other MIME parts.  These
-    serve to *lock* those fields and parts for those entities
-    signaling the need for reviewing changes by those entities.  Which
-    fields/parts are locked can be configured on a per-entity basis
-    and inherited up the hierarchy, where those configurations are
-    also cryptographically signed.
+field sets may be signed
+    Below all other MIME parts, may be zero or more `multipart/signed
+    parts`_ each specifying a set of node fields and/or other MIME
+    parts and a cryptographic signature of that content.  These serve
+    to *lock* those fields and parts for those identities signaling the
+    need for reviewing changes by those entities if anything is
+    changed.  To lock node fields without repeating their content, a
+    `multipart/signed part`_ may use the `NORG-SIGN-FIELDS`_ and
+    `NORG-SIGN-PARTS`_ part header fields to list node header fields
+    and node body parts which should be included in the signed
+    content.
+
+    ??? signed and/or encrypted
+
+signed field sets must be verified
+    Verification must occur when pulling or otherwise merging changes
+    to check if other parties have made changes that require
+    attention.  Verification must also occur prior to making or
+    committing changes to alert if your changes will require
+    attention.
+
+    TODO handling removed signatures
+
+    TODO handling hierarchy override
+
+assigning nodes to entities
+    One or more entities may be designated as responsible for a node
+    by signing node field sets with those entities' private keys.
+    Assignment being the common case for signing field sets, a default
+    set of fields to be signed when assigning a given node may be
+    defined in the `NORG-ASSIGN-FIELDS`_ and `NORG-ASSIGN-PARTS`_ node
+    fields.  As with all fields, these can be inherited up the
+    hierarchy.  The may also be set on a per-entity basis where they
+    in turn are also signed.
+
+delegation
+    TODO
+
+per-entity field values
+    TODO May be useful for state graphs, defining signed field sets,
+    delegating to an assistant, etc.
+
+    ??? use signed/encrypted field sets
+
+    TODO State graphs: supervisor has *a* private key for the entity
+    managed and can sign a per-entity property at the relevant place
+    in the hierarchy to designate *what* the next valid states might
+    be.  As such, the supervisor may have a private key for the
+    managed entity that the managed entity may not have.  You know you
+    love being called a managed entity.  Say my name, managed entity!
+
+TODO separate assignment from private key posession
+    TODO allows a supervisor to only have the private but the entity
+    can trust what's been assigned to them
+
+    ??? entity identity is managed *within* the hierarchy via signed
+    field sets
 
 
 .. _`MIME parts`: http://en.wikipedia.org/wiki/Multipurpose_Internet_Mail_Extensions#Multipart_messages
