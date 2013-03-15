@@ -99,10 +99,11 @@ nodes are like emails
     be as email-like as possible and a node should be able to be sent
     as an email by only adding headers.
 
-collaboration with security
+collaboration through cryptography
     Nodes may be assigned to entities, be they individuals, groups,
     etc..  Assignment is not considered *accepted*, however, unless
-    the assignment is cryptographically signed by the entity.
+    the assignment is cryptographically signed by one of a set of
+    configured identities.
 
 Derivation and Deviation from `org-mode`_
 =========================================
