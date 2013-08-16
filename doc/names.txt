@@ -10,6 +10,10 @@ gittoit
 
 * gooogle: usernames
 
+git2it
+
+* intentions for a project: https://github.com/kisom/kyleisom.net/blob/master/source/downloads/git2it.pdf
+
 gititdone
 
 * google: snarky slang references contrasted to giterdone
@@ -30,6 +34,7 @@ norg, noorg, n-org, nog
 
 * various domains available
 * nog extension seems available
+* nod extension is NetObjects Fusion
 
 
 Taken
