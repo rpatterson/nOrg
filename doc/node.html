@@ -5,6 +5,7 @@
 <ol ng-if="node.children">
   <li ng-repeat="node in node.children"
       id="{{node.headers['Message-ID']}}"
+      class="norg-node"
       ng-include="'node.html'">
   </li>
 </ol>

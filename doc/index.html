@@ -12,6 +12,7 @@
       <ol id="norg-projects">
         <li ng-repeat="node in projects"
             id="{{node.headers['Message-ID']}}"
+            class="norg-node"
             ng-include="'node.html'">
         </li>
       </ol>
