@@ -135,7 +135,9 @@ all these reasons, the design principles are largely similar to
 Format
 ======
 
-The following describes and defines a format that serves the principles.
+The following describes and defines a format that serves the
+principles.  Other formats should be considered and debated.  It may
+even be feasible and desirable to support multiple formats.
 
 nodes formatted as `MIME messages`_
     Each node formatted as one `MIME message`_.
