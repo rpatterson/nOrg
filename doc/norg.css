@@ -1,2 +1,7 @@
-#norg-jstree input {left: initial !important;
-                    border: none;}
+#norg-edit input {border: none;}
+#norg-edit ol {list-style: none;
+               border-left-style: dotted;
+               border-width: thin;
+               margin-left: 0.5em;
+               padding-left: 0.5em;
+              }

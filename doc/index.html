@@ -1,40 +1,20 @@
 <html>
   <head>
     <title>N-Org Demo</title>
-    <link href="http://static.jstree.com/v.1.0pre/themes/default/style.css"
-          rel="stylesheet">
     <link href="norg.css" rel="stylesheet">
-    <script src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
-    <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-    <script src="http://static.jstree.com/v.1.0pre/jquery.jstree.js"></script>
-    <script src="http://static.jstree.com/v.1.0pre/jquery.hotkeys.js"></script>
+    <script
+       src="https://ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.js">
+    </script>
+    <script src="norg-demo.js"></script>
   </head>
   <body>
-    <div id="norg-jstree">
-      <ul id="norg-projects">
-        <li id="norg.nod">
-          <a href="norg.nod">Initial Title</a>
+    <form id="norg-edit" ng-app="nOrg" ng-controller="NOrgCtrl">
+      <ol id="norg-projects">
+        <li ng-repeat="node in projects"
+            id="{{node.headers['Message-ID']}}"
+            ng-include="'node.html'">
         </li>
-        <li>
-          <a data-toggle="collapse" data-target="#sub-items">
-            Has sub-items
-          </a>
-          <ul id="sub-items" class="collapse">
-            <li><a>sub-item</a></li>
-            <li><a>sub-item 2</a></li>
-          </ul>
-        </li>
-      </ul>
-    </div>
-    <script>
-      $(".jstree-leaf").dblclick(function(){
-          treeContainer.jstree("rename");});
-      $("#norg-jstree li > a").dblclick(function () {
-          $("#norg-jstree").jstree("rename");});
-      jQuery("#norg-jstree").jstree({
-          "plugins" : ["themes", "html_data", "dnd", "ui", "crrm", "hotkeys"],
-          "core": {"animation": 0},
-          "themes" : {"theme" : "default", "dots" : true, "icons" : false}});
-    </script>
+      </ol>
+    </form>
   </body>
 </html>

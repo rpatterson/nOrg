@@ -1,0 +1,10 @@
+<input type="text" ng-model="node.headers.Subject"
+       name="{{node.headers['Message-ID']}}:headers.Subject"
+       value="{{node.headers.Subject}}" />
+<a href="{{node.id}}">{{node.headers.Subject}}</a>
+<ol ng-if="node.children">
+  <li ng-repeat="node in node.children"
+      id="{{node.headers['Message-ID']}}"
+      ng-include="'node.html'">
+  </li>
+</ol>
