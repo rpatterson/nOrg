@@ -1,9 +1,17 @@
-<h4 ng-model="node.headers['Subject']"
-    class="norg-subject"
-    contentEditable="true">
+<a class="norg-subject"
+   data-toggle="collapse" data-target="#Message-ID-{{node.id}}-children"
+   ng-model="node.headers['Subject']">
   {{node.headers['Subject']}}
-</h4>
-<dl class="norg-headers dl-horizontal" ng-if="node.headers">
+</a>
+
+<button type="button" class="btn btn-default btn-xs"
+        title="Expand/Collapse headers/fields"
+        data-toggle="collapse" data-target="#Message-ID-{{node.id}}-headers">
+  Headers
+</button>
+<dl ng-if="node.headers"
+    id="Message-ID-{{node.id}}-headers"
+    class="norg-headers dl-horizontal collapse">
   <div ng-repeat="key in filter_headers(node)">
     <dt contentEditable="true">{{key}}:</dt>
     <dd ng-model="node.headers[key]"
@@ -13,11 +21,12 @@
     </dd>
   </div>
 </dl>
+
 <ol ng-if="node.children"
-    class="norg-nodes">
+    id="Message-ID-{{node.id}}-children"
+    class="norg-nodes list-group collapse in">
   <li ng-repeat="node in node.children | filter:sanitizeNodeId"
-      id="Message-ID-{{node.id}}"
-      class="norg-node"
+      id="Message-ID:{{node.id}}" class="norg-node list-group-item"
       ng-include="'app/node.tpl.html'">
   </li>
 </ol>
