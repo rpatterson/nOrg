@@ -1,6 +1,16 @@
 <input type="text" ng-model="node.headers['Subject']"
        name="{{node.headers['Message-ID']}}:headers['Subject']"
        value="{{node.headers['Subject']}}" />
+<dl class="dl-horizontal" ng-if="node.headers">
+  <div ng-repeat="key in filter_headers(node)">
+    <dt>{{key}}:</dt>
+    <dd>
+      <input type="text" ng-model="node.headers[key]"
+             name="{{node.headers['Message-ID']}}:headers['{{key}}']"
+             value="node.headers[key]" />
+    </dd>
+  </div>
+</dl>
 <ol ng-if="node.children">
   <li ng-repeat="node in node.children"
       id="{{node.headers['Message-ID']}}"

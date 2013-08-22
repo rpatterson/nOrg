@@ -1,7 +1,9 @@
-#norg-edit input {border: none;}
+#norg-edit input {border: none;
+                  box-shadow: none;}
 #norg-edit ol {list-style: none;
                border-left-style: dotted;
                border-width: thin;
                margin-left: 0.5em;
                padding-left: 0.5em;
               }
+#norg-edit dl {margin: 0em;}
