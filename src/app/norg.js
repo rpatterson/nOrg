@@ -9,28 +9,33 @@ angular.module( 'nOrg', [
         if (!(key in reserved_headers)) {
           keys.push(key); }; };
       return keys;};
+    $scope.sanitizeNodeId = function(node) {
+      node.id = node.headers["Message-ID"].replace(
+        '<', '').replace('>', '').replace('@', '-').replace('.', '-');
+      return true;
+    };
     $scope.projects = [
-      {"id": "/foo.nod",
+      {"path": "/foo.nod",
        "headers": {"Subject": "Foo Project",
                    "Message-ID": "<1@foo.com>"},
       },
-      {"id": "/bar/.nod",
+      {"path": "/bar/.nod",
        "headers": {"Subject": "Bar Project",
                    "Message-ID": "<2@foo.com>",
                    "Bar-Property": "Bar Property"},
        "children": [
-         {"id": "/bar/corge.nod",
+         {"path": "/bar/corge.nod",
           "headers": {"Subject": "Corge Node",
                       "Message-ID": "<3@foo.com>",
                       "Corge-Property": "Corge Property"}},
-         {"id": "/bar/grault.nod",
+         {"path": "/bar/grault.nod",
           "headers": {"Subject": "Grault Node",
                       "Message-ID": "<4@foo.com>"}},
-         {"id": "/bar/garply.nod",
+         {"path": "/bar/garply.nod",
           "headers": {"Subject": "Garply Node",
                       "Message-ID": "<5@foo.com>"}},
        ]},
-      {"id": "/qux/.nod/.nod",
+      {"path": "/qux/.nod/.nod",
        "headers": {"Subject": "Qux Project",
                    "Message-ID": "<6@foo.com>"},
       },

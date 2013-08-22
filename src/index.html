@@ -10,9 +10,8 @@
   <ol id="norg-edit"
       class="norg-nodes"
       ng-controller="NOrgCtrl">
-    <li ng-repeat="node in projects"
-        id="{{node.headers['Message-ID']}}"
-        class="norg-node"
+    <li ng-repeat="node in projects | filter:sanitizeNodeId"
+        id="Message-ID-{{node.id}}" class="norg-node list-group-item"
         ng-include="'app/node.tpl.html'">
     </li>
   </ol>
