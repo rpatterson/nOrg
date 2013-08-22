@@ -24,4 +24,4 @@ angular.module('nOrg', []).
                          "Message-ID": "<6@foo.com>"},
             },
         ];
-});
+    });
