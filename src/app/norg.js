@@ -3,15 +3,15 @@ angular.module( 'nOrg', [
 
 .controller( 'NOrgCtrl', function NOrgCtrl ( $scope, $location ) {
     var reserved_headers = {"Subject": true, "Message-ID": true};
-    $scope.filter_headers = function(node) {
-      var keys = [];
-      for (var key in node.headers) {
-        if (!(key in reserved_headers)) {
-          keys.push(key); }; };
-      return keys;};
-    $scope.sanitizeNodeId = function(node) {
+    $scope.sanitizeNode = function(node) {
       node.id = node.headers["Message-ID"].replace(
         '<', '').replace('>', '').replace('@', '-').replace('.', '-');
+
+      node.header_keys = [];
+      for (var key in node.headers) {
+        if (!(key in reserved_headers)) {
+          node.header_keys.push(key); }; };
+      
       return true;
     };
     $scope.projects = [

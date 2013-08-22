@@ -10,7 +10,7 @@
   <ol id="norg-edit"
       class="norg-nodes list-group panel panel-default"
       ng-controller="NOrgCtrl">
-    <li ng-repeat="node in projects | filter:sanitizeNodeId"
+    <li ng-repeat="node in projects | filter:sanitizeNode"
         id="Message-ID-{{node.id}}" class="norg-node list-group-item"
         ng-include="'app/node.tpl.html'">
       {{node.headers['Subject']}}

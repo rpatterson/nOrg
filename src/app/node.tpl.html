@@ -4,29 +4,32 @@
   {{node.headers['Subject']}}
 </a>
 
-<button type="button" class="btn btn-default btn-xs"
-        title="Expand/Collapse headers/fields"
-        data-toggle="collapse" data-target="#Message-ID-{{node.id}}-headers">
-  Headers
-</button>
-<dl ng-if="node.headers"
-    id="Message-ID-{{node.id}}-headers"
-    class="norg-headers dl-horizontal collapse">
-  <div ng-repeat="key in filter_headers(node)">
-    <dt contentEditable="true">{{key}}:</dt>
-    <dd ng-model="node.headers[key]"
-        class="norg-headers--{{key}}"
-        contentEditable="true">
-      {{node.headers[key]}}
-    </dd>
-  </div>
-</dl>
+<span ng-if="node.header_keys.length">
+  <button type="button" class="btn btn-default btn-xs"
+          title="Expand/Collapse headers/fields"
+          data-toggle="collapse" data-target="#Message-ID-{{node.id}}-headers">
+    Headers
+  </button>
+  <dl id="Message-ID-{{node.id}}-headers"
+      class="norg-headers dl-horizontal collapse">
+    <div ng-repeat="key in node.header_keys">
+      <dt contentEditable="true">{{key}}:</dt>
+      <dd ng-model="node.headers[key]"
+          class="norg-headers--{{key}}"
+          contentEditable="true">
+        {{node.headers[key]}}
+      </dd>
+    </div>
+  </dl>
+</span>
 
-<ol ng-if="node.children"
-    id="Message-ID-{{node.id}}-children"
-    class="norg-nodes list-group collapse in">
-  <li ng-repeat="node in node.children | filter:sanitizeNodeId"
-      id="Message-ID:{{node.id}}" class="norg-node list-group-item"
-      ng-include="'app/node.tpl.html'">
-  </li>
-</ol>
+<div ng-if="node.children.length">
+  <ol ng-if="node.children"
+      id="Message-ID-{{node.id}}-children"
+      class="norg-nodes list-group collapse in">
+    <li ng-repeat="node in node.children | filter:sanitizeNode"
+        id="Message-ID:{{node.id}}" class="norg-node list-group-item"
+        ng-include="'app/node.tpl.html'">
+    </li>
+  </ol>
+</div>
