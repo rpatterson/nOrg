@@ -3,11 +3,11 @@ angular.module('nOrg', []).
         $scope.projects = [
             {"id": "/foo.nod",
              "headers": {"Subject": "Foo Project",
-                        "Message-ID": "<1@foo.com>"},
+                         "Message-ID": "<1@foo.com>"},
             },
             {"id": "/bar/.nod",
              "headers": {"Subject": "Bar Project",
-                        "Message-ID": "<2@foo.com>"},
+                         "Message-ID": "<2@foo.com>"},
              "children": [
                  {"id": "/bar/corge.nod",
                   "headers": {"Subject": "Corge Node",
