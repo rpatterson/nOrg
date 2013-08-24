@@ -10,14 +10,15 @@ angular.module( 'nOrg', [
       node.header_keys = [];
       for (var key in node.headers) {
         if (!(key in reserved_headers)) {
-          node.header_keys.push(key); }; };
+          node.header_keys.push(key);
+        }}
       
       return true;
     };
     $scope.projects = [
       {"path": "/foo.nod",
        "headers": {"Subject": "Foo Project",
-                   "Message-ID": "<1@foo.com>"},
+                   "Message-ID": "<1@foo.com>"}
       },
       {"path": "/bar/.nod",
        "headers": {"Subject": "Bar Project",
@@ -33,12 +34,12 @@ angular.module( 'nOrg', [
                       "Message-ID": "<4@foo.com>"}},
          {"path": "/bar/garply.nod",
           "headers": {"Subject": "Garply Node",
-                      "Message-ID": "<5@foo.com>"}},
+                      "Message-ID": "<5@foo.com>"}}
        ]},
       {"path": "/qux/.nod/.nod",
        "headers": {"Subject": "Qux Project",
-                   "Message-ID": "<6@foo.com>"},
-      },
+                   "Message-ID": "<6@foo.com>"}
+      }
     ];
 })
 
