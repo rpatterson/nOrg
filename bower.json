@@ -1,13 +1,23 @@
 {
-  "name": "ng-boilerplate",
-  "version": "0.3.0",
-  "devDependencies": {
-    "angular": "~1.0.7",
-    "angular-mocks": "~1.0.7",
-    "bootstrap": "~2.3.2",
-    "angular-bootstrap": "~0.3.0",
-    "angular-ui-router": "~0.0.1",
-    "angular-ui-utils": "~0.0.3"
+  "name": "forgit",
+  "version": "0.0.0",
+  "authors": [
+    "Ross Patterson <me@rpatterson.net>"
+  ],
+  "description": "Task outline organizing tool based on org-node",
+  "main": "src/app/norg.js",
+  "license": "GPLv3",
+  "homepage": "https://github.com/rpatterson/forgit",
+  "dependencies": {
+    "angular": ">=1.2.0-rc.1",
+    "bootstrap": ">=3.0.0"
   },
-  "dependencies": {}
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "vendor",
+    "test",
+    "tests"
+  ]
 }
