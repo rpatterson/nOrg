@@ -514,6 +514,15 @@ module.exports = function ( grunt ) {
         options: {
           livereload: false
         }
+      },
+
+      /**
+       * When the karma config template changes, we only want to
+       * update the config from the template and run the unit tests.
+       */
+      karmaconfig: {
+        files: [ 'karma/karma-unit.tpl.js' ],
+        tasks: [ 'karmaconfig:unit', 'karma:continuous', 'karma:unit:run' ]
       }
     }
   };
