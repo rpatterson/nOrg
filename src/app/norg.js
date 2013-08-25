@@ -4,8 +4,7 @@ angular.module( 'nOrg', [
 .controller( 'NOrgCtrl', function NOrgCtrl ( $scope, $location ) {
     var reserved_headers = {"Subject": true, "Message-ID": true};
     $scope.sanitizeNode = function(node) {
-      node.id = node.headers["Message-ID"].replace(
-        '<', '').replace('>', '').replace('@', '-').replace('.', '-');
+      node.id = window.btoa(node.headers["Message-ID"]).slice(0, -1);
 
       node.header_keys = [];
       for (var key in node.headers) {
