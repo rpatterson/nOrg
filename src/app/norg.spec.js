@@ -1,4 +1,4 @@
-describe( 'N-Org editing control', function() {
+describe( 'N-Org', function() {
   var NOrgCtrl, $location, $scope;
 
   beforeEach( module( 'nOrg' ) );
@@ -17,49 +17,52 @@ describe( 'N-Org editing control', function() {
     expect( $scope.projects.length ).toBeTruthy();
   }));
 
-  // node children
-  it( 'nodes may have children ', inject( function() {
-    expect( $scope.projects.filter(function(node) {
-      return node.children;
-    }).length).toBeTruthy();
-  }));
-  it( 'nodes may not have children ', inject( function() {
-    expect( $scope.projects.filter(function(node) {
-      return ! node.children;
-    }).length).toBeTruthy();
-  }));
+  describe( 'node children:', function() {
+    it( 'nodes may have children ', inject( function() {
+      expect( $scope.projects.filter(function(node) {
+        return node.children;
+      }).length).toBeTruthy();
+    }));
+    it( 'nodes may not have children ', inject( function() {
+      expect( $scope.projects.filter(function(node) {
+        return ! node.children;
+      }).length).toBeTruthy();
+    }));
+  });
 
-  // node ids
-  it( 'generates an element id for nodes', inject( function() {
-    $scope.projects.forEach($scope.sanitizeNode);
-    expect( $scope.projects.filter(function(node) {
-      return node.id;
-    }).length).toEqual($scope.projects.length);
-  }));
-  it( 'generates valid, CSS select-able ids for nodes', inject( function() {
-    $scope.projects.forEach($scope.sanitizeNode);
-    expect( $scope.projects.filter(function(node) {
-      return (/[<@\.>]/).test(node.id);
-    }).length).toBeFalsy();
-  }));
+  describe( 'node ids:', function() {
+    it( 'generates an element id for nodes', inject( function() {
+      $scope.projects.forEach($scope.sanitizeNode);
+      expect( $scope.projects.filter(function(node) {
+        return node.id;
+      }).length).toEqual($scope.projects.length);
+    }));
+    it( 'generates valid, CSS select-able ids for nodes', inject( function() {
+      $scope.projects.forEach($scope.sanitizeNode);
+      expect( $scope.projects.filter(function(node) {
+        return (/[<@\.>]/).test(node.id);
+      }).length).toBeFalsy();
+    }));
+  });
 
-  // node headers
-  it( 'generates a list of headers to display for nodes', inject( function() {
-    $scope.projects.forEach($scope.sanitizeNode);
-    expect( $scope.projects.filter(function(node) {
-      return typeof node.header_keys != "undefined";
-    }).length).toEqual($scope.projects.length);
-  }));
-  it( 'nodes may have visible headers', inject( function() {
-    $scope.projects.forEach($scope.sanitizeNode);
-    expect( $scope.projects.filter(function(node) {
-      return node.header_keys.length;
-    }).length).toBeTruthy();
-  }));
-  it( 'nodes may not have visible headers', inject( function() {
-    $scope.projects.forEach($scope.sanitizeNode);
-    expect( $scope.projects.filter(function(node) {
-      return ! node.header_keys.length;
-    }).length).toBeTruthy();
-  }));
+  describe( 'node headers:', function() {
+    it( 'generates a list of headers to display for nodes', inject( function() {
+      $scope.projects.forEach($scope.sanitizeNode);
+      expect( $scope.projects.filter(function(node) {
+        return typeof node.header_keys != "undefined";
+      }).length).toEqual($scope.projects.length);
+    }));
+    it( 'nodes may have visible headers', inject( function() {
+      $scope.projects.forEach($scope.sanitizeNode);
+      expect( $scope.projects.filter(function(node) {
+        return node.header_keys.length;
+      }).length).toBeTruthy();
+    }));
+    it( 'nodes may not have visible headers', inject( function() {
+      $scope.projects.forEach($scope.sanitizeNode);
+      expect( $scope.projects.filter(function(node) {
+        return ! node.header_keys.length;
+      }).length).toBeTruthy();
+    }));
+  });
 });
