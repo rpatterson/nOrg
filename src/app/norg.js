@@ -1,14 +1,14 @@
-angular.module( 'nOrg', [
+angular.module('nOrg', [
 ])
 
-  .controller( 'NOrgCtrl', function NOrgCtrl ( $scope, $http ) {
+  .controller('NOrgCtrl', function NOrgCtrl ($scope, $http) {
     var reserved_headers = {"Subject": true, "Message-ID": true};
     $scope.listChildren = function (parent) {
       if (arguments.length === 0) {
         parent = $scope;
       }
       var previous;
-      return function( node ) {
+      return function (node) {
         node.parent = parent;
         node.children = node.children || [];
         node.previous = previous;
@@ -29,11 +29,11 @@ angular.module( 'nOrg', [
         return true;
       };
     };
-    $http.get('app/nodes.json').success(function(data) {
+    $http.get('app/nodes.json').success(function (data) {
       $scope.children = data;
     });
 
-    $scope.demote = function(node) {
+    $scope.demote = function (node) {
       if (typeof node.previous == "undefined") {
         throw new Error("Cannot promote first sibling!");
       }
