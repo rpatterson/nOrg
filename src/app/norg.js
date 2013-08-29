@@ -6,9 +6,6 @@ angular.module('nOrg', [
     $scope.listChildren = function (parent) {
       // Generate a filter function closure with access to the parent
       // reference
-      if (arguments.length === 0) {
-        parent = $scope;
-      }
       var previous;
       return function (node) {
         // Process nodes as they are rendered adding utility
@@ -49,13 +46,40 @@ angular.module('nOrg', [
         throw new Error("Cannot promote first sibling!");
       }
       node.previous.children.push(node);
-      node.parent.children.splice(node.parent.children.indexOf(node), 1);
+
+      if (typeof node.parent == "undefined") {
+        children = $scope.children;
+      } else {
+        children = node.parent.children;
+      }
+      children.splice(children.indexOf(node), 1);
+
       node.parent = node.previous;
       if (node.previous.children.length == 1) {
         node.previous = undefined;
         node.classes.splice(node.classes.indexOf("demotable"), 1);
       } else {
         node.previous = node.parent.children[-2];
+      }
+    };
+
+    $scope.promote = function (node) {
+      // Promote a node if appropriate
+      if (typeof node.parent == "undefined") {
+        throw new Error("Cannot promote nodes without parents!");
+      }
+      previous = node.parent;
+      node.parent = node.parent.parent;
+      if (typeof node.parent == "undefined") {
+        children = $scope.children;
+      } else {
+        children = node.parent.children;
+      }
+      children.splice(children.indexOf(previous) + 1, 0, node);
+      previous.children.splice(previous.children.indexOf(node), 1);
+
+      if (typeof node.parent == "undefined") {
+        node.classes.splice(node.classes.indexOf("promotable"), 1);
       }
     };
   });

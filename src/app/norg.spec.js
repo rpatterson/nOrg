@@ -117,5 +117,21 @@ describe('N-Org', function() {
       expect(function () { $scope.demote(node); })
         .toThrow(new Error("Cannot promote first sibling!"));
     }));
+
+    it('nodes with parents may be promoted', inject(function () {
+      var parent = $scope.children[1];
+      var node = parent.children[1];
+      parent.children.forEach($scope.listChildren(parent));
+      expect(node.classes.indexOf('promotable') ).toBeDefined();
+      $scope.promote(node);
+      expect(node.classes.indexOf('promotable') ).toEqual(-1);
+      expect($scope.children[2]).toBe(node);
+    }));
+    it('nodes without parents may not be promoted', inject(function () {
+      var node = $scope.children[1];
+      expect(node.classes.indexOf('promotable') ).toEqual(-1);
+      expect(function () { $scope.promote(node); })
+        .toThrow(new Error("Cannot promote nodes without parents!"));
+    }));
   });
 });
