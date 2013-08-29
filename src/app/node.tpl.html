@@ -27,7 +27,7 @@
   <ol ng-if="node.children"
       id="Message-ID-{{node.id}}-children"
       class="norg-nodes list-group collapse in">
-    <li ng-repeat="node in node.children | filter:sanitizeNode"
+    <li ng-repeat="node in node.children | filter:listChildren(node)"
         id="Message-ID:{{node.id}}" class="norg-node list-group-item"
         ng-include="'app/node.tpl.html'">
     </li>
