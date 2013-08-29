@@ -152,5 +152,53 @@ describe('N-Org', function() {
         $scope.promote(node);
       }).toThrow(new Error("Cannot promote nodes without parents!"));
     }));
+
+    it('nodes with previous siblings may be moved up', inject(function () {
+      var parent = $scope.children[1];
+      var node = parent.children[1];
+      var next = parent.children[0];
+      $scope.listChildren(parent);
+      expect(node.movableUp).toBeTruthy();
+      $scope.moveUp(node);
+      expect(parent.children[0]).toBe(node);
+      expect(parent.children[1]).toBe(next);
+      expect(parent.children.length).toEqual(3);
+      expect(node.movableUp).toBeFalsy();
+      expect(node.index).toBe(0);
+      expect(next.index).toBe(1);
+    }));
+    it('first nodes may not be moved up', inject(function () {
+      var parent = $scope.children[1];
+      var node = parent.children[0];
+      $scope.listChildren(parent);
+      expect(node.movableUp).toBeFalsy();
+      expect(function () {
+        $scope.moveUp(node);
+      }).toThrow(new Error("Cannot move first nodes up!"));
+    }));
+
+    it('nodes with next siblings may be moved down', inject(function () {
+      var parent = $scope.children[1];
+      var node = parent.children[1];
+      var previous = parent.children[2];
+      $scope.listChildren(parent);
+      expect(node.movableDown).toBeTruthy();
+      $scope.moveDown(node);
+      expect(parent.children[2]).toBe(node);
+      expect(parent.children[1]).toBe(previous);
+      expect(parent.children.length).toEqual(3);
+      expect(node.movableDown).toBeFalsy();
+      expect(node.index).toBe(2);
+      expect(previous.index).toBe(1);
+    }));
+    it('last nodes may not be moved down', inject(function () {
+      var parent = $scope.children[1];
+      var node = parent.children[2];
+      $scope.listChildren(parent);
+      expect(node.movableDown).toBeFalsy();
+      expect(function () {
+        $scope.moveDown(node);
+      }).toThrow(new Error("Cannot move last nodes down!"));
+    }));
   });
 });

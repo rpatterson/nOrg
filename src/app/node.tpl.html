@@ -27,6 +27,18 @@
             title="Demote this node"
             ng-disabled="! node.demotable"
             ng-click="demote(node)"></button>
+    <button type="button"
+            class="btn btn-default btn-sm
+                   promote glyphicon glyphicon-arrow-up"
+            title="Promote this node"
+            ng-disabled="! node.movableUp"
+            ng-click="moveUp(node)"></button>
+    <button type="button"
+            class="btn btn-default btn-sm
+                   demote glyphicon glyphicon-arrow-down"
+            title="Demote this node"
+            ng-disabled="! node.movableDown"
+            ng-click="moveDown(node)"></button>
   </span>
 </span>
   

@@ -27,7 +27,10 @@ angular.module('nOrg', [
         child.index = parseInt(idx, 10);
         if (child.index > 0) {
           child.demotable = true;
+          child.movableUp = true;
         }
+        if (child.index < child.siblings.length - 1) {
+          child.movableDown = true;
         }
 
         // Generate a valid HTML ID and CSS selector from the message
@@ -82,6 +85,39 @@ angular.module('nOrg', [
         node.promotable = false;
       }
     };
+
+    $scope.moveUp = function (node) {
+      // Move a node up relative to it's siblings if appropriate
+      if (node.index === 0) {
+        throw new Error("Cannot move first nodes up!");
+      }
+
+      var next = node.siblings[node.index - 1];
+      node.siblings.splice(node.index - 1, 2, node, next);
+      node.index -= 1;
+      next.index += 1;
+      
+      if (node.index === 0) {
+        node.movableUp = false;
+      }
+    };
+
+    $scope.moveDown = function (node) {
+      // Move a node down relative to it's siblings if appropriate
+      if (node.index == node.siblings.length - 1) {
+        throw new Error("Cannot move last nodes down!");
+      }
+
+      var previous = node.siblings[node.index + 1];
+      node.siblings.splice(node.index, 2, previous , node);
+      node.index += 1;
+      previous.index -= 1;
+      
+      if (node.index == node.siblings.length - 1) {
+        node.movableDown = false;
+      }
+    };
+
   });
 
 //NOrgCtrl.$inject = ['$scope', '$http'];
