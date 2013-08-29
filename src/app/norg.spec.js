@@ -214,6 +214,14 @@ describe('N-Org', function() {
       expect(first.cursor).toBeTruthy();
       expect(second.cursor).toBeFalsy();
     }));
+    it('cursor may be changed to any other node', inject(function () {
+      var first = $scope.children[0];
+      var cursor = $scope.children[1].children[1];
+      $scope.setCursor(cursor);
+      expect($scope.cursor).toBe(cursor);
+      expect(cursor.cursor).toBeTruthy();
+      expect(first.cursor).toBeFalsy();
+    }));
   });
 
 });

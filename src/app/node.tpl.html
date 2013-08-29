@@ -5,8 +5,8 @@
       <button type="button"
               class="btn btn-xs cursor-button
                      {{node.cursor && 'btn-primary' || 'btn-default'}}"
-              title="Currently active node"
-              disabled="true">
+              title="Node cursor"
+              ng-click="setCursor(node)">
         <span class="glyphicon glyphicon-chevron-right">
         </span>
       </button>
@@ -21,6 +21,11 @@
                   glyphicon-collapse-{{node.collapsed && 'down' || 'up'}}
                   {{! node.children.length && ' text-muted'}}">
         </span>
+      </button>
+      <button type="button"
+              class="btn btn-default btn-xs select-button"
+              title="Select/deselect node">
+          <input type="checkbox" name="Message-ID-{{node.id}}" />
       </button>
     </span>
     <span class="btn-group">

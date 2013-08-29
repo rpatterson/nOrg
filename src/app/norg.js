@@ -120,6 +120,13 @@ angular.module('nOrg', [
       }
     };
 
+    $scope.setCursor = function (node) {
+      // Move the cursor to the given node
+      $scope.cursor.cursor = false;
+      $scope.cursor = node;
+      node.cursor = true;
+    };
+
   });
 
 //NOrgCtrl.$inject = ['$scope', '$http'];
