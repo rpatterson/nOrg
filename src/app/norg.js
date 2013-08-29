@@ -55,14 +55,14 @@ angular.module('nOrg', [
         throw new Error("Cannot promote first sibling!");
       }
       
-      var parent = node.siblings[node.index - 1]
+      var parent = node.siblings[node.index - 1];
       parent.children.push(node);
       node.parent = parent;
       node.siblings.splice(node.index, 1);
       node.siblings = node.parent.children;
       node.index = 0;
 
-      if (node.index == 0) {
+      if (node.index === 0) {
         node.demotable = false;
       }
     };
