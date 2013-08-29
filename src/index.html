@@ -9,7 +9,9 @@
 <body>
   <ol id="norg-edit"
       class="norg-nodes list-group panel panel-default"
-      ng-controller="NOrgCtrl">
+      tabindex="0"
+      ng-controller="NOrgCtrl"
+      ng-keydown="handleKeydown($event)">
     <span ng:repeat="node in listChildren()"
           ng:include="'app/node.tpl.html'">
       <li>{{node.headers['Subject']}}</li>

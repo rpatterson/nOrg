@@ -222,6 +222,14 @@ describe('N-Org', function() {
       expect(cursor.cursor).toBeTruthy();
       expect(first.cursor).toBeFalsy();
     }));
+    it('up and down arrow keys move the cursor', inject(function () {
+      var first = $scope.children[0];
+      var cursor = $scope.children[1];
+      $scope.setCursor(cursor);
+      expect($scope.cursor).toBe(cursor);
+      expect(cursor.cursor).toBeTruthy();
+      expect(first.cursor).toBeFalsy();
+    }));
   });
 
 });

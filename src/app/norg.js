@@ -122,9 +122,30 @@ angular.module('nOrg', [
 
     $scope.setCursor = function (node) {
       // Move the cursor to the given node
+      if (typeof node == "undefined") {
+        throw new Error("Cannot move cursor to undefined!");
+      }
       $scope.cursor.cursor = false;
       $scope.cursor = node;
       node.cursor = true;
+    };
+
+    $scope.keymap = {
+      37: function () {         // left arrow
+        $scope.setCursor($scope.cursor.parent);
+        },
+      38: function () {         // up arrow
+        $scope.setCursor($scope.cursor.siblings[$scope.cursor.index - 1]);
+        },
+      39: function () {         // right arrow
+        $scope.setCursor($scope.cursor.children[0]);
+        },
+      40: function () {         // down arrow
+        $scope.setCursor($scope.cursor.siblings[$scope.cursor.index + 1]);
+        }
+    };
+    $scope.handleKeydown = function ($event) {
+      $scope.keymap[$event.keyCode]();
     };
 
   });
