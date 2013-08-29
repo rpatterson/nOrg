@@ -97,4 +97,22 @@ describe( 'N-Org', function() {
       }).length).toBeTruthy();
     }));
   });
+
+  describe( 'editing:', function() {
+    it( 'nodes with previous siblings may be demoted', inject( function() {
+      $scope.children.forEach($scope.listChildren());
+      var node = $scope.children[1];
+      expect( node.classes.indexOf('demotable') ).toBeDefined();
+      $scope.demote(node);
+      expect( node.classes.indexOf('demotable') ).toEqual(-1);
+      expect( $scope.children[0].children[0] ).toBe( node );
+    }));
+    it( 'first sibling nodes may not be demoted', inject( function() {
+      $scope.children.forEach($scope.listChildren());
+      var node = $scope.children[0];
+      expect( node.classes.indexOf('demotable') ).toEqual(-1);
+      expect(function () { $scope.demote(node); })
+        .toThrow(new Error("Cannot promote first sibling!"));
+    }));
+  });
 });
