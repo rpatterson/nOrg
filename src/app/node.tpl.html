@@ -1,10 +1,27 @@
 <li id="Message-ID:{{node.id}}"
     class="norg-node list-group-item">
-  <a class="norg-subject list-group-item-heading"
-     data-toggle="collapse" data-target="#Message-ID-{{node.id}}-children"
-     ng-model="node.headers['Subject']">
+  <span class="btn-toolbar pull-left">
+    <span class="btn-group">
+      <button type="button"
+              class="btn btn-default btn-xs collapse-button"
+              title="Expand/Collapse this node's children"
+              ng-disabled="! node.children.length"
+              data-toggle="collapse"
+              data-target="#Message-ID-{{node.id}}-children">
+        <span
+           class="glyphicon
+                  glyphicon-collapse-{{node.collapsed && 'down' || 'up'}}
+                  {{! node.children.length && ' text-muted'}}">
+        </span>
+      </button>
+    </span>
+    <span class="btn-group">
+    </span>
+  </span>
+
+  <span class="norg-subject list-group-item-heading">
     {{node.headers['Subject']}}
-  </a>
+  </span>
 
   <span class="btn-toolbar pull-right">
     <span class="btn-group">
