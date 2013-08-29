@@ -4,6 +4,7 @@ angular.module('nOrg', [
   .controller('NOrgCtrl', function NOrgCtrl ($scope, $http) {
     var reserved_headers = {"Subject": true, "Message-ID": true};
     $scope.listChildren = function (parent) {
+      var children;
       if (typeof parent == "undefined") {
         children = $scope.children;
       } else {
@@ -12,7 +13,7 @@ angular.module('nOrg', [
 
       // Process nodes adding utility attributes deduced from the raw JSON
       var previous;
-      previous = undefined;
+      previous = undefined;  // JSHint
       for (var idx in children) {
         var child = children[idx];
 
@@ -79,7 +80,7 @@ angular.module('nOrg', [
       if (typeof node.parent == "undefined") {
         throw new Error("Cannot promote nodes without parents!");
       }
-      old_parent = node.parent;
+      var old_parent = node.parent;
       node.parent = node.parent.parent;
       if (typeof node.parent == "undefined") {
         siblings = $scope.children;
