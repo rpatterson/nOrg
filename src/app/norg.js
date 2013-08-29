@@ -1,7 +1,7 @@
 angular.module( 'nOrg', [
 ])
 
-.controller( 'NOrgCtrl', function NOrgCtrl ( $scope, $location ) {
+  .controller( 'NOrgCtrl', function NOrgCtrl ( $scope, $location ) {
     var reserved_headers = {"Subject": true, "Message-ID": true};
     $scope.sanitizeNode = function(node) {
       node.id = window.btoa(node.headers["Message-ID"]).slice(0, -1);
@@ -40,7 +40,5 @@ angular.module( 'nOrg', [
                    "Message-ID": "<6@foo.com>"}
       }
     ];
-})
-
-;
+  });
 
