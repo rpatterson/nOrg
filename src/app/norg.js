@@ -19,14 +19,15 @@ angular.module('nOrg', [
         child.parent = parent;
         child.siblings = children;
         child.children = child.children || [];
+        if (typeof child.parent != "undefined") {
+          child.promotable = true;
+        }
 
         // Sibling processing
         child.index = parseInt(idx, 10);
         if (child.index > 0) {
           child.demotable = true;
         }
-        if (typeof child.parent != "undefined") {
-          child.promotable = true;
         }
 
         // Generate a valid HTML ID and CSS selector from the message
