@@ -12,8 +12,6 @@ angular.module('nOrg', [
       }
 
       // Process nodes adding utility attributes deduced from the raw JSON
-      var previous;
-      previous = undefined;  // JSHint
       for (var idx in children) {
         var child = children[idx];
 
@@ -24,8 +22,7 @@ angular.module('nOrg', [
 
         // Sibling processing
         child.index = parseInt(idx, 10);
-        child.previous = previous;
-        if (typeof child.previous != "undefined") {
+        if (child.index > 0) {
           child.demotable = true;
         }
         if (typeof child.parent != "undefined") {
@@ -43,7 +40,6 @@ angular.module('nOrg', [
             child.header_keys.push(key);
           }}
 
-        previous = child;
         }
       return children;
     };
@@ -54,21 +50,19 @@ angular.module('nOrg', [
 
     $scope.demote = function (node) {
       // Demote a node if appropriate
-      if (typeof node.previous == "undefined") {
+      if (node.index === 0) {
         throw new Error("Cannot promote first sibling!");
       }
-
-      node.previous.children.push(node);
-      node.parent = node.previous;
+      
+      var parent = node.siblings[node.index - 1]
+      parent.children.push(node);
+      node.parent = parent;
       node.siblings.splice(node.index, 1);
       node.siblings = node.parent.children;
       node.index = 0;
 
-      if (node.previous.children.length == 1) {
-        node.previous = undefined;
+      if (node.index == 0) {
         node.demotable = false;
-      } else {
-        node.previous = node.parent.children[-2];
       }
     };
 
