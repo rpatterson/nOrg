@@ -3,3 +3,8 @@
 dl.norg-headers {
     margin-bottom: initial;
 }
+
+#norg-edit .btn.disabled,
+#norg-edit .btn[disabled] {
+    opacity: 0.25;
+}
