@@ -151,7 +151,10 @@ angular.module('nOrg', [
       $scope.keymap[from] = $scope.keymap[$scope.keymapAliases[from]];
     }
     $scope.handleKeydown = function ($event) {
-      $scope.keymap[$event.keyCode]();
+      var handler = $scope.keymap[$event.keyCode];
+      if (typeof handler != "undefined") {
+        handler();
+      }
     };
 
   });
