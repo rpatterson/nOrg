@@ -64,7 +64,7 @@ angular.module('nOrg', [
         children = node.parent.children;
       }
       children.splice(node.index, 1);
-      node.index = node.previous.index + 1;
+      node.index = 0;
 
       node.parent = node.previous;
       if (node.previous.children.length == 1) {

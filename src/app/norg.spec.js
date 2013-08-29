@@ -110,6 +110,8 @@ describe('N-Org', function() {
       $scope.demote(node);
       expect(node.classes.indexOf('demotable') ).toEqual(-1);
       expect($scope.children[0].children[0]).toBe(node);
+      expect($scope.children[0]).toBe(node.parent);
+      expect(node.index).toBe(0);
     }));
     it('first sibling nodes may not be demoted', inject(function () {
       var node = $scope.children[0];
@@ -126,6 +128,8 @@ describe('N-Org', function() {
       $scope.promote(node);
       expect(node.classes.indexOf('promotable') ).toEqual(-1);
       expect($scope.children[2]).toBe(node);
+      expect(node.parent).toBeUndefined();
+      expect(node.index).toBe(2);
     }));
     it('nodes without parents may not be promoted', inject(function () {
       var node = $scope.children[1];
