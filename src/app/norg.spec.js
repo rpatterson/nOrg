@@ -1,12 +1,38 @@
 describe( 'N-Org', function() {
-  var NOrgCtrl, $location, $scope;
+  var $scope, NOrgCtrl, $httpBackend;
 
   beforeEach( module( 'nOrg' ) );
 
-  beforeEach( inject( function( $controller, _$location_, $rootScope ) {
-    $location = _$location_;
+  beforeEach(inject(function(_$httpBackend_, $rootScope, $controller) {
+    $httpBackend = _$httpBackend_;
+    $httpBackend.expectGET('app/nodes.json').respond([
+      {"path": "/foo.nod",
+       "headers": {"Subject": "Foo Project",
+                   "Message-ID": "<1@foo.com>"}},
+      {"path": "/bar/.nod",
+       "headers": {"Subject": "Bar Project",
+                   "Message-ID": "<2@foo.com>",
+                   "Bar-Property": "Bar Property"},
+       "children": [
+         {"path": "/bar/corge.nod",
+          "headers": {"Subject": "Corge Node",
+                      "Message-ID": "<3@foo.com>",
+                      "Corge-Property": "Corge Property"}},
+         {"path": "/bar/grault.nod",
+          "headers": {"Subject": "Grault Node",
+                      "Message-ID": "<4@foo.com>"}},
+         {"path": "/bar/garply.nod",
+          "headers": {"Subject": "Garply Node",
+                      "Message-ID": "<5@foo.com>"}}]},
+      {"path": "/qux/.nod/.nod",
+       "headers": {"Subject": "Qux Project",
+                   "Message-ID": "<6@foo.com>"}}
+    ]);
+    
     $scope = $rootScope.$new();
-    NOrgCtrl = $controller( 'NOrgCtrl', { $location: $location, $scope: $scope });
+    NOrgCtrl = $controller("NOrgCtrl", {$scope: $scope});
+    $scope.$digest();
+    $httpBackend.flush();
   }));
 
   it( 'should exist', inject( function() {
