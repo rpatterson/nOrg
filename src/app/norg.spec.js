@@ -116,8 +116,9 @@ describe('N-Org', function() {
     it('first sibling nodes may not be demoted', inject(function () {
       var node = $scope.children[0];
       expect(node.demotable).toBeFalsy();
-      expect(function () { $scope.demote(node); })
-        .toThrow(new Error("Cannot promote first sibling!"));
+      expect(function () {
+        $scope.demote(node);
+      }).toThrow(new Error("Cannot promote first sibling!"));
     }));
     it('last child with siblings may be demoted', inject(function () {
       $scope.listChildren($scope.children[1]);
@@ -147,8 +148,9 @@ describe('N-Org', function() {
     it('nodes without parents may not be promoted', inject(function () {
       var node = $scope.children[1];
       expect(node.promotable).toBeFalsy();
-      expect(function () { $scope.promote(node); })
-        .toThrow(new Error("Cannot promote nodes without parents!"));
+      expect(function () {
+        $scope.promote(node);
+      }).toThrow(new Error("Cannot promote nodes without parents!"));
     }));
   });
 });
