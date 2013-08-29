@@ -10,11 +10,10 @@
   <ol id="norg-edit"
       class="norg-nodes list-group panel panel-default"
       ng-controller="NOrgCtrl">
-    <li ng-repeat="node in listChildren()"
-        id="Message-ID-{{node.id}}" class="norg-node list-group-item"
-        ng-include="'app/node.tpl.html'">
-      {{node.headers['Subject']}}
-    </li>
+    <span ng:repeat="node in listChildren()"
+          ng:include="'app/node.tpl.html'">
+      <li>{{node.headers['Subject']}}</li>
+    </span>
   </ol>
 
 
