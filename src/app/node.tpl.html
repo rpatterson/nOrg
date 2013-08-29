@@ -7,40 +7,50 @@
 <span class="btn-toolbar pull-right">
   <span class="btn-group">
     <button type="button"
-            class="btn btn-default btn-sm
-                   headers-expand glyphicon glyphicon-th-list"
+            class="btn btn-default btn-xs headers-expand"
             title="Expand/Collapse headers/fields"
             ng-disabled="! node.header_keys.length"
             data-toggle="collapse"
-            data-target="#Message-ID-{{node.id}}-headers"></button>
+            data-target="#Message-ID-{{node.id}}-headers">
+      <span class="glyphicon glyphicon-th-list{{
+                   ! node.header_keys.length && ' text-muted' || ''}}"></span>
+    </button>
   </span>
   <span class="btn-group">
     <button type="button"
-            class="btn btn-default btn-sm
-                   promote glyphicon glyphicon-arrow-left"
+            class="btn btn-default btn-xs promote"
             title="Promote this node"
             ng-disabled="! node.promotable"
-            ng-click="promote(node)"></button>
+            ng-click="promote(node)">
+       <span class="glyphicon glyphicon-arrow-left{{
+                   ! node.promotable && ' text-muted' || ''}}"></span>
+    </button>
     <button type="button"
-            class="btn btn-default btn-sm
-                   demote glyphicon glyphicon-arrow-right"
+            class="btn btn-default btn-xs demote"
             title="Demote this node"
             ng-disabled="! node.demotable"
-            ng-click="demote(node)"></button>
+            ng-click="demote(node)">
+       <span class="glyphicon glyphicon-arrow-right{{
+                   ! node.demotable && ' text-muted' || ''}}"></span>
+    </button>
     <button type="button"
-            class="btn btn-default btn-sm
-                   promote glyphicon glyphicon-arrow-up"
+            class="btn btn-default btn-xs promote"
             title="Promote this node"
             ng-disabled="! node.movableUp"
-            ng-click="moveUp(node)"></button>
+            ng-click="moveUp(node)">
+       <span class="glyphicon glyphicon-arrow-up{{
+                    ! node.movableUp && ' text-muted' || ''}}"></span>
+    </button>
     <button type="button"
-            class="btn btn-default btn-sm
-                   demote glyphicon glyphicon-arrow-down"
+            class="btn btn-default btn-xs demote"
             title="Demote this node"
             ng-disabled="! node.movableDown"
-            ng-click="moveDown(node)"></button>
+            ng-click="moveDown(node)">
+       <span class="glyphicon glyphicon-arrow-down{{
+                    ! node.movableDown && ' text-muted' || ''}}"></span>
+    </button>
   </span>
-</span>
+  </span>
   
 <dl id="Message-ID-{{node.id}}-headers"
     class="norg-headers dl-horizontal collapse">
