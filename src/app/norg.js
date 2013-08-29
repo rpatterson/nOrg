@@ -144,6 +144,12 @@ angular.module('nOrg', [
         $scope.setCursor($scope.cursor.siblings[$scope.cursor.index + 1]);
         }
     };
+    $scope.keymapAliases = {
+      74: 40, 75: 38            // j/k -> down/up
+    };
+    for (var from in $scope.keymapAliases) {
+      $scope.keymap[from] = $scope.keymap[$scope.keymapAliases[from]];
+    }
     $scope.handleKeydown = function ($event) {
       $scope.keymap[$event.keyCode]();
     };
