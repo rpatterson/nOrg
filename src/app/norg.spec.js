@@ -57,20 +57,20 @@ describe('N-Org', function() {
     it('child nodes have a reference to their parent', inject(function () {
       var parent = $scope.children[1];
       var child = parent.children[1];
-      parent.children.forEach($scope.listChildren(parent));
+      $scope.listChildren(parent);
       expect(child.parent).toBe(parent);
     }));
   });
 
   describe('node ids:', function () {
     it('generates an element id for nodes', inject(function () {
-      $scope.children.forEach($scope.listChildren());
+      $scope.listChildren();
       expect($scope.children.filter(function(node) {
         return node.id;
       }).length).toEqual($scope.children.length);
     }));
     it('generates valid, CSS select-able ids for nodes', inject(function () {
-      $scope.children.forEach($scope.listChildren());
+      $scope.listChildren();
       expect($scope.children.filter(function(node) {
         return (/[<@\.>]/).test(node.id);
       }).length).toBeFalsy();
@@ -79,7 +79,7 @@ describe('N-Org', function() {
 
   describe('node headers:', function () {
     beforeEach(function () {
-      $scope.children.forEach($scope.listChildren());
+      $scope.listChildren();
     });
 
     it('generates a list of headers to display for nodes', inject(function () {
@@ -101,12 +101,12 @@ describe('N-Org', function() {
 
   describe('editing:', function () {
     beforeEach(function () {
-      $scope.children.forEach($scope.listChildren());
+      $scope.listChildren();
     });
 
     it('nodes with previous siblings may be demoted', inject(function () {
       var node = $scope.children[1];
-      expect(node.classes.indexOf('demotable') ).toBeDefined();
+      expect(node.classes.indexOf('demotable') ).toBeGreaterThan(-1);
       $scope.demote(node);
       expect(node.classes.indexOf('demotable') ).toEqual(-1);
       expect($scope.children[0].children[0]).toBe(node);
@@ -121,8 +121,8 @@ describe('N-Org', function() {
     it('nodes with parents may be promoted', inject(function () {
       var parent = $scope.children[1];
       var node = parent.children[1];
-      parent.children.forEach($scope.listChildren(parent));
-      expect(node.classes.indexOf('promotable') ).toBeDefined();
+      $scope.listChildren(parent);
+      expect(node.classes.indexOf('promotable') ).toBeGreaterThan(-1);
       $scope.promote(node);
       expect(node.classes.indexOf('promotable') ).toEqual(-1);
       expect($scope.children[2]).toBe(node);

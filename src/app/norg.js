@@ -4,36 +4,47 @@ angular.module('nOrg', [
   .controller('NOrgCtrl', function NOrgCtrl ($scope, $http) {
     var reserved_headers = {"Subject": true, "Message-ID": true};
     $scope.listChildren = function (parent) {
-      // Generate a filter function closure with access to the parent
-      // reference
+      if (typeof parent == "undefined") {
+        children = $scope.children;
+      } else {
+        children = parent.children;
+      }
+
+      // Process nodes adding utility attributes deduced from the raw JSON
       var previous;
-      return function (node) {
-        // Process nodes as they are rendered adding utility
-        // attributes deduced from the raw JSON.
+      previous = undefined;
+      for (var idx in children) {
+        var child = children[idx];
+        child.classes = [];
 
         // Parent/Children processing
-        node.parent = parent;
-        node.children = node.children || [];
-        node.previous = previous;
-        node.classes = [];
-        if (typeof node.previous != "undefined") {
-          node.classes.push('demotable');
+        child.parent = parent;
+        child.children = child.children || [];
+
+        // Sibling processing
+        child.index = parseInt(idx, 10);
+        child.previous = previous;
+        if (typeof child.previous != "undefined") {
+          child.classes.push('demotable');
+        }
+        if (typeof child.parent != "undefined") {
+          child.classes.push('promotable');
         }
 
         // Generate a valid HTML ID and CSS selector from the message
         // ID using base64 encoding
-        node.id = window.btoa(node.headers["Message-ID"]).slice(0, -1);
+        child.id = window.btoa(child.headers["Message-ID"]).slice(0, -1);
 
         // A list of header names that the UI will care about
-        node.header_keys = [];
-        for (var key in node.headers) {
+        child.header_keys = [];
+        for (var key in child.headers) {
           if (!(key in reserved_headers)) {
-            node.header_keys.push(key);
+            child.header_keys.push(key);
           }}
 
-        previous = node;
-        return true;
-      };
+        previous = child;
+        }
+      return children;
     };
     $http.get('app/nodes.json').success(function (data) {
       // Load the initial nodes JSON
@@ -52,7 +63,8 @@ angular.module('nOrg', [
       } else {
         children = node.parent.children;
       }
-      children.splice(children.indexOf(node), 1);
+      children.splice(node.index, 1);
+      node.index = node.previous.index + 1;
 
       node.parent = node.previous;
       if (node.previous.children.length == 1) {
@@ -68,15 +80,16 @@ angular.module('nOrg', [
       if (typeof node.parent == "undefined") {
         throw new Error("Cannot promote nodes without parents!");
       }
-      previous = node.parent;
+      old_parent = node.parent;
       node.parent = node.parent.parent;
       if (typeof node.parent == "undefined") {
-        children = $scope.children;
+        siblings = $scope.children;
       } else {
-        children = node.parent.children;
+        siblings = node.parent.children;
       }
-      children.splice(children.indexOf(previous) + 1, 0, node);
-      previous.children.splice(previous.children.indexOf(node), 1);
+      siblings.splice(old_parent.index + 1, 0, node);
+      old_parent.children.splice(node.index, 1);
+      node.index = old_parent.index + 1;
 
       if (typeof node.parent == "undefined") {
         node.classes.splice(node.classes.indexOf("promotable"), 1);
