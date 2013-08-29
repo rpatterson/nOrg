@@ -19,6 +19,7 @@ angular.module('nOrg', [
 
         // Parent/Children processing
         child.parent = parent;
+        child.siblings = children;
         child.children = child.children || [];
 
         // Sibling processing
@@ -56,17 +57,13 @@ angular.module('nOrg', [
       if (typeof node.previous == "undefined") {
         throw new Error("Cannot promote first sibling!");
       }
-      node.previous.children.push(node);
 
-      if (typeof node.parent == "undefined") {
-        children = $scope.children;
-      } else {
-        children = node.parent.children;
-      }
-      children.splice(node.index, 1);
+      node.previous.children.push(node);
+      node.parent = node.previous;
+      node.siblings.splice(node.index, 1);
+      node.siblings = node.parent.children;
       node.index = 0;
 
-      node.parent = node.previous;
       if (node.previous.children.length == 1) {
         node.previous = undefined;
         node.demotable = false;
@@ -82,12 +79,7 @@ angular.module('nOrg', [
       }
       var old_parent = node.parent;
       node.parent = node.parent.parent;
-      if (typeof node.parent == "undefined") {
-        siblings = $scope.children;
-      } else {
-        siblings = node.parent.children;
-      }
-      siblings.splice(old_parent.index + 1, 0, node);
+      old_parent.siblings.splice(old_parent.index + 1, 0, node);
       old_parent.children.splice(node.index, 1);
       node.index = old_parent.index + 1;
 
