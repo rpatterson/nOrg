@@ -3,6 +3,14 @@
   <span class="btn-toolbar pull-left">
     <span class="btn-group">
       <button type="button"
+              class="btn btn-xs cursor-button
+                     {{node.cursor && 'btn-primary' || 'btn-default'}}"
+              title="Currently active node"
+              disabled="true">
+        <span class="glyphicon glyphicon-chevron-right">
+        </span>
+      </button>
+      <button type="button"
               class="btn btn-default btn-xs collapse-button"
               title="Expand/Collapse this node's children"
               ng-disabled="! node.children.length"

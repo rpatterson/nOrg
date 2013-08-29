@@ -4,10 +4,10 @@ dl.norg-headers {
     margin-bottom: initial;
 }
 
-#norg-edit .btn.disabled,
-#norg-edit .btn[disabled] {
-    opacity: 0.25;
-
 #norg-edit .collapse-button.collapsed .glyphicon-collapse-up:before {
     content: "\e159"
+}
+
+#norg-edit .cursor-button.btn-default .glyphicon {
+    color: transparent;
 }

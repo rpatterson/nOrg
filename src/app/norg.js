@@ -49,6 +49,8 @@ angular.module('nOrg', [
     };
     $http.get('app/nodes.json').success(function (data) {
       // Load the initial nodes JSON
+      $scope.cursor = data[0];
+      data[0].cursor = true;
       $scope.children = data;
     });
 

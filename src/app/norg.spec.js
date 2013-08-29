@@ -201,4 +201,19 @@ describe('N-Org', function() {
       }).toThrow(new Error("Cannot move last nodes down!"));
     }));
   });
+
+  describe('cursor:', function () {
+    beforeEach(function () {
+      $scope.listChildren();
+    });
+
+    it('cursor is initially at the first node', inject(function () {
+      var first = $scope.children[0];
+      var second = $scope.children[1];
+      expect($scope.cursor).toBe(first);
+      expect(first.cursor).toBeTruthy();
+      expect(second.cursor).toBeFalsy();
+    }));
+  });
+
 });
