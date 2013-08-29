@@ -15,7 +15,6 @@ angular.module('nOrg', [
       previous = undefined;
       for (var idx in children) {
         var child = children[idx];
-        child.classes = [];
 
         // Parent/Children processing
         child.parent = parent;
@@ -25,10 +24,10 @@ angular.module('nOrg', [
         child.index = parseInt(idx, 10);
         child.previous = previous;
         if (typeof child.previous != "undefined") {
-          child.classes.push('demotable');
+          child.demotable = true;
         }
         if (typeof child.parent != "undefined") {
-          child.classes.push('promotable');
+          child.promotable = true;
         }
 
         // Generate a valid HTML ID and CSS selector from the message
@@ -69,7 +68,7 @@ angular.module('nOrg', [
       node.parent = node.previous;
       if (node.previous.children.length == 1) {
         node.previous = undefined;
-        node.classes.splice(node.classes.indexOf("demotable"), 1);
+        node.demotable = false;
       } else {
         node.previous = node.parent.children[-2];
       }
@@ -92,7 +91,7 @@ angular.module('nOrg', [
       node.index = old_parent.index + 1;
 
       if (typeof node.parent == "undefined") {
-        node.classes.splice(node.classes.indexOf("promotable"), 1);
+        node.promotable = false;
       }
     };
   });

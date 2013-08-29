@@ -106,16 +106,16 @@ describe('N-Org', function() {
 
     it('nodes with previous siblings may be demoted', inject(function () {
       var node = $scope.children[1];
-      expect(node.classes.indexOf('demotable') ).toBeGreaterThan(-1);
+      expect(node.demotable).toBeTruthy();
       $scope.demote(node);
-      expect(node.classes.indexOf('demotable') ).toEqual(-1);
+      expect(node.demotable).toBeFalsy();
       expect($scope.children[0].children[0]).toBe(node);
       expect($scope.children[0]).toBe(node.parent);
       expect(node.index).toBe(0);
     }));
     it('first sibling nodes may not be demoted', inject(function () {
       var node = $scope.children[0];
-      expect(node.classes.indexOf('demotable') ).toEqual(-1);
+      expect(node.demotable).toBeFalsy();
       expect(function () { $scope.demote(node); })
         .toThrow(new Error("Cannot promote first sibling!"));
     }));
@@ -124,16 +124,16 @@ describe('N-Org', function() {
       var parent = $scope.children[1];
       var node = parent.children[1];
       $scope.listChildren(parent);
-      expect(node.classes.indexOf('promotable') ).toBeGreaterThan(-1);
+      expect(node.promotable).toBeTruthy();
       $scope.promote(node);
-      expect(node.classes.indexOf('promotable') ).toEqual(-1);
+      expect(node.promotable).toBeFalsy();
       expect($scope.children[2]).toBe(node);
       expect(node.parent).toBeUndefined();
       expect(node.index).toBe(2);
     }));
     it('nodes without parents may not be promoted', inject(function () {
       var node = $scope.children[1];
-      expect(node.classes.indexOf('promotable') ).toEqual(-1);
+      expect(node.promotable).toBeFalsy();
       expect(function () { $scope.promote(node); })
         .toThrow(new Error("Cannot promote nodes without parents!"));
     }));

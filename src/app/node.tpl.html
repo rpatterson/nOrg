@@ -4,13 +4,31 @@
   {{node.headers['Subject']}}
 </a>
 
-<button type="button"
-        class="btn btn-default btn-sm
-               headers-expand glyphicon glyphicon-th-list"
-        title="Expand/Collapse headers/fields"
-        ng-disabled="! node.header_keys.length"
-        data-toggle="collapse"
-        data-target="#Message-ID-{{node.id}}-headers"></button>
+<span class="btn-toolbar pull-right">
+  <span class="btn-group">
+    <button type="button"
+            class="btn btn-default btn-sm
+                   headers-expand glyphicon glyphicon-th-list"
+            title="Expand/Collapse headers/fields"
+            ng-disabled="! node.header_keys.length"
+            data-toggle="collapse"
+            data-target="#Message-ID-{{node.id}}-headers"></button>
+  </span>
+  <span class="btn-group">
+    <button type="button"
+            class="btn btn-default btn-sm
+                   promote glyphicon glyphicon-arrow-left"
+            title="Promote this node"
+            ng-disabled="! node.promotable"
+            ng-click="promote(node)"></button>
+    <button type="button"
+            class="btn btn-default btn-sm
+                   demote glyphicon glyphicon-arrow-right"
+            title="Demote this node"
+            ng-disabled="! node.demotable"
+            ng-click="demote(node)"></button>
+  </span>
+</span>
   
 <dl id="Message-ID-{{node.id}}-headers"
     class="norg-headers dl-horizontal collapse">
