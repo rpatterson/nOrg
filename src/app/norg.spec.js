@@ -108,9 +108,9 @@ describe('N-Org', function() {
       var node = $scope.children[1];
       expect(node.demotable).toBeTruthy();
       $scope.demote(node);
-      expect(node.demotable).toBeFalsy();
       expect($scope.children[0].children[0]).toBe(node);
       expect($scope.children[0]).toBe(node.parent);
+      expect(node.demotable).toBeFalsy();
       expect(node.index).toBe(0);
     }));
     it('first sibling nodes may not be demoted', inject(function () {
@@ -127,9 +127,9 @@ describe('N-Org', function() {
         $scope.children[1].children.length - 1];
       expect(node.demotable).toBeTruthy();
       $scope.demote(node);
-      expect(node.demotable).toBeFalsy();
       expect(parent.children.length).toEqual(1);
       expect(parent.children[0]).toBe(node);
+      expect(node.demotable).toBeFalsy();
       expect(node.index).toBe(0);
     }));
 
@@ -139,9 +139,9 @@ describe('N-Org', function() {
       $scope.listChildren(parent);
       expect(node.promotable).toBeTruthy();
       $scope.promote(node);
-      expect(node.promotable).toBeFalsy();
       expect($scope.children[2]).toBe(node);
       expect(node.parent).toBeUndefined();
+      expect(node.promotable).toBeFalsy();
       expect(node.index).toBe(2);
     }));
     it('nodes without parents may not be promoted', inject(function () {
