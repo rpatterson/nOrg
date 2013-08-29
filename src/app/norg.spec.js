@@ -119,6 +119,19 @@ describe('N-Org', function() {
       expect(function () { $scope.demote(node); })
         .toThrow(new Error("Cannot promote first sibling!"));
     }));
+    it('last child with siblings may be demoted', inject(function () {
+      $scope.listChildren($scope.children[1]);
+      var parent = $scope.children[1].children[
+        $scope.children[1].children.length - 2];
+      var node = $scope.children[1].children[
+        $scope.children[1].children.length - 1];
+      expect(node.demotable).toBeTruthy();
+      $scope.demote(node);
+      expect(node.demotable).toBeFalsy();
+      expect(parent.children.length).toEqual(1);
+      expect(parent.children[0]).toBe(node);
+      expect(node.index).toBe(0);
+    }));
 
     it('nodes with parents may be promoted', inject(function () {
       var parent = $scope.children[1];

@@ -42,8 +42,7 @@
   </div>
 </dl>
 
-<ol ng-if="node.children"
-    id="Message-ID-{{node.id}}-children"
+<ol id="Message-ID-{{node.id}}-children"
     class="norg-nodes list-group collapse in">
   <li ng-repeat="node in listChildren(node)"
       id="Message-ID:{{node.id}}" class="norg-node list-group-item"
