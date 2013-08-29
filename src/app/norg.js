@@ -15,7 +15,7 @@ angular.module( 'nOrg', [
       return true;
     };
     $http.get('app/nodes.json').success(function(data) {
-      $scope.projects = data;
+      $scope.children = data;
     });
   });
 
