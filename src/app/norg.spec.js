@@ -78,20 +78,21 @@ describe( 'N-Org', function() {
   });
 
   describe( 'node headers:', function() {
-    it( 'generates a list of headers to display for nodes', inject( function() {
+    beforeEach(function () {
       $scope.children.forEach($scope.listChildren());
+    });
+
+    it( 'generates a list of headers to display for nodes', inject( function() {
       expect( $scope.children.filter(function(node) {
         return typeof node.header_keys != "undefined";
       }).length).toEqual($scope.children.length);
     }));
     it( 'nodes may have visible headers', inject( function() {
-      $scope.children.forEach($scope.listChildren());
       expect( $scope.children.filter(function(node) {
         return node.header_keys.length;
       }).length).toBeTruthy();
     }));
     it( 'nodes may not have visible headers', inject( function() {
-      $scope.children.forEach($scope.listChildren());
       expect( $scope.children.filter(function(node) {
         return ! node.header_keys.length;
       }).length).toBeTruthy();
@@ -99,8 +100,11 @@ describe( 'N-Org', function() {
   });
 
   describe( 'editing:', function() {
-    it( 'nodes with previous siblings may be demoted', inject( function() {
+    beforeEach(function () {
       $scope.children.forEach($scope.listChildren());
+    });
+
+    it( 'nodes with previous siblings may be demoted', inject( function() {
       var node = $scope.children[1];
       expect( node.classes.indexOf('demotable') ).toBeDefined();
       $scope.demote(node);
@@ -108,7 +112,6 @@ describe( 'N-Org', function() {
       expect( $scope.children[0].children[0] ).toBe( node );
     }));
     it( 'first sibling nodes may not be demoted', inject( function() {
-      $scope.children.forEach($scope.listChildren());
       var node = $scope.children[0];
       expect( node.classes.indexOf('demotable') ).toEqual(-1);
       expect(function () { $scope.demote(node); })
