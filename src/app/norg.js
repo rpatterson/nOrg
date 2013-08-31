@@ -54,7 +54,8 @@ angular.module('nOrg', ['ui.bootstrap'
         }}
     };
     $scope.keymapAliases = {
-      74: 40, 75: 38            // j/k -> down/up
+      74: 40, 75: 38,  // j/k -> down/up
+      87: 38, 83: 40, 65: 37, 68: 39  // w/s/a/d -> up/down/left/right
     };
     for (var from in $scope.keymapAliases) {
       $scope.keymap[from] = $scope.keymap[$scope.keymapAliases[from]];
