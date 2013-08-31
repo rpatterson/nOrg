@@ -84,17 +84,22 @@
       </span>
     </span>
   </h5>
-  
-  <dl id="Message-ID-{{id}}-headers" class="norg-headers dl-horizontal"
-      collapse="headersCollapsed">
-    <div ng-repeat="key in header_keys">
-      <dt contentEditable="true">{{key}}:</dt>
-      <dd class="norg-headers--{{key}}"
-          contentEditable="true">
-        {{node.headers[key]}}
-      </dd>
-    </div>
-  </dl>
+
+  <div id="Message-ID-{{id}}-headers"
+       class="norg-headers"
+       collapse="headersCollapsed">
+    <table class="table table-condensed table-bordered table-striped"
+           title="Node header, AKA field or property, name and value pairs">
+      <caption>Node header, AKA field or property, name and value pairs</caption>
+      <tr ng-repeat="key in header_keys">
+        <th contentEditable="true">{{key}}:</th>
+        <td class="norg-headers--{{key}}"
+            contentEditable="true">
+          {{node.headers[key]}}
+        </td>
+      </tr>
+    </table>
+  </div>
 
   <ol id="Message-ID-{{id}}-children" class="norg-nodes"
       collapse="collapsed">

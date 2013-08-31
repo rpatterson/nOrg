@@ -1,13 +1,20 @@
 /* norg css stylesheet */
-.list-group.norg-nodes,
-dl.norg-headers {
-    margin-bottom: initial;
+.norg-nodes {
+    list-style: none;
 }
 
 #norg-edit .btn.disabled,
 #norg-edit .btn[disabled] {
     opacity: 0.25;
 }
+
+.norg-headers .table {
+    width: initial;
+}
+.norg-headers caption {
+    display: none;
+}
+
 
 #norg-edit .btn-toolbar {
     margin: 0em;
