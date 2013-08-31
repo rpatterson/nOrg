@@ -18,7 +18,8 @@
                 ng-disabled="! node.children.length"
                 ng-click="collapsed = !collapsed">
           <span
-             class="icon-chevron-{{collapsed && 'down' || 'up'}}
+             class="icon-chevron-{{(node.children.length && collapsed)
+                                    && 'down' || 'up'}}
                     {{! node.children.length && 'muted' || ''}}">
           </span>
         </button>
