@@ -52,6 +52,14 @@ angular.module('nOrg', ['ui.bootstrap'
           $log.debug("Cannot move cursor above the top.");
         } else {
         $scope.setCursor($scope.cursor.parent);
+        }},
+
+      72: function () {          // h for collapse/expand headers
+        if (! $scope.cursor.header_keys.length) {
+          $log.debug(
+            "Cannot expand/collapse headers for nodes without headers.");
+        } else {
+          $scope.cursor.headersCollapsed = ! $scope.cursor.headersCollapsed;
         }}
     };
     $scope.keymapAliases = {
