@@ -1,234 +1,217 @@
 describe('N-Org', function() {
-  var $scope, NOrgCtrl, $httpBackend;
+  var $scope;
+  var NOrgNodeCtrl;
+  var json;
 
   beforeEach(module('nOrg'));
 
-  beforeEach(inject(function(_$httpBackend_, $rootScope, $controller) {
-    $httpBackend = _$httpBackend_;
-    $httpBackend.expectGET('app/nodes.json').respond([
-      {"path": "/foo.nod",
-       "headers": {"Subject": "Foo Project",
-                   "Message-ID": "<1@foo.com>"}},
-      {"path": "/bar/.nod",
-       "headers": {"Subject": "Bar Project",
-                   "Message-ID": "<2@foo.com>",
-                   "Bar-Property": "Bar Property"},
-       "children": [
-         {"path": "/bar/corge.nod",
-          "headers": {"Subject": "Corge Node",
-                      "Message-ID": "<3@foo.com>",
-                      "Corge-Property": "Corge Property"}},
-         {"path": "/bar/grault.nod",
-          "headers": {"Subject": "Grault Node",
-                      "Message-ID": "<4@foo.com>"}},
-         {"path": "/bar/garply.nod",
-          "headers": {"Subject": "Garply Node",
-                      "Message-ID": "<5@foo.com>"}}]},
-      {"path": "/qux/.nod/.nod",
-       "headers": {"Subject": "Qux Project",
-                   "Message-ID": "<6@foo.com>"}}
-    ]);
-
+  beforeEach(inject(function($rootScope, $controller) {
+    json = {
+      "children": [
+        {"path": "/foo.nod",
+         "headers": {"Subject": "Foo Project",
+                     "Message-ID": "<1@foo.com>"}},
+        {"path": "/bar/.nod",
+         "headers": {"Subject": "Bar Project",
+                     "Message-ID": "<2@foo.com>",
+                     "Bar-Property": "Bar Property"},
+         "children": [
+           {"path": "/bar/corge.nod",
+            "headers": {"Subject": "Corge Node",
+                        "Message-ID": "<3@foo.com>",
+                        "Corge-Property": "Corge Property"}},
+           {"path": "/bar/grault.nod",
+            "headers": {"Subject": "Grault Node",
+                        "Message-ID": "<4@foo.com>"}},
+           {"path": "/bar/garply.nod",
+            "headers": {"Subject": "Garply Node",
+                        "Message-ID": "<5@foo.com>"}}]},
+        {"path": "/qux/.nod/.nod",
+         "headers": {"Subject": "Qux Project",
+                     "Message-ID": "<6@foo.com>"}}
+      ]};
     $scope = $rootScope.$new();
-    NOrgCtrl = $controller("NOrgCtrl", {$scope: $scope});
-    $scope.$digest();
-    $httpBackend.flush();
+    $scope.node = json;
+    $controller("NOrgCtrl", {$scope: $scope});
+    $scope = $scope.$new().$new().$new();
+    $scope.$index = 1;
+    $scope.node = $scope.$parent.$parent.$parent.node.children[$scope.$index];
+    NOrgNodeCtrl = $controller("NOrgNodeCtrl", {$scope: $scope});
   }));
 
   it('should exist', inject(function () {
-    expect(NOrgCtrl).toBeTruthy();
+    expect(NOrgNodeCtrl).toBeTruthy();
   }));
 
   it('should provide N-Org nodes', inject(function () {
-    expect($scope.children.length).toBeTruthy();
+    expect($scope.node.children.length).toBeTruthy();
   }));
 
   describe('node children:', function () {
     it('nodes may have children ', inject(function () {
-      expect($scope.children.filter(function(node) {
-        return node.children;
-      }).length).toBeTruthy();
+      expect($scope.node.children.length).toBeTruthy();
     }));
     it('nodes may not have children ', inject(function () {
-      expect($scope.children.filter(function(node) {
+      expect($scope.node.children.filter(function(node) {
         return ! node.children;
       }).length).toBeTruthy();
     }));
     it('child nodes have a reference to their parent', inject(function () {
-      var parent = $scope.children[1];
-      var child = parent.children[1];
-      $scope.listChildren(parent);
-      expect(child.parent).toBe(parent);
+      expect($scope.parent).toBe($scope.$parent.$parent.$parent);
     }));
   });
 
   describe('node ids:', function () {
     it('generates an element id for nodes', inject(function () {
-      $scope.listChildren();
-      expect($scope.children.filter(function(node) {
-        return node.id;
-      }).length).toEqual($scope.children.length);
+      expect($scope.id).toBeTruthy();
     }));
     it('generates valid, CSS select-able ids for nodes', inject(function () {
-      $scope.listChildren();
-      expect($scope.children.filter(function(node) {
-        return (/[<@\.>]/).test(node.id);
-      }).length).toBeFalsy();
+      expect((/[<@\.>]/).test($scope.id)).toBeFalsy();
     }));
   });
 
   describe('node headers:', function () {
     beforeEach(function () {
-      $scope.listChildren();
     });
 
     it('generates a list of headers to display for nodes', inject(function () {
-      expect($scope.children.filter(function(node) {
-        return typeof node.header_keys != "undefined";
-      }).length).toEqual($scope.children.length);
-    }));
-    it('nodes may have visible headers', inject(function () {
-      expect($scope.children.filter(function(node) {
-        return node.header_keys.length;
-      }).length).toBeTruthy();
-    }));
-    it('nodes may not have visible headers', inject(function () {
-      expect($scope.children.filter(function(node) {
-        return ! node.header_keys.length;
-      }).length).toBeTruthy();
+      expect($scope.header_keys.length).toBeTruthy();
     }));
   });
 
   describe('editing:', function () {
-    beforeEach(function () {
-      $scope.listChildren();
-    });
-
-    it('nodes with previous siblings may be demoted', inject(function () {
-      var node = $scope.children[1];
-      expect(node.demotable).toBeTruthy();
-      $scope.demote(node);
-      expect($scope.children[0].children[0]).toBe(node);
-      expect($scope.children[0]).toBe(node.parent);
-      expect(node.demotable).toBeFalsy();
-      expect(node.index).toBe(0);
+    it('nodes with previous siblings may be demoted', inject(function
+    () {
+      var new_parent = $scope.siblings[$scope.$index - 1];
+      new_parent.children = [];
+      expect($scope.demotable).toBeTruthy();
+      $scope.demote();
+      expect(new_parent.children[0]).toBe($scope.node);
     }));
     it('first sibling nodes may not be demoted', inject(function () {
-      var node = $scope.children[0];
-      expect(node.demotable).toBeFalsy();
+      inject(function($rootScope, $controller) {
+        // Switch to a scope with no previous siblings
+        $scope = $scope.parent.$new().$new().$new();
+        $scope.$index = 0;
+        $scope.node = $scope.$parent.$parent.$parent.node.children[
+          $scope.$index];
+        NOrgNodeCtrl = $controller("NOrgNodeCtrl", {$scope: $scope});
+      });
+      expect($scope.demotable).toBeFalsy();
       expect(function () {
-        $scope.demote(node);
+        $scope.demote();
       }).toThrow(new Error("Cannot promote first sibling!"));
-    }));
-    it('last child with siblings may be demoted', inject(function () {
-      $scope.listChildren($scope.children[1]);
-      var parent = $scope.children[1].children[
-        $scope.children[1].children.length - 2];
-      var node = $scope.children[1].children[
-        $scope.children[1].children.length - 1];
-      expect(node.demotable).toBeTruthy();
-      $scope.demote(node);
-      expect(parent.children.length).toEqual(1);
-      expect(parent.children[0]).toBe(node);
-      expect(node.demotable).toBeFalsy();
-      expect(node.index).toBe(0);
     }));
 
     it('nodes with parents may be promoted', inject(function () {
-      var parent = $scope.children[1];
-      var node = parent.children[1];
-      $scope.listChildren(parent);
-      expect(node.promotable).toBeTruthy();
-      $scope.promote(node);
-      expect($scope.children[2]).toBe(node);
-      expect(node.parent).toBeUndefined();
-      expect(node.promotable).toBeFalsy();
-      expect(node.index).toBe(2);
+      inject(function($rootScope, $controller) {
+        // Add a child scope beneath the previous
+        $scope = $scope.$new().$new().$new();
+        $scope.$index = 1;
+        $scope.node = $scope.$parent.$parent.$parent.node.children[
+          $scope.$index];
+        NOrgNodeCtrl = $controller("NOrgNodeCtrl", {$scope: $scope});
+      });
+      expect($scope.promotable).toBeTruthy();
+      $scope.promote();
+      expect($scope.parent.parent.node.children[2]).toBe($scope.node);
     }));
     it('nodes without parents may not be promoted', inject(function () {
-      var node = $scope.children[1];
-      expect(node.promotable).toBeFalsy();
+      expect($scope.promotable).toBeFalsy();
       expect(function () {
-        $scope.promote(node);
+        $scope.promote();
       }).toThrow(new Error("Cannot promote nodes without parents!"));
     }));
 
     it('nodes with previous siblings may be moved up', inject(function () {
-      var parent = $scope.children[1];
-      var node = parent.children[1];
-      var next = parent.children[0];
-      $scope.listChildren(parent);
-      expect(node.movableUp).toBeTruthy();
-      $scope.moveUp(node);
-      expect(parent.children[0]).toBe(node);
-      expect(parent.children[1]).toBe(next);
-      expect(parent.children.length).toEqual(3);
-      expect(node.movableUp).toBeFalsy();
-      expect(node.index).toBe(0);
-      expect(next.index).toBe(1);
+      var new_next = $scope.siblings[0];
+      expect($scope.movableUp).toBeTruthy();
+      $scope.moveUp();
+      expect($scope.siblings[0]).toBe($scope.node);
+      expect($scope.siblings[1]).toBe(new_next);
+      expect($scope.siblings.length).toEqual(3);
     }));
     it('first nodes may not be moved up', inject(function () {
-      var parent = $scope.children[1];
-      var node = parent.children[0];
-      $scope.listChildren(parent);
-      expect(node.movableUp).toBeFalsy();
+      inject(function($rootScope, $controller) {
+        // Switch to a scope with no previous siblings
+        $scope = $scope.parent.$new().$new().$new();
+        $scope.$index = 0;
+        $scope.node = $scope.$parent.$parent.$parent.node.children[
+          $scope.$index];
+        NOrgNodeCtrl = $controller("NOrgNodeCtrl", {$scope: $scope});
+      });
+      expect($scope.node.movableUp).toBeFalsy();
       expect(function () {
-        $scope.moveUp(node);
+        $scope.moveUp();
       }).toThrow(new Error("Cannot move first nodes up!"));
     }));
 
     it('nodes with next siblings may be moved down', inject(function () {
-      var parent = $scope.children[1];
-      var node = parent.children[1];
-      var previous = parent.children[2];
-      $scope.listChildren(parent);
-      expect(node.movableDown).toBeTruthy();
-      $scope.moveDown(node);
-      expect(parent.children[2]).toBe(node);
-      expect(parent.children[1]).toBe(previous);
-      expect(parent.children.length).toEqual(3);
-      expect(node.movableDown).toBeFalsy();
-      expect(node.index).toBe(2);
-      expect(previous.index).toBe(1);
+      var new_previous = $scope.siblings[2];
+      expect($scope.movableDown).toBeTruthy();
+      $scope.moveDown();
+      expect($scope.siblings[2]).toBe($scope.node);
+      expect($scope.siblings[1]).toBe(new_previous);
+      expect($scope.siblings.length).toEqual(3);
     }));
     it('last nodes may not be moved down', inject(function () {
-      var parent = $scope.children[1];
-      var node = parent.children[2];
-      $scope.listChildren(parent);
-      expect(node.movableDown).toBeFalsy();
+      inject(function($rootScope, $controller) {
+        // Switch to a scope with no next siblings
+        $scope = $scope.parent.$new().$new().$new();
+        $scope.$index = 2;
+        $scope.node = $scope.$parent.$parent.$parent.node.children[
+          $scope.$index];
+        NOrgNodeCtrl = $controller("NOrgNodeCtrl", {$scope: $scope});
+      });
+      expect($scope.movableDown).toBeFalsy();
       expect(function () {
-        $scope.moveDown(node);
+        $scope.moveDown();
       }).toThrow(new Error("Cannot move last nodes down!"));
     }));
   });
 
   describe('cursor:', function () {
     beforeEach(function () {
-      $scope.listChildren();
+      inject(function($rootScope, $controller) {
+        // Switch to the first node
+        $rootScope.cursor = undefined;
+        $scope = $scope.parent.$new().$new().$new();
+        $scope.$index = 0;
+        $scope.node = $scope.$parent.$parent.$parent.node.children[
+          $scope.$index];
+        NOrgNodeCtrl = $controller("NOrgNodeCtrl", {$scope: $scope});
+      });
     });
 
     it('cursor is initially at the first node', inject(function () {
-      var first = $scope.children[0];
-      var second = $scope.children[1];
-      expect($scope.cursor).toBe(first);
-      expect(first.cursor).toBeTruthy();
-      expect(second.cursor).toBeFalsy();
+      expect($scope.cursor).toBe($scope);
+      expect($scope.isCursor()).toBeTruthy();
+
+      inject(function($rootScope, $controller) {
+        // Switch to the next node
+        $scope = $scope.parent.$new().$new().$new();
+        $scope.$index = 1;
+        $scope.node = $scope.$parent.$parent.$parent.node.children[
+          $scope.$index];
+        NOrgNodeCtrl = $controller("NOrgNodeCtrl", {$scope: $scope});
+      });
+      expect($scope.cursor).not.toBe($scope);
+      expect($scope.isCursor()).toBeFalsy();
     }));
     it('cursor may be changed to any other node', inject(function () {
-      var first = $scope.children[0];
-      var cursor = $scope.children[1].children[1];
-      $scope.setCursor(cursor);
-      expect($scope.cursor).toBe(cursor);
-      expect(cursor.cursor).toBeTruthy();
-      expect(first.cursor).toBeFalsy();
-    }));
-    it('up and down arrow keys move the cursor', inject(function () {
-      var first = $scope.children[0];
-      var cursor = $scope.children[1];
-      $scope.setCursor(cursor);
-      expect($scope.cursor).toBe(cursor);
-      expect(cursor.cursor).toBeTruthy();
-      expect(first.cursor).toBeFalsy();
+      var old_cursor = $scope.cursor;
+      inject(function($rootScope, $controller) {
+        // Switch to the next node
+        $scope = $scope.parent.$new().$new().$new();
+        $scope.$index = 1;
+        $scope.node = $scope.$parent.$parent.$parent.node.children[
+          $scope.$index];
+        NOrgNodeCtrl = $controller("NOrgNodeCtrl", {$scope: $scope});
+      });
+      $scope.setCursor($scope);
+      expect($scope.cursor).toBe($scope);
+      expect($scope.isCursor()).toBeTruthy();
+      expect(old_cursor.isCursor()).toBeFalsy();
     }));
   });
 

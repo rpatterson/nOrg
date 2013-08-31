@@ -1,12 +1,13 @@
-<li id="Message-ID:{{node.id}}"
+<li ng:controller="NOrgNodeCtrl"
+    id="Message-ID-{{id}}"
     class="norg-node list-group-item">
   <span class="btn-toolbar pull-left">
     <span class="btn-group">
       <button type="button"
               class="btn btn-xs cursor-button
-                     {{node.cursor && 'btn-primary' || 'btn-default'}}"
+                     {{isCursor() && 'btn-primary' || 'btn-default'}}"
               title="Node cursor"
-              ng-click="setCursor(node)">
+              ng-click="setCursor()">
         <span class="glyphicon glyphicon-chevron-right">
         </span>
       </button>
@@ -18,14 +19,14 @@
               data-target="#Message-ID-{{node.id}}-children">
         <span
            class="glyphicon
-                  glyphicon-collapse-{{node.collapsed && 'down' || 'up'}}
+                  glyphicon-collapse-{{collapsed && 'down' || 'up'}}
                   {{! node.children.length && ' text-muted'}}">
         </span>
       </button>
       <button type="button"
               class="btn btn-default btn-xs select-button"
               title="Select/deselect node">
-          <input type="checkbox" name="Message-ID-{{node.id}}" />
+          <input type="checkbox" name="Message-ID-{{id}}" />
       </button>
     </span>
     <span class="btn-group">
@@ -41,52 +42,52 @@
       <button type="button"
               class="btn btn-default btn-xs headers-expand"
               title="Expand/Collapse headers/fields"
-              ng-disabled="! node.header_keys.length"
+              ng-disabled="! header_keys.length"
               data-toggle="collapse"
-              data-target="#Message-ID-{{node.id}}-headers">
+              data-target="#Message-ID-{{id}}-headers">
         <span class="glyphicon glyphicon-th-list{{
-                     ! node.header_keys.length && ' text-muted' || ''}}"></span>
+                     {{! header_keys.length && 'text-muted' || ''}}"></span>
       </button>
     </span>
     <span class="btn-group">
       <button type="button"
               class="btn btn-default btn-xs promote"
               title="Promote this node"
-              ng-disabled="! node.promotable"
+              ng-disabled="! promotable"
               ng-click="promote(node)">
          <span class="glyphicon glyphicon-arrow-left{{
-                     ! node.promotable && ' text-muted' || ''}}"></span>
+                     ! promotable && ' text-muted' || ''}}"></span>
       </button>
       <button type="button"
               class="btn btn-default btn-xs demote"
               title="Demote this node"
-              ng-disabled="! node.demotable"
+              ng-disabled="! demotable"
               ng-click="demote(node)">
          <span class="glyphicon glyphicon-arrow-right{{
-                     ! node.demotable && ' text-muted' || ''}}"></span>
+                     ! demotable && ' muted' || ''}}"></span>
       </button>
       <button type="button"
               class="btn btn-default btn-xs promote"
               title="Promote this node"
-              ng-disabled="! node.movableUp"
+              ng-disabled="! movableUp"
               ng-click="moveUp(node)">
          <span class="glyphicon glyphicon-arrow-up{{
-                      ! node.movableUp && ' text-muted' || ''}}"></span>
+                      ! movableUp && ' text-muted' || ''}}"></span>
       </button>
       <button type="button"
               class="btn btn-default btn-xs demote"
               title="Demote this node"
-              ng-disabled="! node.movableDown"
+              ng-disabled="! movableDown"
               ng-click="moveDown(node)">
          <span class="glyphicon glyphicon-arrow-down{{
-                      ! node.movableDown && ' text-muted' || ''}}"></span>
+                      ! movableDown && ' text-muted' || ''}}"></span>
       </button>
     </span>
   </span>
   
-  <dl id="Message-ID-{{node.id}}-headers"
+  <dl id="Message-ID-{{id}}-headers"
       class="norg-headers dl-horizontal collapse">
-    <div ng-repeat="key in node.header_keys">
+    <div ng-repeat="key in header_keys">
       <dt contentEditable="true">{{key}}:</dt>
       <dd ng-model="node.headers[key]"
           class="norg-headers--{{key}}"
@@ -96,9 +97,9 @@
     </div>
   </dl>
 
-  <ol id="Message-ID-{{node.id}}-children"
+  <ol id="Message-ID-{{id}}-children"
       class="norg-nodes list-group collapse in">
-    <span ng:repeat="node in listChildren(node)"
+    <span ng:repeat="node in node.children"
           ng:include="'app/node.tpl.html'">
       <li>{{node.headers['Subject']}}</li>
     </span>

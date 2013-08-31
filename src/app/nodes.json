@@ -1,4 +1,4 @@
-[
+{"children": [
   {"path": "/foo.nod",
    "headers": {"Subject": "Foo Project",
                "Message-ID": "<1@foo.com>"}
@@ -23,4 +23,4 @@
    "headers": {"Subject": "Qux Project",
                "Message-ID": "<6@foo.com>"}
   }
-]
+]}

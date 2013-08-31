@@ -12,7 +12,7 @@
       tabindex="0"
       ng-controller="NOrgCtrl"
       ng-keydown="handleKeydown($event)">
-    <span ng:repeat="node in listChildren()"
+    <span ng:repeat="node in node.children"
           ng:include="'app/node.tpl.html'">
       <li>{{node.headers['Subject']}}</li>
     </span>
