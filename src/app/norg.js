@@ -14,6 +14,13 @@ angular.module('nOrg', ['ui.bootstrap'
 
 
     $scope.keymap = {
+      9: function () {          // tab
+        if (! $scope.node.children.length) {
+          $log.debug("Cannot expand/collapse nodes without children.");
+        } else {
+          $scope.cursor.collapsed = ! $scope.cursor.collapsed;
+        }},
+
       38: function () {         // up arrow
         if (typeof $scope.cursor.siblings[
           $scope.cursor.$index - 1] == "undefined") {
@@ -34,6 +41,9 @@ angular.module('nOrg', ['ui.bootstrap'
         if (typeof $scope.cursor.node.children[0] == "undefined") {
           $log.debug("Cannot move cursor down into a node without children.");
         } else {
+          if ($scope.cursor.collapsed) {
+            $scope.cursor.collapsed = false;
+          }
         $scope.setCursor($scope.cursor.node.children[0].scope);
         }},
       37: function () {         // left arrow
@@ -52,7 +62,8 @@ angular.module('nOrg', ['ui.bootstrap'
     $scope.handleKeydown = function ($event) {
       var handler = $scope.keymap[$event.keyCode];
       if (typeof handler != "undefined") {
-        handler();
+        handler($event);
+        $event.preventDefault();
       }
     };
   })
