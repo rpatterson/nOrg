@@ -14,11 +14,12 @@ angular.module('nOrg', ['ui.bootstrap'
 
 
     $scope.keymap = {
-      9: function () {          // tab
-        if (! $scope.node.children.length) {
+      9: function ($event) {          // tab
+        if (! $scope.cursor.node.children.length) {
           $log.debug("Cannot expand/collapse nodes without children.");
         } else {
           $scope.cursor.collapsed = ! $scope.cursor.collapsed;
+          $event.preventDefault();
         }},
 
       38: function () {         // up arrow
@@ -64,7 +65,6 @@ angular.module('nOrg', ['ui.bootstrap'
       var handler = $scope.keymap[$event.keyCode];
       if (typeof handler != "undefined") {
         handler($event);
-        $event.preventDefault();
       }
     };
   })
