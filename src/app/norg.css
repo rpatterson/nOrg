@@ -10,11 +10,6 @@
     margin: 0em;
 }
 
-#norg-edit .btn.disabled,
-#norg-edit .btn[disabled] {
-    opacity: 0.25;
-}
-
 .norg-headers .table {
     width: initial;
     margin: 0em;
@@ -23,7 +18,10 @@
     display: none;
 }
 
-
+#norg-edit .btn.disabled,
+#norg-edit .btn[disabled] {
+    opacity: 0.25;
+}
 #norg-edit .btn-toolbar {
-    margin: 0em;
+    margin: 0em;  /* Fix sibling <li> recursive indenting */
 }
