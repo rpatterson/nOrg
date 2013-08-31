@@ -33,7 +33,8 @@
     </span>
 
     <span class="norg-node-details">
-      <h5 class="norg-node-subject" contentEditable="true">
+      <h5 class="norg-node-subject" contentEditable="true"
+          ng:keydown="$event.stopPropagation()">
         {{node.headers['Subject']}}
       </h5>
 
@@ -44,9 +45,10 @@
                title="Node header, AKA field or property, name and value pairs">
           <caption>Node header, AKA field or property, name and value pairs</caption>
           <tr ng-repeat="key in header_keys">
-            <th contentEditable="true">{{key}}:</th>
+            <th contentEditable="true"
+                ng:keydown="$event.stopPropagation()">{{key}}:</th>
             <td class="norg-headers--{{key}}"
-                contentEditable="true">
+                contentEditable="true" ng:keydown="$event.stopPropagation()">
               {{node.headers[key]}}
             </td>
           </tr>
