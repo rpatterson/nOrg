@@ -1,87 +1,89 @@
 <li ng:controller="NOrgNodeCtrl"
     id="Message-ID-{{id}}"
     class="norg-node">
-  <span class="btn-toolbar pull-left">
-    <span class="btn-group">
-      <button type="button"
-              class="btn btn-mini cursor-button
-                     {{isCursor() && 'btn-primary' || 'btn-default'}}"
-              title="Node cursor"
-              ng-click="setCursor()">
-        <span class="icon-th">
-        </span>
-      </button>
-      <button type="button"
-              class="btn btn-default btn-mini collapse-button"
-              title="Expand/Collapse this node's children"
-              ng-disabled="! node.children.length"
-              ng-click="collapsed = !collapsed">
-        <span
-           class="icon-chevron-{{collapsed && 'down' || 'up'}}
-                  {{! node.children.length && 'muted' || ''}}">
-        </span>
-      </button>
-      <button type="button"
-              class="btn btn-default btn-mini select-button"
-              title="Select/deselect node">
+  <h5>
+    <span class="btn-toolbar pull-left">
+      <span class="btn-group">
+        <button type="button"
+                class="btn btn-mini cursor-button
+                       {{isCursor() && 'btn-primary' || 'btn-default'}}"
+                title="Node cursor"
+                ng-click="setCursor()">
+          <span class="icon-th">
+          </span>
+        </button>
+        <button type="button"
+                class="btn btn-default btn-mini collapse-button"
+                title="Expand/Collapse this node's children"
+                ng-disabled="! node.children.length"
+                ng-click="collapsed = !collapsed">
+          <span
+             class="icon-chevron-{{collapsed && 'down' || 'up'}}
+                    {{! node.children.length && 'muted' || ''}}">
+          </span>
+        </button>
+        <button type="button"
+                class="btn btn-default btn-mini select-button"
+                title="Select/deselect node">
           <input type="checkbox" name="Message-ID-{{id}}" />
-      </button>
+        </button>
+      </span>
+      <span class="btn-group">
+      </span>
     </span>
-    <span class="btn-group">
-    </span>
-  </span>
 
-  <span class="norg-subject" contentEditable="true">
-    {{node.headers['Subject']}}
-  </span>
+    <span class="norg-subject" contentEditable="true">
+      {{node.headers['Subject']}}
+    </span>
 
-  <span class="btn-toolbar pull-right">
-    <span class="btn-group">
-      <button type="button"
-              class="btn btn-default btn-mini headers-expand"
-              title="Expand/Collapse headers/fields"
-              ng-disabled="! header_keys.length"
-              ng-click="headersCollapsed = !headersCollapsed">
-        <span class="icon-th-list
-                     {{! header_keys.length && 'text-muted' || ''}}">
-        </span>
-      </button>
+    <span class="btn-toolbar pull-right">
+      <span class="btn-group">
+        <button type="button"
+                class="btn btn-default btn-mini headers-expand"
+                title="Expand/Collapse headers/fields"
+                ng-disabled="! header_keys.length"
+                ng-click="headersCollapsed = !headersCollapsed">
+          <span class="icon-th-list
+                       {{! header_keys.length && 'text-muted' || ''}}">
+          </span>
+        </button>
+      </span>
+      <span class="btn-group">
+        <button type="button"
+                class="btn btn-default btn-mini promote"
+                title="Promote this node"
+                ng-disabled="! promotable"
+                ng-click="promote(node)">
+          <span class="icon-arrow-left{{
+                       ! promotable && ' muted' || ''}}"></span>
+        </button>
+        <button type="button"
+                class="btn btn-default btn-mini demote"
+                title="Demote this node"
+                ng-disabled="! demotable"
+                ng-click="demote(node)">
+          <span class="icon-arrow-right{{
+                       ! demotable && ' muted' || ''}}"></span>
+        </button>
+        <button type="button"
+                class="btn btn-default btn-mini promote"
+                title="Promote this node"
+                ng-disabled="! movableUp"
+                ng-click="moveUp(node)">
+          <span class="icon-arrow-up{{
+                       ! movableUp && ' muted' || ''}}"></span>
+        </button>
+        <button type="button"
+                class="btn btn-default btn-mini demote"
+                title="Demote this node"
+                ng-disabled="! movableDown"
+                ng-click="moveDown(node)">
+          <span class="icon-arrow-down{{
+                       ! movableDown && ' muted' || ''}}"></span>
+        </button>
+      </span>
     </span>
-    <span class="btn-group">
-      <button type="button"
-              class="btn btn-default btn-mini promote"
-              title="Promote this node"
-              ng-disabled="! promotable"
-              ng-click="promote(node)">
-         <span class="icon-arrow-left{{
-                     ! promotable && ' muted' || ''}}"></span>
-      </button>
-      <button type="button"
-              class="btn btn-default btn-mini demote"
-              title="Demote this node"
-              ng-disabled="! demotable"
-              ng-click="demote(node)">
-         <span class="icon-arrow-right{{
-                     ! demotable && ' muted' || ''}}"></span>
-      </button>
-      <button type="button"
-              class="btn btn-default btn-mini promote"
-              title="Promote this node"
-              ng-disabled="! movableUp"
-              ng-click="moveUp(node)">
-         <span class="icon-arrow-up{{
-                      ! movableUp && ' muted' || ''}}"></span>
-      </button>
-      <button type="button"
-              class="btn btn-default btn-mini demote"
-              title="Demote this node"
-              ng-disabled="! movableDown"
-              ng-click="moveDown(node)">
-         <span class="icon-arrow-down{{
-                      ! movableDown && ' muted' || ''}}"></span>
-      </button>
-    </span>
-  </span>
+  </h5>
   
   <dl id="Message-ID-{{id}}-headers" class="norg-headers dl-horizontal"
       collapse="headersCollapsed">
