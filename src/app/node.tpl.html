@@ -1,30 +1,28 @@
 <li ng:controller="NOrgNodeCtrl"
     id="Message-ID-{{id}}"
-    class="norg-node list-group-item">
+    class="norg-node">
   <span class="btn-toolbar pull-left">
     <span class="btn-group">
       <button type="button"
-              class="btn btn-xs cursor-button
+              class="btn btn-mini cursor-button
                      {{isCursor() && 'btn-primary' || 'btn-default'}}"
               title="Node cursor"
               ng-click="setCursor()">
-        <span class="glyphicon glyphicon-chevron-right">
+        <span class="icon-chevron-right">
         </span>
       </button>
       <button type="button"
-              class="btn btn-default btn-xs collapse-button"
+              class="btn btn-default btn-mini collapse-button"
               title="Expand/Collapse this node's children"
               ng-disabled="! node.children.length"
-              data-toggle="collapse"
-              data-target="#Message-ID-{{node.id}}-children">
+              ng-click="collapsed = !collapsed">
         <span
-           class="glyphicon
-                  glyphicon-collapse-{{collapsed && 'down' || 'up'}}
-                  {{! node.children.length && ' text-muted'}}">
+           class="icon-chevron-{{collapsed && 'down' || 'up'}}
+                  {{! node.children.length && 'muted' || ''}}">
         </span>
       </button>
       <button type="button"
-              class="btn btn-default btn-xs select-button"
+              class="btn btn-default btn-mini select-button"
               title="Select/deselect node">
           <input type="checkbox" name="Message-ID-{{id}}" />
       </button>
@@ -33,72 +31,71 @@
     </span>
   </span>
 
-  <span class="norg-subject list-group-item-heading">
+  <span class="norg-subject">
     {{node.headers['Subject']}}
   </span>
 
   <span class="btn-toolbar pull-right">
     <span class="btn-group">
       <button type="button"
-              class="btn btn-default btn-xs headers-expand"
+              class="btn btn-default btn-mini headers-expand"
               title="Expand/Collapse headers/fields"
               ng-disabled="! header_keys.length"
-              data-toggle="collapse"
-              data-target="#Message-ID-{{id}}-headers">
-        <span class="glyphicon glyphicon-th-list{{
-                     {{! header_keys.length && 'text-muted' || ''}}"></span>
+              ng-click="headersCollapsed = !headersCollapsed">
+        <span class="icon-th-list
+                     {{! header_keys.length && 'text-muted' || ''}}">
+        </span>
       </button>
     </span>
     <span class="btn-group">
       <button type="button"
-              class="btn btn-default btn-xs promote"
+              class="btn btn-default btn-mini promote"
               title="Promote this node"
               ng-disabled="! promotable"
               ng-click="promote(node)">
-         <span class="glyphicon glyphicon-arrow-left{{
-                     ! promotable && ' text-muted' || ''}}"></span>
+         <span class="icon-arrow-left{{
+                     ! promotable && ' muted' || ''}}"></span>
       </button>
       <button type="button"
-              class="btn btn-default btn-xs demote"
+              class="btn btn-default btn-mini demote"
               title="Demote this node"
               ng-disabled="! demotable"
               ng-click="demote(node)">
-         <span class="glyphicon glyphicon-arrow-right{{
+         <span class="icon-arrow-right{{
                      ! demotable && ' muted' || ''}}"></span>
       </button>
       <button type="button"
-              class="btn btn-default btn-xs promote"
+              class="btn btn-default btn-mini promote"
               title="Promote this node"
               ng-disabled="! movableUp"
               ng-click="moveUp(node)">
-         <span class="glyphicon glyphicon-arrow-up{{
-                      ! movableUp && ' text-muted' || ''}}"></span>
+         <span class="icon-arrow-up{{
+                      ! movableUp && ' muted' || ''}}"></span>
       </button>
       <button type="button"
-              class="btn btn-default btn-xs demote"
+              class="btn btn-default btn-mini demote"
               title="Demote this node"
               ng-disabled="! movableDown"
               ng-click="moveDown(node)">
-         <span class="glyphicon glyphicon-arrow-down{{
-                      ! movableDown && ' text-muted' || ''}}"></span>
+         <span class="icon-arrow-down{{
+                      ! movableDown && ' muted' || ''}}"></span>
       </button>
     </span>
   </span>
   
-  <dl id="Message-ID-{{id}}-headers"
-      class="norg-headers dl-horizontal collapse">
+  <dl id="Message-ID-{{id}}-headers" class="norg-headers dl-horizontal"
+      collapse="headersCollapsed">
     <div ng-repeat="key in header_keys">
       <dt contentEditable="true">{{key}}:</dt>
-      <dd ng-model="node.headers[key]"
-          class="norg-headers--{{key}}"
+      <dd class="norg-headers--{{key}}"
           contentEditable="true">
         {{node.headers[key]}}
       </dd>
     </div>
   </dl>
 
-  <ol id="Message-ID-{{id}}-children"
-      class="norg-nodes list-group collapse in">
+  <ol id="Message-ID-{{id}}-children" class="norg-nodes"
+      collapse="collapsed">
     <span ng:repeat="node in node.children"
           ng:include="'app/node.tpl.html'">
       <li>{{node.headers['Subject']}}</li>

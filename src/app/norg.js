@@ -67,6 +67,7 @@ angular.module('nOrg', ['ui.bootstrap'
     $scope.node.scope = $scope;
 
     // Parent/Children processing
+    $scope.collapsed = true;
     $scope.parent = $scope.$parent.$parent.$parent;
     $scope.siblings = $scope.parent.node.children;
     $scope.node.children = $scope.node.children || [];
@@ -88,6 +89,7 @@ angular.module('nOrg', ['ui.bootstrap'
     $scope.id = window.btoa($scope.node.headers["Message-ID"]).slice(0, -1);
 
     // A list of header names that the UI will care about
+    $scope.headersCollapsed = true;
     $scope.header_keys = [];
     for (var key in $scope.node.headers) {
       if (!(key in $scope.reserved_headers)) {

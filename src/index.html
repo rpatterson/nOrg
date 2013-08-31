@@ -3,12 +3,11 @@
 <head>
   <meta charset="utf-8">
   <title>N-Org Demo</title>
-  <link href="../vendor/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+  <link href="../vendor/bootstrap/css/bootstrap.css" rel="stylesheet">
   <link href="app/norg.css" rel="stylesheet">
 </head>
 <body>
-  <ol id="norg-edit"
-      class="norg-nodes list-group panel panel-default"
+  <ol id="norg-edit" class="norg-nodes"
       tabindex="0"
       ng-controller="NOrgCtrl"
       ng-keydown="handleKeydown($event)">
@@ -23,10 +22,9 @@
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
   -->
   <script src="../vendor/angular/angular.js"></script>
-
-  <script src="../vendor/jquery/jquery.js"></script>
-  <script src="../vendor/bootstrap/dist/js/bootstrap.js"></script>
+  <script src="../vendor/angular-bootstrap/ui-bootstrap-tpls.js"></script>
 
   <script src="app/norg.js"></script>
+
 </body>
 </html>
