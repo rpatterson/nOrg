@@ -1,7 +1,7 @@
 <li ng:controller="NOrgNodeCtrl"
     id="Message-ID-{{id}}"
     class="norg-node">
-  <h5>
+  <div>
     <span class="btn-toolbar pull-left">
       <span class="btn-group">
         <button type="button"
@@ -32,8 +32,26 @@
       </span>
     </span>
 
-    <span class="norg-subject" contentEditable="true">
-      {{node.headers['Subject']}}
+    <span class="norg-node-details">
+      <h5 class="norg-node-subject" contentEditable="true">
+        {{node.headers['Subject']}}
+      </h5>
+
+      <div id="Message-ID-{{id}}-headers"
+           class="norg-headers"
+           collapse="headersCollapsed">
+        <table class="table table-condensed table-bordered table-striped"
+               title="Node header, AKA field or property, name and value pairs">
+          <caption>Node header, AKA field or property, name and value pairs</caption>
+          <tr ng-repeat="key in header_keys">
+            <th contentEditable="true">{{key}}:</th>
+            <td class="norg-headers--{{key}}"
+                contentEditable="true">
+              {{node.headers[key]}}
+            </td>
+          </tr>
+        </table>
+      </div>
     </span>
 
     <span class="btn-toolbar pull-right">
@@ -83,22 +101,6 @@
         </button>
       </span>
     </span>
-  </h5>
-
-  <div id="Message-ID-{{id}}-headers"
-       class="norg-headers"
-       collapse="headersCollapsed">
-    <table class="table table-condensed table-bordered table-striped"
-           title="Node header, AKA field or property, name and value pairs">
-      <caption>Node header, AKA field or property, name and value pairs</caption>
-      <tr ng-repeat="key in header_keys">
-        <th contentEditable="true">{{key}}:</th>
-        <td class="norg-headers--{{key}}"
-            contentEditable="true">
-          {{node.headers[key]}}
-        </td>
-      </tr>
-    </table>
   </div>
 
   <ol id="Message-ID-{{id}}-children" class="norg-nodes"

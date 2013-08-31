@@ -3,6 +3,13 @@
     list-style: none;
 }
 
+.norg-node-details {
+    display: inline-block;
+}
+.norg-node-subject {
+    margin: 0em;
+}
+
 #norg-edit .btn.disabled,
 #norg-edit .btn[disabled] {
     opacity: 0.25;
@@ -10,6 +17,7 @@
 
 .norg-headers .table {
     width: initial;
+    margin: 0em;
 }
 .norg-headers caption {
     display: none;
