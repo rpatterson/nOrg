@@ -224,7 +224,7 @@ describe('N-Org', function() {
       expect($scope.cursor).toBeFalsy();
       expect(json.children[1].children[0].scope.cursor).toBeTruthy();
     }));
-    it('cursor can move to next parent from last child', inject(function() {
+    it('cursor can move down to next parent from last child', inject(function() {
       // Switch to last child node
       $scope = json.children[1].children[2].scope;
       $scope.cursorTo($scope);
@@ -233,7 +233,7 @@ describe('N-Org', function() {
       expect($scope.cursor).toBeFalsy();
       expect(json.children[2].scope.cursor).toBeTruthy();
     }));
-    it('cursor can be moved up to previous sibling', inject(function() {
+    it('cursor can move up to previous sibling', inject(function() {
       var old_cursor = $scope.cursorScope;
       // Switch to the next node
       $scope = json.children[1].scope;
