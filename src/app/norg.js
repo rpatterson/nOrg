@@ -59,6 +59,9 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'
     
     $scope.cursorDown = function cursorDown($event) {
       var scope = $scope.cursorScope;
+      if (scope.node.children.length && (! scope.collapsed)) {
+        return $scope.cursorTo(scope.childHeadNode);
+      }
       while (scope.$last && scope.parentNode.parentNode) {
         scope = scope.parentNode;
       }
