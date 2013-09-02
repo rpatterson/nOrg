@@ -72,14 +72,20 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'
       }};
 
     $scope.cursorUp = function cursorUp($event) {
-      if ($scope.cursorScope.$first) {
-        if ($scope.cursorScope.parentNode.parentNode) {
-          $scope.cursorTo($scope.cursorScope.parentNode);
+      var scope = $scope.cursorScope;
+      if (scope.prevSiblingNode &&
+          scope.prevSiblingNode.node.children.length &&
+          (! scope.prevSiblingNode.collapsed)) {
+        return $scope.cursorTo(scope.prevSiblingNode.childTailNode);
+      }
+      if (scope.$first) {
+        if (scope.parentNode.parentNode) {
+          $scope.cursorTo(scope.parentNode);
           } else {
             $log.debug("Cannot move cursor before the first node.");
           }
       } else {
-        $scope.cursorTo($scope.cursorScope.prevSiblingNode);
+        $scope.cursorTo(scope.prevSiblingNode);
       }};
 
     $scope.cursorRight = function cursorRight($event) {

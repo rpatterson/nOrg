@@ -244,6 +244,20 @@ describe('N-Org', function() {
       expect($scope.cursor).toBeFalsy();
       expect(old_cursor.cursor).toBeTruthy();
     }));
+    it("cursor can move up into previous expanded sibling's last child",
+       inject(function() {
+         // Switch to node after one with children
+         $scope = json.children[2].scope;
+         $scope.cursorTo($scope);
+         expect($scope.cursorScope.prevSiblingNode.collapsed).toBeTruthy();
+         $scope.cursorScope.prevSiblingNode.collapsed = false;
+
+         $scope.cursorUp();
+         expect($scope.cursorScope.node.path).toBe(
+           json.children[1].children[2].path);
+         expect($scope.cursor).toBeFalsy();
+         expect(json.children[1].children[2].scope.cursor).toBeTruthy();
+       }));
     it('cursor cannot be moved up above first sibling', inject(function() {
       $scope.cursorUp();
       expect($scope.cursorScope.node.path).toBe($scope.node.path);
