@@ -125,6 +125,7 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'
     $scope.collapsed = true;
     $scope.parentNode = $scope.$parent.nodeScope();
     $scope.node.children = $scope.node.children || [];
+    $scope.promotable = false;
     if (typeof $scope.parentNode.parentNode != "undefined") {
       $scope.promotable = true;
     }
@@ -147,6 +148,9 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'
 
     // Sibling processing
     $scope.siblings = $scope.parentNode.node.children;
+    $scope.demotable = false;
+    $scope.movableUp = false;
+    $scope.movableDown = false;
     if (! $scope.$first) {
       $scope.demotable = true;
       $scope.movableUp = true;
@@ -174,7 +178,7 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'
     $scope.demote = function demote() {
       // Demote a node if appropriate
       if ($scope.$first) {
-        throw new Error("Cannot promote first sibling!");
+        throw new Error("Cannot demote first sibling!");
       }
       
       $scope.siblings[$scope.$index - 1].children.push($scope.node);
