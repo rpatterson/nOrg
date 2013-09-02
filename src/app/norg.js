@@ -58,10 +58,14 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'
     };
     
     $scope.cursorDown = function cursorDown($event) {
-      if ($scope.cursorScope.$last) {
-        $log.debug("Cannot move cursor after the last child node.");
+      var scope = $scope.cursorScope;
+      while (scope.$last && scope.parentNode.parentNode) {
+        scope = scope.parentNode;
+      }
+      if (scope.$last) {
+        $log.debug("Cannot move cursor after the last node.");
       } else {
-        $scope.cursorTo($scope.cursorScope.nextSiblingNode);
+        $scope.cursorTo(scope.nextSiblingNode);
       }};
 
     $scope.cursorUp = function cursorUp($event) {
