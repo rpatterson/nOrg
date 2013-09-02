@@ -70,7 +70,11 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'
 
     $scope.cursorUp = function cursorUp($event) {
       if ($scope.cursorScope.$first) {
-        $log.debug("Cannot move cursor before the first child node.");
+        if ($scope.cursorScope.parentNode.parentNode) {
+          $scope.cursorTo($scope.cursorScope.parentNode);
+          } else {
+            $log.debug("Cannot move cursor before the first node.");
+          }
       } else {
         $scope.cursorTo($scope.cursorScope.prevSiblingNode);
       }};

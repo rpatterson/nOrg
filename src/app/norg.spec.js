@@ -238,7 +238,13 @@ describe('N-Org', function() {
     }));
     it('cursor can move to previous parent from first child',
        inject(function() {
-         // TODO
+         // Switch to first child node
+         $scope = json.children[1].children[0].scope;
+         $scope.cursorTo($scope);
+         $scope.cursorUp();
+         expect($scope.cursorScope.node.path).toBe(json.children[1].path);
+         expect($scope.cursor).toBeFalsy();
+         expect(json.children[1].scope.cursor).toBeTruthy();
        }));
 
     it('cursor can be moved right to the first child', inject(function() {
