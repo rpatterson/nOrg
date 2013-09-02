@@ -83,6 +83,7 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'
       if ($scope.cursorScope.node.children.length === 0) {
         $log.debug("Cannot move cursor down into a node without children.");
       } else {
+        $scope.cursorScope.collapsed = false;
         $scope.cursorTo($scope.cursorScope.childHeadNode);
       }};
 

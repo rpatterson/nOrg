@@ -266,6 +266,20 @@ describe('N-Org', function() {
       expect($scope.cursorScope.node.path).toBe($scope.node.path);
       expect($scope.cursor).toBeTruthy();
     }));
+    it('cursor can expand and move into collapsed first child',
+       inject(function() {
+         // Switch to last child node
+         $scope = json.children[1].scope;
+         $scope.cursorTo($scope);
+         expect($scope.collapsed).toBeTruthy();
+
+         $scope.cursorRight();
+         expect($scope.cursorScope.node.path).toBe(
+           json.children[1].children[0].path);
+         expect($scope.cursor).toBeFalsy();
+         expect(json.children[1].children[0].scope.cursor).toBeTruthy();
+         expect(json.children[1].scope.collapsed).toBeFalsy();
+       }));
     it('cursor can be moved up to previous sibling', inject(function() {
       var old_cursor;
       // Create a child scope
