@@ -4,3 +4,10 @@
 
 * Initial Release
 
+## TODO
+
+* ng:*
+* ng:bind
+* ng:class
+* apply node props directly to scope
+* configurable keys in cookies and/or nodes

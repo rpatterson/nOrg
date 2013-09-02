@@ -1,106 +1,119 @@
-angular.module('nOrg', ['ui.bootstrap'
+angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'
 ])
 
-  .controller('NOrgCtrl', function NOrgCtrl($scope, $rootScope, $http, $log) {
+  .controller('NOrgCtrl', function NOrgCtrl($scope, $http, $log) {
+    $scope.controlName = 'NOrgCtrl';
+
+    $scope.reserved_headers = {"Subject": true, "Message-ID": true};
+    $scope.keydown = {
+      'down': 'cursorDown($event)',
+      'up': 'cursorUp($event)',
+      'right': 'cursorRight($event)',
+      'left': 'cursorLeft($event)'
+    };
+    $scope.keydown_aliases = {
+      'j': 'down',
+      'k': 'up',
+      'w': 'up',
+      's': 'down',
+      'a': 'left',
+      'd': 'right'
+    };
+    for (var alias in $scope.keydown_aliases) {
+      $scope.keydown[alias] = $scope.keydown[$scope.keydown_aliases[alias]];
+    }
+
+
     $http.get('app/nodes.json').success(function loadNode(node) {
       // Load the initial nodes JSON
       $scope.node = node;
     });
 
-    $scope.setCursor = function setCursor(scope) {
-      // Move the cursor to the given node
-      $rootScope.cursor = scope || $scope;
+
+    $scope.nodeScope = function nodeScope() {
+      return $scope;
     };
 
 
-    $scope.keymap = {
-      9: function handleTab($event) {          // tab
-        if (! $scope.cursor.node.children.length) {
-          $log.debug("Cannot expand/collapse nodes without children.");
-        } else {
-          $scope.cursor.collapsed = ! $scope.cursor.collapsed;
-          $event.preventDefault();
-        }},
-
-      38: function handleUp() {         // up arrow
-        if (typeof $scope.cursor.siblings[
-          $scope.cursor.$index - 1] == "undefined") {
-          $log.debug("Cannot move cursor before the first child node.");
-        } else {
-          $scope.setCursor(
-            $scope.cursor.siblings[$scope.cursor.$index - 1].scope);
-        }},
-      40: function handleDown() {         // down arrow
-        if (typeof $scope.cursor.siblings[
-          $scope.cursor.$index + 1] == "undefined") {
-          $log.debug("Cannot move cursor after the last child node.");
-        } else {
-          $scope.setCursor(
-            $scope.cursor.siblings[$scope.cursor.$index + 1].scope);
-        }},
-      39: function handleRight() {         // right arrow
-        if (typeof $scope.cursor.node.children[0] == "undefined") {
-          $log.debug("Cannot move cursor down into a node without children.");
-        } else {
-          if ($scope.cursor.collapsed) {
-            $scope.cursor.collapsed = false;
-          }
-        $scope.setCursor($scope.cursor.node.children[0].scope);
-        }},
-      37: function handleLeft() {         // left arrow
-        if (typeof $scope.cursor.parent.parent == "undefined") {
-          $log.debug("Cannot move cursor above the top.");
-        } else {
-        $scope.setCursor($scope.cursor.parent);
-        }},
-
-      72: function handleH() {          // h for collapse/expand headers
-        if (! $scope.cursor.header_keys.length) {
-          $log.debug(
-            "Cannot expand/collapse headers for nodes without headers.");
-        } else {
-          $scope.cursor.headersCollapsed = ! $scope.cursor.headersCollapsed;
-        }}
-    };
-    $scope.keymapAliases = {
-      74: 40, 75: 38,  // j/k -> down/up
-      87: 38, 83: 40, 65: 37, 68: 39  // w/s/a/d -> up/down/left/right
-    };
-    for (var from in $scope.keymapAliases) {
-      $scope.keymap[from] = $scope.keymap[$scope.keymapAliases[from]];
-    }
-    $scope.handleKeydown = function handleKeydown($event) {
-      var handler = $scope.keymap[$event.keyCode];
-      if (typeof handler != "undefined") {
-        handler($event);
+    // Root cursor state
+    $scope.cursorTo = function cursorTo(scope) {
+      if (typeof scope == "undefined") {
+        scope = this;
       }
+      if ($scope.cursorScope) {
+        $scope.cursorScope.cursor = false;
+      }
+      scope.cursor = true;
+      $scope.cursorScope = scope;
     };
+    
+    $scope.cursorDown = function cursorDown($event) {
+      if ($scope.cursorScope.$last) {
+        $log.debug("Cannot move focus after the last child node.");
+        // TODO to next parent
+      } else {
+        $scope.cursorTo($scope.cursorScope.$parent.$$nextSibling.$$childHead);
+      }};
+
+    $scope.cursorUp = function cursorUp($event) {
+      if ($scope.cursorScope.$first) {
+        $log.debug("Cannot move focus before the first child node.");
+        // TODO to prev parent
+      } else {
+        $scope.cursorTo($scope.cursorScope.$parent.$$prevSibling.$$childHead);
+      }};
+
+    $scope.cursorRight = function cursorRight($event) {
+      if ($scope.cursorScope.node.children.length === 0) {
+        $log.debug("Cannot move focus down into a node without children.");
+      } else {
+        $scope.cursorTo($scope.cursorScope.childHeadNode);
+      }};
+
+    $scope.cursorLeft = function cursorLeft() {
+      if (typeof $scope.cursorScope.parentNode.parentNode == "undefined") {
+        $log.debug("Cannot move focus above the top.");
+      } else {
+        $scope.cursorTo($scope.cursorScope.parentNode);
+      }};
   })
 
-  .controller('NOrgNodeCtrl', function NOrgNodeCtrl ($scope, $rootScope) {
-    $scope.reserved_headers = {"Subject": true, "Message-ID": true};
+  .controller('NOrgNodeCtrl', function NOrgNodeCtrl ($scope) {
 
-    if (typeof $rootScope.cursor == "undefined") {
-      // Cursor defaults to first node
-      $rootScope.cursor = $scope;
+    $scope.controlName = 'NOrgNodeCtrl';
+
+    // Cursor initialization
+    // child nodes must overrid parent to avoid scope inheritance
+    // leaking the cursor down
+    $scope.cursor = false;
+    if (typeof $scope.cursorScope == "undefined") {
+      // Focus defaults to first node
+      $scope.cursorTo($scope);
     }
-    $scope.node.scope = $scope;
 
     // Parent/Children processing
     $scope.collapsed = true;
-    $scope.parent = $scope.$parent.$parent.$parent;
-    $scope.siblings = $scope.parent.node.children;
+    $scope.parentNode = $scope.$parent.nodeScope();
     $scope.node.children = $scope.node.children || [];
-    if (typeof $scope.parent.parent != "undefined") {
+    if (typeof $scope.parentNode.parentNode != "undefined") {
       $scope.promotable = true;
     }
+    $scope.childHeadNode = undefined;
+    if ($scope.$first) {
+      $scope.parentNode.childHeadNode = $scope;
+    }
+      
+    $scope.nodeScope = function nodeScope() {
+      return $scope;
+    };
 
     // Sibling processing
-    if ($scope.$index > 0) {
+    $scope.siblings = $scope.parentNode.node.children;
+    if (! $scope.$first) {
       $scope.demotable = true;
       $scope.movableUp = true;
     }
-    if ($scope.$index < $scope.siblings.length - 1) {
+    if (! $scope.$last) {
       $scope.movableDown = true;
     }
 
@@ -115,30 +128,34 @@ angular.module('nOrg', ['ui.bootstrap'
       if (!(key in $scope.reserved_headers)) {
         $scope.header_keys.push(key);
       }}
+    $scope.headers = {};        // header scopes
+
+
+    // Moving nodes
 
     $scope.demote = function demote() {
       // Demote a node if appropriate
-      if ($scope.$index === 0) {
+      if ($scope.$first) {
         throw new Error("Cannot promote first sibling!");
       }
       
-      var new_parent = $scope.siblings[$scope.$index - 1];
-      new_parent.children.push($scope.node);
+      $scope.siblings[$scope.$index - 1].children.push($scope.node);
       $scope.siblings.splice($scope.$index, 1);
     };
 
     $scope.promote = function promote() {
       // Promote a node if appropriate
-      if (typeof $scope.parent.siblings == "undefined") {
+      if (typeof $scope.parentNode.siblings == "undefined") {
         throw new Error("Cannot promote nodes without parents!");
       }
-      $scope.parent.siblings.splice($scope.parent.$index + 1, 0, $scope.node);
-      $scope.parent.node.children.splice($scope.$index, 1);
+      $scope.parentNode.siblings.splice(
+        $scope.parentNode.$index + 1, 0, $scope.node);
+      $scope.parentNode.node.children.splice($scope.$index, 1);
     };
 
     $scope.moveUp = function moveUp() {
       // Move a node up relative to it's siblings if appropriate
-      if ($scope.$index === 0) {
+      if ($scope.$first) {
         throw new Error("Cannot move first nodes up!");
       }
 
@@ -148,7 +165,7 @@ angular.module('nOrg', ['ui.bootstrap'
 
     $scope.moveDown = function moveDown() {
       // Move a node down relative to it's siblings if appropriate
-      if ($scope.$index == $scope.siblings.length - 1) {
+      if ($scope.$last) {
         throw new Error("Cannot move last nodes down!");
       }
 
@@ -156,8 +173,40 @@ angular.module('nOrg', ['ui.bootstrap'
       $scope.siblings.splice($scope.$index, 2, new_previous , $scope.node);
     };
 
-    $scope.isCursor = function isCursor() {
-      return $scope.cursor === $scope;
+
+    // expand/collapse
+    $scope.handleTab = function handleTab($event) {
+      if (! $scope.focus.node.children.length) {
+        $log.debug("Cannot expand/collapse nodes without children.");
+      } else {
+        $scope.focus.collapsed = ! $scope.focus.collapsed;
+        $event.preventDefault();
+      }};
+
+    // Headers
+    $scope.handleH = function handleH() {
+      if (! $scope.focus.header_keys.length) {
+        $log.debug(
+          "Cannot expand/collapse headers for nodes without headers.");
+      } else {
+        $scope.focus.headersCollapsed = ! $scope.focus.headersCollapsed;
+      }};
+  })
+
+  .controller('NOrgHeaderCtrl', function NOrgHeaderCtrl ($scope) {
+    $scope.controlName = 'NOrgHeaderCtrl';
+
+    $scope.value = $scope.node.headers[$scope.key];
+    $scope.headers[$scope.key] = $scope;
+  })
+
+  .directive('norgCursor', function norgCursor() {
+    return function (scope, element, attrs) {
+      attrs.$observe('norgCursor', function (newValue) {
+        if (newValue === 'true') {
+          element[0].focus();
+        }
+      });
     };
   });
 

@@ -10,19 +10,24 @@
   <ol id="norg-edit" class="norg-nodes"
       tabindex="0"
       ng-controller="NOrgCtrl"
-      ng-keydown="handleKeydown($event)">
-    <span ng:repeat="node in node.children"
-          ng:include="'app/node.tpl.html'">
-      <li>{{node.headers['Subject']}}</li>
-    </span>
+      ui:keydown="keydown">
+    <li ng:repeat="node in node.children"
+        ng:controller="NOrgNodeCtrl"
+        id="Message-ID-{{id}}"
+        class="norg-node">
+      <span ng:include="'app/node.tpl.html'">
+        Subject
+      </span>
+    </li>
   </ol>
 
 
   <!-- In production use:
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
   -->
-  <script src="../vendor/angular/angular.js"></script>
+  <script src="../vendor/angular/build/angular.js"></script>
   <script src="../vendor/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+  <script src="../vendor/angular-ui-utils/modules/keypress/keypress.js"></script>
 
   <script src="app/norg.js"></script>
 

@@ -1,14 +1,12 @@
-<li ng:controller="NOrgNodeCtrl"
-    id="Message-ID-{{id}}"
-    class="norg-node">
   <div>
     <span class="btn-toolbar pull-left">
       <span class="btn-group">
         <button type="button"
                 class="btn btn-mini cursor-button
-                       {{isCursor() && 'btn-primary' || 'btn-default'}}"
+                       {{$parent.cursor && 'btn-primary' || 'btn-default'}}"
                 title="Node cursor"
-                ng-click="setCursor()">
+                ng-click="cursorTo($parent)"
+                norg-cursor="{{$parent.cursor}}">
           <span class="icon-th">
           </span>
         </button>
@@ -45,12 +43,23 @@
         <table class="table table-condensed table-bordered table-striped"
                title="Node header, AKA field or property, name and value pairs">
           <caption>Node header, AKA field or property, name and value pairs</caption>
-          <tr ng-repeat="key in header_keys">
-            <th contentEditable="true"
-                ng:keydown="$event.stopPropagation()">{{key}}:</th>
-            <td class="norg-headers--{{key}}"
-                contentEditable="true" ng:keydown="$event.stopPropagation()">
-              {{node.headers[key]}}
+          <tr ng-repeat="key in header_keys"
+              ng:controller="NOrgHeaderCtrl"
+              class="norg-headers--{{key}}">
+            <th>
+              <button type="button"
+                      class="btn btn-mini cursor-button
+                             btn-{{isCursor() && 'primary' || 'default'}}"
+                      title="Node cursor"
+                      ng:cursor="cursored" ng-click="cursored = true">
+                <span class="icon-th">
+                </span>
+              </button>
+            <span contentEditable="true"
+                ng:keydown="$event.stopPropagation()">{{key}}:</span>
+            </th>
+            <td contentEditable="true" ng:keydown="$event.stopPropagation()">
+              {{value}}
             </td>
           </tr>
         </table>
@@ -108,9 +117,12 @@
 
   <ol id="Message-ID-{{id}}-children" class="norg-nodes"
       collapse="collapsed">
-    <span ng:repeat="node in node.children"
-          ng:include="'app/node.tpl.html'">
-      <li>{{node.headers['Subject']}}</li>
-    </span>
+    <li ng:repeat="node in node.children"
+        ng:controller="NOrgNodeCtrl"
+        id="Message-ID-{{id}}"
+        class="norg-node">
+      <span ng:include="'app/node.tpl.html'">
+        Subject
+      </span>
+    </li>
   </ol>
-</li>

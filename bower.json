@@ -9,7 +9,7 @@
   "license": "GPLv3",
   "homepage": "https://github.com/rpatterson/forgit",
   "dependencies": {
-    "angular": "PatternConsulting/bower-angular#1.1.x",
+    "angular": "angular/angular.js#master",
     "bootstrap": "bowerjs/bootstrap#2.3.2"
   },
   "devDependencies": {
