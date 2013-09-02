@@ -5,13 +5,16 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'
     $scope.controlName = 'NOrgCtrl';
 
     $scope.reserved_headers = {"Subject": true, "Message-ID": true};
-    $scope.keydown = {
+    $scope.keymap = {
+      'tab': 'toggleNode($event)',
+      'h': 'toggleHeaders($event)',
+
       'down': 'cursorDown($event)',
       'up': 'cursorUp($event)',
       'right': 'cursorRight($event)',
       'left': 'cursorLeft($event)'
     };
-    $scope.keydown_aliases = {
+    $scope.keymap_aliases = {
       'j': 'down',
       'k': 'up',
       'w': 'up',
@@ -19,9 +22,16 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'
       'a': 'left',
       'd': 'right'
     };
-    for (var alias in $scope.keydown_aliases) {
-      $scope.keydown[alias] = $scope.keydown[$scope.keydown_aliases[alias]];
+    for (var alias in $scope.keymap_aliases) {
+      $scope.keymap[alias] = $scope.keymap[$scope.keymap_aliases[alias]];
     }
+    $scope.keydown = {};
+    for (var key in $scope.keymap) {
+      if (key.length === 1) {
+        $scope.keydown[key.toUpperCase().charCodeAt()] = $scope.keymap[key];
+      } else {
+        $scope.keydown[key] = $scope.keymap[key];
+      }}
 
 
     $http.get('app/nodes.json').success(function loadNode(node) {
@@ -75,6 +85,28 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'
         $log.debug("Cannot move focus above the top.");
       } else {
         $scope.cursorTo($scope.cursorScope.parentNode);
+      }};
+
+
+    // expand/collapse
+
+    // node
+    $scope.toggleNode = function toggleNode($event) {
+      if (! $scope.cursorScope.node.children.length) {
+        $log.debug("Cannot expand/collapse nodes without children.");
+      } else {
+        $scope.cursorScope.collapsed = ! $scope.cursorScope.collapsed;
+        $event.preventDefault();
+      }};
+
+    // headers
+    $scope.toggleHeaders = function toggleHeaders($event) {
+      if (! $scope.cursorScope.header_keys.length) {
+        $log.debug(
+          "Cannot expand/collapse headers for nodes without headers.");
+      } else {
+        $scope.cursorScope.headersCollapsed = (
+          ! $scope.cursorScope.headersCollapsed);
       }};
   })
 
@@ -172,25 +204,6 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'
       var new_previous = $scope.siblings[$scope.$index + 1];
       $scope.siblings.splice($scope.$index, 2, new_previous , $scope.node);
     };
-
-
-    // expand/collapse
-    $scope.handleTab = function handleTab($event) {
-      if (! $scope.focus.node.children.length) {
-        $log.debug("Cannot expand/collapse nodes without children.");
-      } else {
-        $scope.focus.collapsed = ! $scope.focus.collapsed;
-        $event.preventDefault();
-      }};
-
-    // Headers
-    $scope.handleH = function handleH() {
-      if (! $scope.focus.header_keys.length) {
-        $log.debug(
-          "Cannot expand/collapse headers for nodes without headers.");
-      } else {
-        $scope.focus.headersCollapsed = ! $scope.focus.headersCollapsed;
-      }};
   })
 
   .controller('NOrgHeaderCtrl', function NOrgHeaderCtrl ($scope) {
