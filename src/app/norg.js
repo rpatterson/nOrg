@@ -59,7 +59,7 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'
     
     $scope.cursorDown = function cursorDown($event) {
       if ($scope.cursorScope.$last) {
-        $log.debug("Cannot move focus after the last child node.");
+        $log.debug("Cannot move cursor after the last child node.");
         // TODO to next parent
       } else {
         $scope.cursorTo($scope.cursorScope.$parent.$$nextSibling.$$childHead);
@@ -67,7 +67,7 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'
 
     $scope.cursorUp = function cursorUp($event) {
       if ($scope.cursorScope.$first) {
-        $log.debug("Cannot move focus before the first child node.");
+        $log.debug("Cannot move cursor before the first child node.");
         // TODO to prev parent
       } else {
         $scope.cursorTo($scope.cursorScope.$parent.$$prevSibling.$$childHead);
@@ -75,14 +75,14 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'
 
     $scope.cursorRight = function cursorRight($event) {
       if ($scope.cursorScope.node.children.length === 0) {
-        $log.debug("Cannot move focus down into a node without children.");
+        $log.debug("Cannot move cursor down into a node without children.");
       } else {
         $scope.cursorTo($scope.cursorScope.childHeadNode);
       }};
 
     $scope.cursorLeft = function cursorLeft() {
       if (typeof $scope.cursorScope.parentNode.parentNode == "undefined") {
-        $log.debug("Cannot move focus above the top.");
+        $log.debug("Cannot move cursor above the top.");
       } else {
         $scope.cursorTo($scope.cursorScope.parentNode);
       }};
@@ -119,7 +119,7 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'
     // leaking the cursor down
     $scope.cursor = false;
     if (typeof $scope.cursorScope == "undefined") {
-      // Focus defaults to first node
+      // Cursor defaults to first node
       $scope.cursorTo($scope);
     }
 
