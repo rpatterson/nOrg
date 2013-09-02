@@ -125,10 +125,6 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'
     $scope.collapsed = true;
     $scope.parentNode = $scope.$parent.nodeScope();
     $scope.node.children = $scope.node.children || [];
-    $scope.promotable = false;
-    if (typeof $scope.parentNode.parentNode != "undefined") {
-      $scope.promotable = true;
-    }
 
     $scope.childHeadNode = undefined;
     if ($scope.$first) {
@@ -148,16 +144,6 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'
 
     // Sibling processing
     $scope.siblings = $scope.parentNode.node.children;
-    $scope.demotable = false;
-    $scope.movableUp = false;
-    $scope.movableDown = false;
-    if (! $scope.$first) {
-      $scope.demotable = true;
-      $scope.movableUp = true;
-    }
-    if (! $scope.$last) {
-      $scope.movableDown = true;
-    }
 
     // Generate a valid HTML ID and CSS selector from the message
     // ID using base64 encoding

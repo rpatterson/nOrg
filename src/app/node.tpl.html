@@ -89,34 +89,34 @@
         <button type="button"
                 class="btn btn-default btn-mini promote"
                 title="Promote this node"
-                ng:disabled="! promotable"
+                ng:disabled="! parentNode.parentNode"
                 ng:click="promote(node)">
           <span class="icon-arrow-left"
-                ng:class="{'muted': ! promotable}"></span>
+                ng:class="{'muted': ! parentNode.parentNode}"></span>
         </button>
         <button type="button"
                 class="btn btn-default btn-mini demote"
                 title="Demote this node"
-                ng:disabled="! demotable"
+                ng:disabled="$first"
                 ng:click="demote(node)">
           <span class="icon-arrow-right"
-                ng:class="{'muted': ! demotable}"></span>
+                ng:class="{'muted': $first}"></span>
         </button>
         <button type="button"
                 class="btn btn-default btn-mini promote"
                 title="Promote this node"
-                ng:disabled="! movableUp"
+                ng:disabled="$first"
                 ng:click="moveUp(node)">
           <span class="icon-arrow-up"
-                ng:class="{'muted': ! movableUp}"></span>
+                ng:class="{'muted': $first}"></span>
         </button>
         <button type="button"
                 class="btn btn-default btn-mini demote"
                 title="Demote this node"
-                ng:disabled="! movableDown"
+                ng:disabled="$last"
                 ng:click="moveDown(node)">
           <span class="icon-arrow-down"
-                ng:class="{'muted': ! movableDown}"></span>
+                ng:class="{'muted': $last}"></span>
         </button>
       </span>
     </span>
