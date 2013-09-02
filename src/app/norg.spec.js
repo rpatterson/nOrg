@@ -82,8 +82,7 @@ describe('N-Org', function() {
   });
 
   describe('editing:', function () {
-    it('nodes with previous siblings may be demoted', inject(function
-    () {
+    it('nodes with previous siblings may be demoted', inject(function () {
       var new_parent = $scope.siblings[$scope.$index - 1];
       new_parent.children = [];
       expect($scope.demotable).toBeTruthy();
