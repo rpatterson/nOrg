@@ -2,8 +2,9 @@
     <span class="btn-toolbar pull-left">
       <span class="btn-group">
         <button type="button"
-                class="btn btn-mini cursor-button
-                       {{$parent.cursor && 'btn-primary' || 'btn-default'}}"
+                class="btn btn-mini cursor-button"
+                ng:class="{'btn-primary': $parent.cursor,
+                           'btn-default': ! $parent.cursor}"
                 title="Node cursor"
                 ng:click="cursorTo($parent)"
                 norg:cursor="{{$parent.cursor}}">
@@ -15,10 +16,10 @@
                 title="Expand/Collapse this node's children"
                 ng:disabled="! node.children.length"
                 ng:click="collapsed = !collapsed">
-          <span
-             class="icon-chevron-{{(node.children.length && collapsed)
-                                    && 'down' || 'up'}}
-                    {{! node.children.length && 'muted' || ''}}">
+          <span ng:class="{'icon-chevron-down': node.children.length && collapsed,
+                           'icon-chevron-up': !(node.children.length && collapsed),
+                           'icon-chevron-up': !(node.children.length && collapsed),
+                           'muted': ! node.children.length}">
           </span>
         </button>
         <button type="button"
@@ -48,10 +49,12 @@
               class="norg-headers--{{key}}">
             <th>
               <button type="button"
-                      class="btn btn-mini cursor-button
-                             btn-{{isCursor() && 'primary' || 'default'}}"
+                      class="btn btn-mini cursor-button"
+                      ng:class="{'btn-primary': $parent.cursor,
+                                'btn-default': ! $parent.cursor}"
                       title="Node cursor"
-                      ng:cursor="cursored" ng:click="cursored = true">
+                      ng:click="cursorTo($parent)"
+                      norg:cursor="{{$parent.cursor}}">
                 <span class="icon-th">
                 </span>
               </button>
@@ -75,8 +78,8 @@
                 title="Expand/Collapse headers/fields"
                 ng:disabled="! header_keys.length"
                 ng:click="headersCollapsed = !headersCollapsed">
-          <span class="icon-th-list
-                       {{! header_keys.length && 'text-muted' || ''}}">
+          <span class="icon-th-list"
+                ng:class="{'text-muted': ! header_keys.length}">
           </span>
         </button>
       </span>
@@ -86,32 +89,32 @@
                 title="Promote this node"
                 ng:disabled="! promotable"
                 ng:click="promote(node)">
-          <span class="icon-arrow-left{{
-                       ! promotable && ' muted' || ''}}"></span>
+          <span class="icon-arrow-left"
+                ng:class="{'muted': ! promotable}"></span>
         </button>
         <button type="button"
                 class="btn btn-default btn-mini demote"
                 title="Demote this node"
                 ng:disabled="! demotable"
                 ng:click="demote(node)">
-          <span class="icon-arrow-right{{
-                       ! demotable && ' muted' || ''}}"></span>
+          <span class="icon-arrow-right"
+                ng:class="{'muted': ! demotable}"></span>
         </button>
         <button type="button"
                 class="btn btn-default btn-mini promote"
                 title="Promote this node"
                 ng:disabled="! movableUp"
                 ng:click="moveUp(node)">
-          <span class="icon-arrow-up{{
-                       ! movableUp && ' muted' || ''}}"></span>
+          <span class="icon-arrow-up"
+                ng:class="{'muted': ! movableUp}"></span>
         </button>
         <button type="button"
                 class="btn btn-default btn-mini demote"
                 title="Demote this node"
                 ng:disabled="! movableDown"
                 ng:click="moveDown(node)">
-          <span class="icon-arrow-down{{
-                       ! movableDown && ' muted' || ''}}"></span>
+          <span class="icon-arrow-down"
+                ng:class="{'muted': ! movableDown}"></span>
         </button>
       </span>
     </span>
