@@ -5,7 +5,7 @@ describe('N-Org', function() {
 
   beforeEach(module('nOrg'));
 
-  beforeEach(inject(function($rootScope, $controller) {
+  beforeEach(inject(function($rootScope, $controller, $log) {
     json = {
       "children": [
         {"path": "/foo.nod",
@@ -39,6 +39,8 @@ describe('N-Org', function() {
     $scope.$last = false;
     $scope.node = $scope.$parent.$parent.$parent.node.children[$scope.$index];
     NOrgNodeCtrl = $controller("NOrgNodeCtrl", {$scope: $scope});
+
+    $log.debug = $log.info;
   }));
 
   it('should exist', inject(function () {
@@ -211,7 +213,118 @@ describe('N-Org', function() {
          expect($scope.cursorScope.node.path).toBe($scope.node.path);
          expect($scope.cursor).toBeTruthy();
          expect(old_cursor.cursor).toBeFalsy();
+       }));
+    it('cursor can be moved down to next sibling',
+       inject(function($controller) {
+         var old_cursor = $scope.cursorScope;
+         // Switch to the next node
+         $scope = $scope.parentNode.$new().$new().$new();
+         $scope.$index = 1;
+         $scope.node = $scope.$parent.$parent.$parent.node.children[
+           $scope.$index];
+         NOrgNodeCtrl = $controller("NOrgNodeCtrl", {$scope: $scope});
+
+         $scope.cursorDown();
+         expect($scope.cursorScope.node.path).toBe($scope.node.path);
+         expect($scope.cursor).toBeTruthy();
+         expect(old_cursor.cursor).toBeFalsy();
+       }));
+    it('cursor cannot be moved down beyond last sibling',
+       inject(function($controller) {
+         // Switch to the next node
+         $scope = $scope.parentNode.$new().$new().$new();
+         $scope.$index = 2;
+         $scope.$last = true;
+         $scope.node = $scope.$parent.$parent.$parent.node.children[
+           $scope.$index];
+         NOrgNodeCtrl = $controller("NOrgNodeCtrl", {$scope: $scope});
+
+         $scope.cursorTo($scope);
+         $scope.cursorDown();
+         expect($scope.cursorScope.node.path).toBe($scope.node.path);
+         expect($scope.cursor).toBeTruthy();
+       }));
+    it('cursor can be moved up to previous sibling',
+       inject(function($controller) {
+         var old_cursor = $scope.cursorScope;
+         // Switch to the next node
+         $scope = $scope.parentNode.$new().$new().$new();
+         $scope.$index = 1;
+         $scope.node = $scope.$parent.$parent.$parent.node.children[
+           $scope.$index];
+         NOrgNodeCtrl = $controller("NOrgNodeCtrl", {$scope: $scope});
+
+         $scope.cursorTo($scope);
+         $scope.cursorUp();
+         expect($scope.cursorScope.node.path).toBe(old_cursor.node.path);
+         expect($scope.cursor).toBeFalsy();
+         expect(old_cursor.cursor).toBeTruthy();
+    }));
+    it('cursor cannot be moved up above first sibling',
+       inject(function($controller) {
+         $scope.cursorUp();
+         expect($scope.cursorScope.node.path).toBe($scope.node.path);
+         expect($scope.cursor).toBeTruthy();
+    }));
+
+    it('cursor can be moved right to the first child',
+       inject(function($controller) {
+         var old_cursor;
+         // Create a child scope
+         $scope = $scope.parentNode.$new().$new().$new();
+         $scope.$index = 1;
+         $scope.node = $scope.$parent.$parent.$parent.node.children[
+           $scope.$index];
+         NOrgNodeCtrl = $controller("NOrgNodeCtrl", {$scope: $scope});
+         $scope.cursorTo($scope);
+         old_cursor = $scope.cursorScope;
+
+         $scope = $scope.$new().$new().$new();
+         $scope.$index = 0;
+         $scope.$first = true;
+         $scope.node = $scope.$parent.$parent.$parent.node.children[
+           $scope.$index];
+         NOrgNodeCtrl = $controller("NOrgNodeCtrl", {$scope: $scope});
+
+         $scope.cursorRight();
+         expect($scope.cursorScope.node.path).toBe($scope.node.path);
+         expect($scope.cursor).toBeTruthy();
+         expect(old_cursor.cursor).toBeFalsy();
+       }));
+    it('cursor cannot be moved right without children', inject(function() {
+         $scope.cursorRight();
+         expect($scope.cursorScope.node.path).toBe($scope.node.path);
+         expect($scope.cursor).toBeTruthy();
+       }));
+    it('cursor can be moved up to previous sibling',
+       inject(function($controller) {
+         var old_cursor;
+         // Create a child scope
+         $scope = $scope.parentNode.$new().$new().$new();
+         $scope.$index = 1;
+         $scope.node = $scope.$parent.$parent.$parent.node.children[
+           $scope.$index];
+         NOrgNodeCtrl = $controller("NOrgNodeCtrl", {$scope: $scope});
+         $scope.cursorTo($scope);
+         old_cursor = $scope.cursorScope;
+
+         $scope = $scope.$new().$new().$new();
+         $scope.$index = 0;
+         $scope.$first = true;
+         $scope.node = $scope.$parent.$parent.$parent.node.children[
+           $scope.$index];
+         NOrgNodeCtrl = $controller("NOrgNodeCtrl", {$scope: $scope});
+         $scope.cursorTo($scope);
+
+         $scope.cursorLeft();
+         expect($scope.cursorScope.node.path).toBe(old_cursor.node.path);
+         expect($scope.cursor).toBeFalsy();
+         expect(old_cursor.cursor).toBeTruthy();
+       }));
+    it('cursor cannot be moved up above first sibling', inject(function() {
+       $scope.cursorLeft();
+       expect($scope.cursorScope.node.path).toBe($scope.node.path);
+       expect($scope.cursor).toBeTruthy();
     }));
   });
-
 });

@@ -62,7 +62,7 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'
         $log.debug("Cannot move cursor after the last child node.");
         // TODO to next parent
       } else {
-        $scope.cursorTo($scope.cursorScope.$parent.$$nextSibling.$$childHead);
+        $scope.cursorTo($scope.cursorScope.nextSiblingNode);
       }};
 
     $scope.cursorUp = function cursorUp($event) {
@@ -70,7 +70,7 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'
         $log.debug("Cannot move cursor before the first child node.");
         // TODO to prev parent
       } else {
-        $scope.cursorTo($scope.cursorScope.$parent.$$prevSibling.$$childHead);
+        $scope.cursorTo($scope.cursorScope.prevSiblingNode);
       }};
 
     $scope.cursorRight = function cursorRight($event) {
@@ -130,10 +130,18 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'
     if (typeof $scope.parentNode.parentNode != "undefined") {
       $scope.promotable = true;
     }
+
     $scope.childHeadNode = undefined;
     if ($scope.$first) {
       $scope.parentNode.childHeadNode = $scope;
     }
+
+    $scope.childTailNode = undefined;
+    $scope.prevSiblingNode = $scope.parentNode.childTailNode;
+    if (typeof $scope.prevSiblingNode != "undefined") {
+      $scope.prevSiblingNode.nextSiblingNode = $scope;
+    }
+    $scope.parentNode.childTailNode = $scope;
       
     $scope.nodeScope = function nodeScope() {
       return $scope;
