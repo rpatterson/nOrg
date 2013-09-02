@@ -59,7 +59,7 @@ describe('N-Org', function() {
       }).length).toBeTruthy();
     }));
     it('child nodes have a reference to their parent', inject(function () {
-      expect($scope.parentNode).toBe($scope.$parent.$parent.$parent);
+      expect($scope.parentNode.node.path).toBe($scope.$parent.$parent.$parent.node.path);
     }));
   });
 
@@ -87,7 +87,7 @@ describe('N-Org', function() {
       new_parent.children = [];
       expect($scope.demotable).toBeTruthy();
       $scope.demote();
-      expect(new_parent.children[0]).toBe($scope.node);
+      expect(new_parent.children[0].path).toBe($scope.node.path);
     }));
     it('first sibling nodes may not be demoted',
        inject(function ($controller) {
@@ -115,7 +115,7 @@ describe('N-Org', function() {
 
       expect($scope.promotable).toBeTruthy();
       $scope.promote();
-      expect($scope.parentNode.parentNode.node.children[2]).toBe($scope.node);
+      expect($scope.parentNode.parentNode.node.children[2].path).toBe($scope.node.path);
     }));
     it('nodes without parents may not be promoted', inject(function () {
       expect($scope.promotable).toBeFalsy();
@@ -128,8 +128,8 @@ describe('N-Org', function() {
       var new_next = $scope.siblings[0];
       expect($scope.movableUp).toBeTruthy();
       $scope.moveUp();
-      expect($scope.siblings[0]).toBe($scope.node);
-      expect($scope.siblings[1]).toBe(new_next);
+      expect($scope.siblings[0].path).toBe($scope.node.path);
+      expect($scope.siblings[1].path).toBe(new_next.path);
       expect($scope.siblings.length).toEqual(3);
     }));
     it('first nodes may not be moved up', inject(function($controller) {
@@ -151,8 +151,8 @@ describe('N-Org', function() {
       var new_previous = $scope.siblings[2];
       expect($scope.movableDown).toBeTruthy();
       $scope.moveDown();
-      expect($scope.siblings[2]).toBe($scope.node);
-      expect($scope.siblings[1]).toBe(new_previous);
+      expect($scope.siblings[2].path).toBe($scope.node.path);
+      expect($scope.siblings[1].path).toBe(new_previous.path);
       expect($scope.siblings.length).toEqual(3);
     }));
     it('last nodes may not be moved down', inject(function($controller) {
@@ -184,7 +184,7 @@ describe('N-Org', function() {
     }));
 
     it('cursor is initially at the first node', inject(function($controller) {
-      expect($scope.cursorScope).toBe($scope);
+      expect($scope.cursorScope.node.path).toBe($scope.node.path);
       expect($scope.cursor).toBeTruthy();
 
       // Switch to the next node
@@ -208,7 +208,7 @@ describe('N-Org', function() {
          NOrgNodeCtrl = $controller("NOrgNodeCtrl", {$scope: $scope});
 
          $scope.cursorTo($scope);
-         expect($scope.cursorScope).toBe($scope);
+         expect($scope.cursorScope.node.path).toBe($scope.node.path);
          expect($scope.cursor).toBeTruthy();
          expect(old_cursor.cursor).toBeFalsy();
     }));
