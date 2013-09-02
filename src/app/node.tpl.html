@@ -5,16 +5,16 @@
                 class="btn btn-mini cursor-button
                        {{$parent.cursor && 'btn-primary' || 'btn-default'}}"
                 title="Node cursor"
-                ng-click="cursorTo($parent)"
-                norg-cursor="{{$parent.cursor}}">
+                ng:click="cursorTo($parent)"
+                norg:cursor="{{$parent.cursor}}">
           <span class="icon-th">
           </span>
         </button>
         <button type="button"
                 class="btn btn-default btn-mini collapse-button"
                 title="Expand/Collapse this node's children"
-                ng-disabled="! node.children.length"
-                ng-click="collapsed = !collapsed">
+                ng:disabled="! node.children.length"
+                ng:click="collapsed = !collapsed">
           <span
              class="icon-chevron-{{(node.children.length && collapsed)
                                     && 'down' || 'up'}}
@@ -43,7 +43,7 @@
         <table class="table table-condensed table-bordered table-striped"
                title="Node header, AKA field or property, name and value pairs">
           <caption>Node header, AKA field or property, name and value pairs</caption>
-          <tr ng-repeat="key in header_keys"
+          <tr ng:repeat="key in header_keys"
               ng:controller="NOrgHeaderCtrl"
               class="norg-headers--{{key}}">
             <th>
@@ -51,7 +51,7 @@
                       class="btn btn-mini cursor-button
                              btn-{{isCursor() && 'primary' || 'default'}}"
                       title="Node cursor"
-                      ng:cursor="cursored" ng-click="cursored = true">
+                      ng:cursor="cursored" ng:click="cursored = true">
                 <span class="icon-th">
                 </span>
               </button>
@@ -71,8 +71,8 @@
         <button type="button"
                 class="btn btn-default btn-mini headers-expand"
                 title="Expand/Collapse headers/fields"
-                ng-disabled="! header_keys.length"
-                ng-click="headersCollapsed = !headersCollapsed">
+                ng:disabled="! header_keys.length"
+                ng:click="headersCollapsed = !headersCollapsed">
           <span class="icon-th-list
                        {{! header_keys.length && 'text-muted' || ''}}">
           </span>
@@ -82,32 +82,32 @@
         <button type="button"
                 class="btn btn-default btn-mini promote"
                 title="Promote this node"
-                ng-disabled="! promotable"
-                ng-click="promote(node)">
+                ng:disabled="! promotable"
+                ng:click="promote(node)">
           <span class="icon-arrow-left{{
                        ! promotable && ' muted' || ''}}"></span>
         </button>
         <button type="button"
                 class="btn btn-default btn-mini demote"
                 title="Demote this node"
-                ng-disabled="! demotable"
-                ng-click="demote(node)">
+                ng:disabled="! demotable"
+                ng:click="demote(node)">
           <span class="icon-arrow-right{{
                        ! demotable && ' muted' || ''}}"></span>
         </button>
         <button type="button"
                 class="btn btn-default btn-mini promote"
                 title="Promote this node"
-                ng-disabled="! movableUp"
-                ng-click="moveUp(node)">
+                ng:disabled="! movableUp"
+                ng:click="moveUp(node)">
           <span class="icon-arrow-up{{
                        ! movableUp && ' muted' || ''}}"></span>
         </button>
         <button type="button"
                 class="btn btn-default btn-mini demote"
                 title="Demote this node"
-                ng-disabled="! movableDown"
-                ng-click="moveDown(node)">
+                ng:disabled="! movableDown"
+                ng:click="moveDown(node)">
           <span class="icon-arrow-down{{
                        ! movableDown && ' muted' || ''}}"></span>
         </button>

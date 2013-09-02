@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" ng-app="nOrg">
+<html lang="en" ng:app="nOrg">
 <head>
   <meta charset="utf-8">
   <title>N-Org Demo</title>
@@ -9,7 +9,7 @@
 <body>
   <ol id="norg-edit" class="norg-nodes"
       tabindex="0"
-      ng-controller="NOrgCtrl"
+      ng:controller="NOrgCtrl"
       ui:keydown="keydown">
     <li ng:repeat="node in node.children"
         ng:controller="NOrgNodeCtrl"

@@ -6,7 +6,6 @@
 
 ## TODO
 
-* ng:*
 * ng:bind
 * ng:class
 * apply node props directly to scope
