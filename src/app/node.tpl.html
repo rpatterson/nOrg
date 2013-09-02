@@ -47,17 +47,19 @@
           <tr ng:repeat="key in header_keys"
               ng:controller="NOrgHeaderCtrl"
               class="norg-headers--{{key}}">
-            <th>
+            <th class="cursor-cell">
               <button type="button"
                       class="btn btn-mini cursor-button"
-                      ng:class="{'btn-primary': $parent.cursor,
-                                'btn-default': ! $parent.cursor}"
+                      ng:class="{'btn-primary': cursor,
+                                'btn-default': ! cursor}"
                       title="Node cursor"
-                      ng:click="cursorTo($parent)"
-                      norg:cursor="{{$parent.cursor}}">
+                      ng:click="cursorTo()"
+                      norg:cursor="{{cursor}}">
                 <span class="icon-th">
                 </span>
               </button>
+            </th>
+            <th>
             <span contentEditable="true"
                   ng:bind="key + ':'"
                   ng:keydown="$event.stopPropagation()"></span>

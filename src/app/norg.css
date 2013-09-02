@@ -25,3 +25,14 @@
 #norg-edit .btn-toolbar {
     margin: 0em;  /* Fix sibling <li> recursive indenting */
 }
+.norg-headers .btn.cursor-button {
+    border: none;
+}
+.norg-headers .table-condensed th,
+.norg-headers .table-condensed td {
+    padding-top: 0em;
+    padding-bottom: 0em;
+}    
+.norg-headers .cursor-cell {
+    padding: 0em;
+}
