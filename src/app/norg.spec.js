@@ -244,6 +244,10 @@ describe('N-Org', function() {
          expect($scope.cursorScope.node.path).toBe($scope.node.path);
          expect($scope.cursor).toBeTruthy();
        }));
+    it('cursor can move to next parent from last child',
+       inject(function($controller) {
+         // TODO
+       }));
     it('cursor can be moved up to previous sibling',
        inject(function($controller) {
          var old_cursor = $scope.cursorScope;
@@ -266,6 +270,10 @@ describe('N-Org', function() {
          expect($scope.cursorScope.node.path).toBe($scope.node.path);
          expect($scope.cursor).toBeTruthy();
     }));
+    it('cursor can move to previous parent from first child',
+       inject(function($controller) {
+         // TODO
+       }));
 
     it('cursor can be moved right to the first child',
        inject(function($controller) {

@@ -60,7 +60,6 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'
     $scope.cursorDown = function cursorDown($event) {
       if ($scope.cursorScope.$last) {
         $log.debug("Cannot move cursor after the last child node.");
-        // TODO to next parent
       } else {
         $scope.cursorTo($scope.cursorScope.nextSiblingNode);
       }};
@@ -68,7 +67,6 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'
     $scope.cursorUp = function cursorUp($event) {
       if ($scope.cursorScope.$first) {
         $log.debug("Cannot move cursor before the first child node.");
-        // TODO to prev parent
       } else {
         $scope.cursorTo($scope.cursorScope.prevSiblingNode);
       }};
