@@ -17,21 +17,21 @@ describe('nOrg', function() {
     });
     it('inherits attrs and headers from parent', function () {
       var child = node.newChild();
-      node.foo = 'foo';
-      node.headers['Foo-Header'] = 'foo';
+      node.path = 'foo';
+      node.headers['Subject'] = "Foo Subject";
 
-      expect(child.foo).toBe('foo');
-      expect(child.headers['Foo-Header']).toBe('foo');
+      expect(child.path).toBe('foo');
+      expect(child.headers['Subject']).toBe("Foo Subject");
     });
     it('child may override parent attrs and headers', function () {
       var child = node.newChild();
-      node.foo = 'foo';
-      node.headers['Foo-Header'] = 'foo';
-      child.foo = 'bar';
-      child.headers['Foo-Header'] = 'bar';
+      node.path = 'foo';
+      node.headers['Subject'] = "Foo Subject";
+      child.path = 'bar';
+      child.headers['Subject'] = 'Bar Subject';
 
-      expect(child.foo).toBe('bar');
-      expect(child.headers['Foo-Header']).toBe('bar');
+      expect(child.path).toBe('bar');
+      expect(child.headers['Subject']).toBe('Bar Subject');
     });
   });
   
