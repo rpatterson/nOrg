@@ -8,7 +8,6 @@ describe('N-Org', function() {
   beforeEach(inject(function($rootScope, $controller, $log) {
     $scope = $rootScope.$new();
     NOrgNodeCtrl = $controller("NOrgCtrl", {$scope: $scope});
-    $log.debug = $log.info;
   }));
 
   it('should exist', inject(function () {
