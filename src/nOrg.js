@@ -18,7 +18,7 @@ var nOrg = (function nOrg() {
     child.headers.node = this;
 
     if (object) {
-      this.extend(object);
+      child.extend(object);
     }
 
     return child;
@@ -27,6 +27,9 @@ var nOrg = (function nOrg() {
     for (var key in object) {
       if (key === 'headers') {
         this.headers.extend(object.headers);
+      } else if (key === 'children') {
+        this.children = [];
+        object.children.forEach(extendChild, this);
       } else {
         this[key] = object[key];
       }
@@ -55,6 +58,10 @@ var nOrg = (function nOrg() {
   };
 
   root = new Node();
+
+  function extendChild(child) {
+    this.children.push( this.newChild(child));
+  }
 
   return {
     Node: Node,
