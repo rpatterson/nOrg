@@ -90,6 +90,11 @@ describe('nOrg', function() {
       expect(nOrg.root.childTail.prevSibling.path).toBe(node.path);
       expect(typeof node.nextSibling.nextSibling).toBe('undefined');
     });
+    it('assembles children into an array', function () {
+      var children = node.children();
+      expect(children.length).toBe(3);
+      expect(children[0].path).toBe(node.childHead.path);
+    });
   });
 
   it('generates valid, CSS select-able ids for nodes', function () {

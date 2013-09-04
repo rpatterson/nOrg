@@ -11,7 +11,7 @@
       tabindex="0"
       ng:controller="NOrgCtrl"
       ui:keydown="keydown">
-    <li ng:repeat="node in node.children"
+    <li ng:repeat="node in node.children()"
         ng:controller="NOrgNodeCtrl"
         id="Message-ID-{{id}}"
         class="norg-node">

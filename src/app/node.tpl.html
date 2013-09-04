@@ -124,7 +124,7 @@
 
   <ol id="Message-ID-{{id}}-children" class="norg-nodes"
       collapse="collapsed">
-    <li ng:repeat="node in node.children"
+    <li ng:repeat="node in node.children()"
         ng:controller="NOrgNodeCtrl"
         id="Message-ID-{{id}}"
         class="norg-node">

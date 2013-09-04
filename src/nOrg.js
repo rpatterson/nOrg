@@ -57,6 +57,15 @@ var nOrg = (function nOrg() {
     }
     this.childTail = child;
   };
+  Node.prototype.children = function children() {
+    var results = [];
+    var child = this.childHead;
+    while (child) {
+      results.push(child);
+      child = child.nextSibling;
+    }
+    return results;
+  };
   Node.prototype.extend = function extend(object) {
     for (var key in object) {
       if (key === 'headers') {
