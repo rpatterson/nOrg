@@ -10,6 +10,11 @@ describe('nOrg', function() {
     expect(nOrg.root).toBeTruthy();
   });
 
+  it('child nodes have headers', function () {
+    expect(node.hasOwnProperty("headers")).toBeTruthy();
+    expect(node.headers.hasOwnProperty("node")).toBeTruthy();
+  });
+
   describe('node inheritance:', function () {
     it('has a parent', function () {
       expect(node).toBeTruthy();
@@ -21,6 +26,7 @@ describe('nOrg', function() {
       node.headers['Subject'] = "Foo Subject";
 
       expect(child.path).toBe('foo');
+      expect(child.headers.node.path).toBe('foo');
       expect(child.headers['Subject']).toBe("Foo Subject");
     });
     it('child may override parent attrs and headers', function () {
