@@ -12,7 +12,7 @@ var nOrg = (function nOrg() {
     this.nextSibling = undefined;
     this.prevSibling = undefined;
   };
-  Node.prototype.toId = function toId(object) {
+  Node.prototype.toId = function toId() {
     // Generate a valid HTML ID and CSS selector from the message
     // ID using base64 encoding
     return window.btoa(this.headers["Message-ID"]).slice(0, -1);
