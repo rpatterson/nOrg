@@ -234,10 +234,11 @@ var nOrg = (function nOrg() {
       }, this);
   };
 
-  function newRoot() {
+  function newRoot(object) {
     root = new Node();
     root.root = root;           // for looking up the root node
     root.headers.hiddenKeys = {"Subject": true, "Message-ID": true};
+    root.extend(object);
     return root;
   }
 

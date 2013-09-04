@@ -26,8 +26,7 @@ describe('nOrg', function() {
       ]};
 
   beforeEach(function () {
-    nOrg.root = nOrg.newRoot();
-    nOrg.root.extend(json);
+    nOrg.root = nOrg.newRoot(json);
     node = nOrg.root.childHead.nextSibling;
   });
 
