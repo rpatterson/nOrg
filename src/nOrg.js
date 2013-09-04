@@ -7,6 +7,7 @@ var nOrg = (function nOrg() {
   }
   Node.prototype.init = function init() {
     this.headers = new Headers(this);
+    this.length = 0;
 
     // ensure that internally used attrs are not inherited
     reservedAttrs.forEach(function (attr) {
@@ -33,6 +34,7 @@ var nOrg = (function nOrg() {
     return child;
   };
   Node.prototype.pushChild = function pushChild(child) {
+    this.length++;
     if (this.childHead) {
       child.prevSibling = this.childTail;
       this.childTail.nextSibling = child;

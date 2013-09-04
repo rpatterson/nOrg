@@ -53,8 +53,11 @@ describe('nOrg', function() {
 
       var last = nOrg.root.newChild({"path": "bar"});
 
+      expect(nOrg.root.length).toBe(2);
+
       expect(nOrg.root.childHead.path).toBe(node.path);
       expect(nOrg.root.childTail.path).toBe(last.path);
+      expect(node.length).toBe(0);
       expect(node.childHead).toBeUndefined();
       expect(node.childTail).toBeUndefined();
 
