@@ -44,65 +44,6 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'
     };
 
 
-    // Root cursor state
-    $scope.cursorTo = function cursorTo(scope) {
-      if (typeof scope == "undefined") {
-        scope = this;
-      }
-      if ($scope.cursorScope) {
-        $scope.cursorScope.cursor = false;
-      }
-      scope.cursor = true;
-      $scope.cursorScope = scope;
-    };
-    
-    $scope.cursorDown = function cursorDown($event) {
-      var scope = $scope.cursorScope;
-      if (scope.node.children.length && (! scope.collapsed)) {
-        return $scope.cursorTo(scope.childHeadNode);
-      }
-      while (scope.$last && scope.parentNode.parentNode) {
-        scope = scope.parentNode;
-      }
-      if (scope.$last) {
-        $log.debug("Cannot move cursor after the last node.");
-      } else {
-        $scope.cursorTo(scope.nextSiblingNode);
-      }};
-
-    $scope.cursorUp = function cursorUp($event) {
-      var scope = $scope.cursorScope;
-      if (scope.prevSiblingNode &&
-          scope.prevSiblingNode.node.children.length &&
-          (! scope.prevSiblingNode.collapsed)) {
-        return $scope.cursorTo(scope.prevSiblingNode.childTailNode);
-      }
-      if (scope.$first) {
-        if (scope.parentNode.parentNode) {
-          $scope.cursorTo(scope.parentNode);
-          } else {
-            $log.debug("Cannot move cursor before the first node.");
-          }
-      } else {
-        $scope.cursorTo(scope.prevSiblingNode);
-      }};
-
-    $scope.cursorRight = function cursorRight($event) {
-      if ($scope.cursorScope.node.children.length === 0) {
-        $log.debug("Cannot move cursor down into a node without children.");
-      } else {
-        $scope.cursorScope.collapsed = false;
-        $scope.cursorTo($scope.cursorScope.childHeadNode);
-      }};
-
-    $scope.cursorLeft = function cursorLeft() {
-      if (typeof $scope.cursorScope.parentNode.parentNode == "undefined") {
-        $log.debug("Cannot move cursor above the top.");
-      } else {
-        $scope.cursorTo($scope.cursorScope.parentNode);
-      }};
-
-
     // expand/collapse
 
     // node
@@ -129,17 +70,7 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'
 
     $scope.controlName = 'NOrgNodeCtrl';
 
-    // Cursor initialization
-    // child nodes must overrid parent to avoid scope inheritance
-    // leaking the cursor down
-    $scope.cursor = false;
-    if (typeof $scope.cursorScope == "undefined") {
-      // Cursor defaults to first node
-      $scope.cursorTo($scope);
-    }
-
     // Parent/Children processing
-    $scope.collapsed = true;
     $scope.parentNode = $scope.$parent.nodeScope();
     $scope.node.children = $scope.node.children || [];
 

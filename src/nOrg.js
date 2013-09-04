@@ -14,6 +14,15 @@ var nOrg = (function nOrg() {
     this.prevSibling = undefined;
 
     this.collapsed = true;
+
+    // Cursor initialization
+    // child nodes must override parent to avoid scope inheritance
+    // leaking the cursor down
+    this.cursor = false;
+    if (this.root && (! this.cursorNode)) {
+      // Cursor defaults to first node
+      this.cursorTo(this);
+    }
   };
   Node.prototype.toId = function toId() {
     // Generate a valid HTML ID and CSS selector from the message
@@ -153,6 +162,57 @@ var nOrg = (function nOrg() {
   };
 
 
+  // Root cursor state
+  Node.prototype.cursorTo = function cursorTo(node) {
+    if (typeof node == "undefined") {
+      node = this;
+    }
+    if (this.cursorNode) {
+      this.cursorNode.cursor = false;
+    }
+    node.cursor = true;
+    this.root.cursorNode = node;
+  };
+  
+  Node.prototype.cursorDown = function cursorDown() {
+    var node = this.cursorNode;
+    if (node.length && (! node.collapsed)) {
+      return this.cursorTo(node.childHead);
+    }
+    while ((! node.nextSibling) && node.parent.parent) {
+      node = node.parent;
+    }
+    if (node.nextSibling) {
+      this.cursorTo(node.nextSibling);
+    }};
+
+  Node.prototype.cursorUp = function cursorUp() {
+    var node = this.cursorNode;
+    if (node.prevSibling &&
+        node.prevSibling.length &&
+        (! node.prevSibling.collapsed)) {
+      return this.cursorTo(node.prevSibling.childTail);
+    }
+    if (! node.prevSibling) {
+      if (node.parent.parent) {
+        this.cursorTo(node.parent);
+      }
+    } else {
+      this.cursorTo(node.prevSibling);
+    }};
+
+  Node.prototype.cursorRight = function cursorRight() {
+    if (this.cursorNode.length) {
+      this.cursorNode.collapsed = false;
+      this.cursorTo(this.cursorNode.childHead);
+    }};
+
+  Node.prototype.cursorLeft = function cursorLeft() {
+    if (this.cursorNode.parent.parent) {
+      this.cursorTo(this.cursorNode.parent);
+    }};
+
+
   function Headers() {
   }
   Headers.prototype.newChild = function newChild() {
@@ -176,6 +236,7 @@ var nOrg = (function nOrg() {
 
   function newRoot() {
     root = new Node();
+    root.root = root;           // for looking up the root node
     root.headers.hiddenKeys = {"Subject": true, "Message-ID": true};
     return root;
   }

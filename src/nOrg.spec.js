@@ -63,6 +63,10 @@ describe('nOrg', function() {
       expect(child.path).toBe('bar');
       expect(child.headers['Subject']).toBe('Bar Subject');
     });
+    it('can inherit root node', function () {
+      expect(node.hasOwnProperty("root")).toBeFalsy();
+      expect(node.root.hasOwnProperty("root")).toBeTruthy();
+    });
   });
 
   describe('node children:', function () {
@@ -190,6 +194,167 @@ describe('nOrg', function() {
       expect(function () {
         node.moveDown();
       }).toThrow(new Error("Cannot move last nodes down!"));
+    }));
+  });
+
+  describe('cursor:', function () {
+    beforeEach(inject(function() {
+      // Switch to the first node
+      node = node.parent.childHead;
+    }));
+
+    it('cursor is initially at the first node', inject(function($controller) {
+      expect(node.cursorNode.path).toBe(node.path);
+      expect(node.cursor).toBeTruthy();
+
+      // Switch to the next node
+      node = node.nextSibling;
+
+      expect(node.cursorNode).not.toBe(node);
+      expect(node.cursor).toBeFalsy();
+    }));
+    it('cursor may be changed to any other node', inject(function() {
+      var old_cursor = node.cursorNode;
+      // Switch to the next node
+      node = node.nextSibling;
+
+      node.cursorTo(node);
+      expect(node.cursorNode.path).toBe(node.path);
+      expect(node.cursor).toBeTruthy();
+      expect(old_cursor.cursor).toBeFalsy();
+    }));
+    it('cursor can be moved down to next sibling', inject(function() {
+      var old_cursor = node.cursorNode;
+      // Switch to the next node
+      node = node.nextSibling;
+
+      node.cursorDown();
+      expect(node.cursorNode.path).toBe(node.path);
+      expect(node.cursor).toBeTruthy();
+      expect(old_cursor.cursor).toBeFalsy();
+    }));
+    it('cursor cannot be moved down beyond last sibling', inject(function() {
+      // Switch to the last node
+      node = node.parent.childTail;
+
+      node.cursorTo(node);
+      node.cursorDown();
+      expect(node.cursorNode.path).toBe(node.path);
+      expect(node.cursor).toBeTruthy();
+    }));
+    it('cursor can move down to next expanded child', inject(function() {
+      // Switch to node with children
+      node = node.nextSibling;
+      node.cursorTo(node);
+      expect(node.cursorNode.collapsed).toBeTruthy();
+      node.cursorNode.collapsed = false;
+
+      node.cursorDown();
+      expect(node.cursorNode.path).toBe(node.childHead.path);
+      expect(node.cursor).toBeFalsy();
+      expect(node.childHead.cursor).toBeTruthy();
+    }));
+    it('cursor can move down to next parent from last child', inject(function() {
+      // Switch to last child node
+      node = node.nextSibling.childTail;
+      node.cursorTo(node);
+      node.cursorDown();
+      expect(node.cursorNode.path).toBe(node.parent.nextSibling.path);
+      expect(node.cursor).toBeFalsy();
+      expect(node.parent.nextSibling.cursor).toBeTruthy();
+    }));
+    it('cursor can move up to previous sibling', inject(function() {
+      var old_cursor = node.cursorNode;
+      // Switch to the next node
+      node = node.nextSibling;
+
+      node.cursorTo(node);
+      node.cursorUp();
+      expect(node.cursorNode.path).toBe(old_cursor.path);
+      expect(node.cursor).toBeFalsy();
+      expect(old_cursor.cursor).toBeTruthy();
+    }));
+    it("cursor can move up into previous expanded sibling's last child",
+       inject(function() {
+         // Switch to node after one with children
+         node = node.parent.childTail;
+         node.cursorTo(node);
+         expect(node.cursorNode.prevSibling.collapsed).toBeTruthy();
+         node.cursorNode.prevSibling.collapsed = false;
+
+         node.cursorUp();
+         expect(node.cursorNode.path).toBe(node.prevSibling.childTail.path);
+         expect(node.cursor).toBeFalsy();
+         expect(node.prevSibling.childTail.cursor).toBeTruthy();
+       }));
+    it('cursor cannot be moved up above first sibling', inject(function() {
+      node.cursorUp();
+      expect(node.cursorNode.path).toBe(node.path);
+      expect(node.cursor).toBeTruthy();
+    }));
+    it('cursor can move to previous parent from first child',
+       inject(function() {
+         // Switch to first child node
+         node = node.nextSibling.childHead;
+         node.cursorTo(node);
+         node.cursorUp();
+         expect(node.cursorNode.path).toBe(node.parent.path);
+         expect(node.cursor).toBeFalsy();
+         expect(node.parent.cursor).toBeTruthy();
+       }));
+
+    it('cursor can be moved right to the first child', inject(function() {
+      var old_cursor;
+      // Create a child
+      node = node.nextSibling;
+      node.cursorTo(node);
+      old_cursor = node.cursorNode;
+
+      node = node.childHead;
+
+      node.cursorRight();
+      expect(node.cursorNode.path).toBe(node.path);
+      expect(node.cursor).toBeTruthy();
+      expect(old_cursor.cursor).toBeFalsy();
+    }));
+    it('cursor cannot be moved right without children', inject(function() {
+      node.cursorRight();
+      expect(node.cursorNode.path).toBe(node.path);
+      expect(node.cursor).toBeTruthy();
+    }));
+    it('cursor can expand and move into collapsed first child',
+       inject(function() {
+         // Switch to the next node
+         node = node.nextSibling;
+         node.cursorTo(node);
+         expect(node.collapsed).toBeTruthy();
+
+         node.cursorRight();
+         expect(node.cursorNode.path).toBe(node.childHead.path);
+         expect(node.cursor).toBeFalsy();
+         expect(node.childHead.cursor).toBeTruthy();
+         expect(node.collapsed).toBeFalsy();
+       }));
+    it('cursor can be moved up to previous sibling', inject(function() {
+      var old_cursor;
+      // Create a child
+      node = node.nextSibling;
+
+      node.cursorTo(node);
+      old_cursor = node.cursorNode;
+
+      node = node.childHead;
+      node.cursorTo(node);
+
+      node.cursorLeft();
+      expect(node.cursorNode.path).toBe(old_cursor.path);
+      expect(node.cursor).toBeFalsy();
+      expect(old_cursor.cursor).toBeTruthy();
+    }));
+    it('cursor cannot be moved up above first sibling', inject(function() {
+      node.cursorLeft();
+      expect(node.cursorNode.path).toBe(node.path);
+      expect(node.cursor).toBeTruthy();
     }));
   });
 });
