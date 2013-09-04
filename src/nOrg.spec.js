@@ -34,6 +34,23 @@ describe('nOrg', function() {
       expect(child.headers['Subject']).toBe('Bar Subject');
     });
   });
-  
+
+  it('nodes may be created from objects', function () {
+    var object = {"path": "bar",
+                  "headers": {"Subject": "Bar Subject"}};
+    var child = node.newChild();
+    node.path = 'foo';
+    node.headers['Subject'] = "Foo Subject";
+
+    child.extend(object);
+    expect(child.path).toBe('bar');
+    expect(child.headers['Subject']).toBe("Bar Subject");
+
+    object.path = 'qux';
+    object.headers['Subject'] = "Qux Subject";
+    child = node.newChild(object);
+    expect(child.path).toBe('qux');
+    expect(child.headers['Subject']).toBe("Qux Subject");
+    });
 });
 
