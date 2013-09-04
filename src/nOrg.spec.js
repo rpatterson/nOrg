@@ -1,10 +1,34 @@
 describe('nOrg', function() {
   var node;
+  var json = {
+      "children": [
+        {"path": "/foo.nod",
+         "headers": {"Subject": "Foo Subject",
+                     "Message-ID": "<1@foo.com>"}},
+        {"path": "/bar/.nod",
+         "headers": {"Subject": "Bar Subject",
+                     "Message-ID": "<2@foo.com>",
+                     "Bar-Property": "Bar Property"},
+         "children": [
+           {"path": "/bar/corge.nod",
+            "headers": {"Subject": "Corge Node",
+                        "Message-ID": "<3@foo.com>",
+                        "Corge-Property": "Corge Property"}},
+           {"path": "/bar/grault.nod",
+            "headers": {"Subject": "Grault Node",
+                        "Message-ID": "<4@foo.com>"}},
+           {"path": "/bar/garply.nod",
+            "headers": {"Subject": "Garply Node",
+                        "Message-ID": "<5@foo.com>"}}]},
+        {"path": "/qux/.nod/.nod",
+         "headers": {"Subject": "Qux Subject",
+                     "Message-ID": "<6@foo.com>"}}
+      ]};
 
   beforeEach(function () {
     nOrg.root = nOrg.newRoot();
-    node = nOrg.root.newChild({"path": "foo",
-                               "headers": {"Subject": "Foo Subject"}});
+    nOrg.root.extend(json);
+    node = nOrg.root.childHead.nextSibling;
   });
 
   it('exports module contents', function () {
@@ -17,8 +41,7 @@ describe('nOrg', function() {
       expect(node.hasOwnProperty("headers")).toBeTruthy();
     });
     it('lists of headers to include in UI', inject(function () {
-      node.headers['Foo-Header'] = 'Foo Header';
-      expect(node.headers.keys()).toEqual(['Foo-Header']);
+      expect(node.headers.keys()).toEqual(['Bar-Property']);
     }));
   });
 
@@ -29,8 +52,8 @@ describe('nOrg', function() {
     });
     it('inherits attrs and headers from parent', function () {
       var child = node.newChild();
-      expect(child.path).toBe('foo');
-      expect(child.headers['Subject']).toBe("Foo Subject");
+      expect(child.path).toBe('/bar/.nod');
+      expect(child.headers['Subject']).toBe("Bar Subject");
     });
     it('child may override parent attrs and headers', function () {
       var child = node.newChild();
@@ -44,27 +67,25 @@ describe('nOrg', function() {
 
   describe('node children:', function () {
     it('nodes may have children', function () {
-      expect(nOrg.root.childHead.path).toBe(node.path);
-      expect(nOrg.root.childTail.path).toBe(node.path);
-      expect(nOrg.root.prevSibling).toBeUndefined();
-      expect(nOrg.root.nextSibling).toBeUndefined();
-      expect(node.prevSibling).toBeUndefined();
-      expect(node.nextSibling).toBeUndefined();
+      expect(nOrg.root.childHead.nextSibling.path).toBe(node.path);
+      expect(nOrg.root.childTail.prevSibling.path).toBe(node.path);
+      expect(typeof nOrg.root.prevSibling).toBe('undefined');
+      expect(typeof nOrg.root.nextSibling).toBe('undefined');
+      expect(typeof node.prevSibling.prevSibling).toBe('undefined');
+      expect(typeof node.nextSibling.nextSibling).toBe('undefined');
 
-      var last = nOrg.root.newChild({"path": "bar"});
+      expect(nOrg.root.length).toBe(3);
 
-      expect(nOrg.root.length).toBe(2);
+      expect(nOrg.root.childHead.nextSibling.path).toBe(node.path);
+      expect(nOrg.root.childTail.prevSibling.path).toBe(node.path);
+      expect(node.childHead.length).toBe(0);
+      expect(typeof node.prevSibling.childHead).toBe('undefined');
+      expect(typeof node.prevSibling.childTail).toBe('undefined');
 
-      expect(nOrg.root.childHead.path).toBe(node.path);
-      expect(nOrg.root.childTail.path).toBe(last.path);
-      expect(node.length).toBe(0);
-      expect(node.childHead).toBeUndefined();
-      expect(node.childTail).toBeUndefined();
-
-      expect(node.nextSibling.path).toBe(last.path);
-      expect(node.prevSibling).toBeUndefined();
-      expect(last.prevSibling.path).toBe(node.path);
-      expect(last.nextSibling).toBeUndefined();
+      expect(nOrg.root.childHead.nextSibling.path).toBe(node.path);
+      expect(typeof node.prevSibling.prevSibling).toBe('undefined');
+      expect(nOrg.root.childTail.prevSibling.path).toBe(node.path);
+      expect(typeof node.nextSibling.nextSibling).toBe('undefined');
     });
   });
 
