@@ -1,6 +1,4 @@
 var nOrg = (function nOrg() {
-  var root;
-
   function Node() {
     this.init();
   }
@@ -30,7 +28,6 @@ var nOrg = (function nOrg() {
     child.parent = this;
     this.pushChild(child);
     child.headers = this.headers.newChild(child);
-    child.headers.node = this;
 
     if (object) {
       child.extend(object);
@@ -60,20 +57,14 @@ var nOrg = (function nOrg() {
     }
   };
 
-  function Headers(node) {
-    this.init(node);
+  function Headers() {
   }
-  Headers.prototype.init = function init(node) {
-    this.node = node;
-  };
-  Headers.prototype.newChild = function newChild(node) {
+  Headers.prototype.newChild = function newChild() {
     // prototypical inheritance from parent headerss
-    function Headers(node) {
-      this.init(node);
-    }
+    function Headers() {}
     var child;
     Headers.prototype = this;
-    child = new Headers(node);
+    child = new Headers();
     return child;
   };
   Headers.prototype.extend = function extend(object) {
@@ -81,12 +72,23 @@ var nOrg = (function nOrg() {
       this[key] = object[key];
     }
   };
+  Headers.prototype.keys = function keys() {
+    return Object.keys(this).filter(function (key) {
+      return !(key in this.hiddenKeys);
+      }, this);
+  };
 
-  root = new Node();
+  function newRoot() {
+    root = new Node();
+    root.headers.hiddenKeys = {"Subject": true, "Message-ID": true};
+    return root;
+  }
+
 
   return {
     Node: Node,
     Headers: Headers,
-    root: root
+    newRoot: newRoot,
+    root: newRoot()
   };
 }());

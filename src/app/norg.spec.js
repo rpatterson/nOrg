@@ -85,15 +85,6 @@ describe('N-Org', function() {
     }));
   });
 
-  describe('node headers:', function () {
-    beforeEach(function () {
-    });
-
-    it('generates a list of headers to display for nodes', inject(function () {
-      expect($scope.header_keys.length).toBeTruthy();
-    }));
-  });
-
   describe('editing:', function () {
     it('nodes with previous siblings may be demoted', inject(function () {
       var new_parent = $scope.siblings[$scope.$index - 1];

@@ -4,7 +4,6 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'
   .controller('NOrgCtrl', function NOrgCtrl($scope, $http, $log) {
     $scope.controlName = 'NOrgCtrl';
 
-    $scope.reserved_headers = {"Subject": true, "Message-ID": true};
     $scope.keymap = {
       'tab': 'toggleNode($event)',
       'h': 'toggleHeaders($event)',
@@ -165,11 +164,6 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'
 
     // A list of header names that the UI will care about
     $scope.headersCollapsed = true;
-    $scope.header_keys = [];
-    for (var key in $scope.node.headers) {
-      if (!(key in $scope.reserved_headers)) {
-        $scope.header_keys.push(key);
-      }}
     $scope.headers = {};        // header scopes
 
 

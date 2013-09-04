@@ -2,7 +2,7 @@ describe('nOrg', function() {
   var node;
 
   beforeEach(function () {
-    nOrg.root = new nOrg.Node();
+    nOrg.root = nOrg.newRoot();
     node = nOrg.root.newChild({"path": "foo",
                                "headers": {"Subject": "Foo Subject"}});
   });
@@ -12,9 +12,14 @@ describe('nOrg', function() {
     expect(nOrg.root).toBeTruthy();
   });
 
-  it('child nodes have headers', function () {
-    expect(node.hasOwnProperty("headers")).toBeTruthy();
-    expect(node.headers.hasOwnProperty("node")).toBeTruthy();
+  describe('node headers:', function () {
+    it('child nodes have headers', function () {
+      expect(node.hasOwnProperty("headers")).toBeTruthy();
+    });
+    it('lists of headers to include in UI', inject(function () {
+      node.headers['Foo-Header'] = 'Foo Header';
+      expect(node.headers.keys()).toEqual(['Foo-Header']);
+    }));
   });
 
   describe('node inheritance:', function () {
@@ -25,7 +30,6 @@ describe('nOrg', function() {
     it('inherits attrs and headers from parent', function () {
       var child = node.newChild();
       expect(child.path).toBe('foo');
-      expect(child.headers.node.path).toBe('foo');
       expect(child.headers['Subject']).toBe("Foo Subject");
     });
     it('child may override parent attrs and headers', function () {
