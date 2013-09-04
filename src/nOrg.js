@@ -1,6 +1,5 @@
 var nOrg = (function nOrg() {
   var root;
-  var reservedAttrs = ['childHead', 'childTail', 'nextSibling', 'prevSibling'];
 
   function Node() {
     this.init();
@@ -10,9 +9,10 @@ var nOrg = (function nOrg() {
     this.length = 0;
 
     // ensure that internally used attrs are not inherited
-    reservedAttrs.forEach(function (attr) {
-      this[attr] = undefined;
-    }, this);
+    this.childHead = undefined;
+    this.childTail = undefined;
+    this.nextSibling = undefined;
+    this.prevSibling = undefined;
   };
   Node.prototype.newChild = function newChild(object) {
     // prototypical inheritance from parent nodes
