@@ -165,49 +165,6 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'
     // A list of header names that the UI will care about
     $scope.headersCollapsed = true;
     $scope.headers = {};        // header scopes
-
-
-    // Moving nodes
-
-    $scope.demote = function demote() {
-      // Demote a node if appropriate
-      if ($scope.$first) {
-        throw new Error("Cannot demote first sibling!");
-      }
-      
-      $scope.siblings[$scope.$index - 1].children.push($scope.node);
-      $scope.siblings.splice($scope.$index, 1);
-    };
-
-    $scope.promote = function promote() {
-      // Promote a node if appropriate
-      if (typeof $scope.parentNode.siblings == "undefined") {
-        throw new Error("Cannot promote nodes without parents!");
-      }
-      $scope.parentNode.siblings.splice(
-        $scope.parentNode.$index + 1, 0, $scope.node);
-      $scope.parentNode.node.children.splice($scope.$index, 1);
-    };
-
-    $scope.moveUp = function moveUp() {
-      // Move a node up relative to it's siblings if appropriate
-      if ($scope.$first) {
-        throw new Error("Cannot move first nodes up!");
-      }
-
-      var new_next = $scope.siblings[$scope.$index - 1];
-      $scope.siblings.splice($scope.$index - 1, 2, $scope.node, new_next);
-    };
-
-    $scope.moveDown = function moveDown() {
-      // Move a node down relative to it's siblings if appropriate
-      if ($scope.$last) {
-        throw new Error("Cannot move last nodes down!");
-      }
-
-      var new_previous = $scope.siblings[$scope.$index + 1];
-      $scope.siblings.splice($scope.$index, 2, new_previous , $scope.node);
-    };
   })
 
   .controller('NOrgHeaderCtrl', function NOrgHeaderCtrl ($scope) {

@@ -130,5 +130,67 @@ describe('nOrg', function() {
       expect(child.childTail.headers["Subject"]).toBe("Garply Subject");
     });
   });
+
+  describe('moving nodes:', function () {
+    it('nodes with previous siblings may be demoted', inject(function () {
+      expect(node.prevSibling.collapsed).toBeTruthy();
+      node.demote();
+      expect(node.prevSibling.childHead.path).toBe(node.path);
+      expect(node.prevSibling.collapsed).toBeFalsy();
+    }));
+    it('first sibling nodes may not be demoted', inject(function () {
+      // Switch to a scope with no previous siblings
+      node = node.childHead;
+
+      expect(function () {
+        node.demote();
+      }).toThrow(new Error("Cannot demote first sibling!"));
+    }));
+
+    it('nodes with parents may be promoted', inject(function() {
+      // Switch to a scope beneath the previous
+      node = node.childHead.nextSibling;
+
+      node.promote();
+      expect(nOrg.root.childTail.prevSibling.path).toBe(node.path);
+    }));
+    it('nodes without parents may not be promoted', inject(function () {
+      expect(function () {
+        node.promote();
+      }).toThrow(new Error("Cannot promote nodes without parents!"));
+    }));
+
+    it('nodes with previous siblings may be moved up', inject(function () {
+      var new_next = node.prevSibling;
+      node.moveUp();
+      expect(new_next.prevSibling.path).toBe(node.path);
+      expect(node.nextSibling.path).toBe(new_next.path);
+      expect(node.length).toEqual(3);
+    }));
+    it('first nodes may not be moved up', inject(function() {
+      // Switch to a scope with no previous siblings
+      node = node.childHead;
+
+      expect(function () {
+        node.moveUp();
+      }).toThrow(new Error("Cannot move first nodes up!"));
+    }));
+
+    it('nodes with next siblings may be moved down', inject(function () {
+      var new_previous = node.nextSibling;
+      node.moveDown();
+      expect(new_previous.nextSibling.path).toBe(node.path);
+      expect(node.prevSibling.path).toBe(new_previous.path);
+      expect(node.length).toEqual(3);
+    }));
+    it('last nodes may not be moved down', inject(function() {
+      // Switch to a scope with no next siblings
+      node = node.childTail;
+
+      expect(function () {
+        node.moveDown();
+      }).toThrow(new Error("Cannot move last nodes down!"));
+    }));
+  });
 });
 

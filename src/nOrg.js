@@ -7,10 +7,13 @@ var nOrg = (function nOrg() {
     this.length = 0;
 
     // ensure that internally used attrs are not inherited
+
     this.childHead = undefined;
     this.childTail = undefined;
     this.nextSibling = undefined;
     this.prevSibling = undefined;
+
+    this.collapsed = true;
   };
   Node.prototype.toId = function toId() {
     // Generate a valid HTML ID and CSS selector from the message
@@ -56,6 +59,99 @@ var nOrg = (function nOrg() {
       }
     }
   };
+
+
+  // Moving nodes
+
+  Node.prototype.demote = function demote() {
+    // Demote a node if appropriate
+    if (! this.prevSibling) {
+      throw new Error("Cannot demote first sibling!");
+    }
+
+    // Hook sibling nodes to eachother
+    this.prevSibling.nextSibling = this.nextSibling;
+    this.nextSibling.prevSibling = this.prevSibling;
+
+    if (! this.nextSibling) {
+      // update parent last child
+      this.parent.childTail = this.prevSibling;
+    }
+
+    this.prevSibling.collapsed = false;
+    this.prevSibling.pushChild(this);
+  };
+
+  Node.prototype.promote = function promote() {
+    // Promote a node if appropriate
+    if (typeof this.parent.parent == "undefined") {
+      throw new Error("Cannot promote nodes without parents!");
+    }
+
+    // Hook sibling nodes to eachother
+    this.prevSibling.nextSibling = this.nextSibling;
+    this.nextSibling.prevSibling = this.prevSibling;
+
+    if (! this.prevSibling) {
+      // update parent first child
+      this.parent.childHead = this.nextSibling;
+    }
+    if (! this.nextSibling) {
+      // update parent last child
+      this.parent.childTail = this.prevSibling;
+    }
+
+    if (! this.parent.nextSibling) {
+      // last sibling
+      this.parent.parent.childTail = this;
+    } else if (this.parent.nextSibling) {
+      // insert between
+      this.parent.nextSibling.prevSibling = this;
+    }
+    this.parent.nextSibling = this;
+    this.parent = this.parent.parent;
+  };
+
+  Node.prototype.moveUp = function moveUp() {
+    // Move a node up relative to it's siblings if appropriate
+    if (! this.prevSibling) {
+      throw new Error("Cannot move first nodes up!");
+    }
+
+    this.nextSibling = this.prevSibling;
+    this.prevSibling = this.prevSibling.prevSibling;
+    if (this.prevSibling) {
+      this.prevSibling.nextSibling = this;
+    } else {
+      this.parent.childHead = this;
+    }
+    if (this.nextSibling) {
+      this.nextSibling.prevSibling = this;
+    } else {
+      this.parent.childTail = this;
+    }
+  };
+
+  Node.prototype.moveDown = function moveDown() {
+    // Move a node down relative to it's siblings if appropriate
+    if (! this.nextSibling) {
+      throw new Error("Cannot move last nodes down!");
+    }
+
+    this.prevSibling = this.nextSibling;
+    this.nextSibling = this.nextSibling.nextSibling;
+    if (this.nextSibling) {
+      this.nextSibling.prevSibling = this;
+    } else {
+      this.parent.childTail = this;
+    }
+    if (this.prevSibling) {
+      this.prevSibling.nextSibling = this;
+    } else {
+      this.parent.childHead = this;
+    }
+  };
+
 
   function Headers() {
   }

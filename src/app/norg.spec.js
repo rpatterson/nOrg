@@ -85,69 +85,6 @@ describe('N-Org', function() {
     }));
   });
 
-  describe('editing:', function () {
-    it('nodes with previous siblings may be demoted', inject(function () {
-      var new_parent = $scope.siblings[$scope.$index - 1];
-      new_parent.children = [];
-      $scope.demote();
-      expect(new_parent.children[0].path).toBe($scope.node.path);
-    }));
-    it('first sibling nodes may not be demoted', inject(function () {
-      // Switch to a scope with no previous siblings
-      $scope = json.children[1].children[0].scope;
-
-      expect(function () {
-        $scope.demote();
-      }).toThrow(new Error("Cannot demote first sibling!"));
-    }));
-
-    it('nodes with parents may be promoted', inject(function() {
-      // Switch to a scope beneath the previous
-      $scope = json.children[1].children[1].scope;
-
-      $scope.promote();
-      expect($scope.parentNode.parentNode.node.children[2].path).toBe(
-        $scope.node.path);
-    }));
-    it('nodes without parents may not be promoted', inject(function () {
-      expect(function () {
-        $scope.promote();
-      }).toThrow(new Error("Cannot promote nodes without parents!"));
-    }));
-
-    it('nodes with previous siblings may be moved up', inject(function () {
-      var new_next = $scope.siblings[0];
-      $scope.moveUp();
-      expect($scope.siblings[0].path).toBe($scope.node.path);
-      expect($scope.siblings[1].path).toBe(new_next.path);
-      expect($scope.siblings.length).toEqual(3);
-    }));
-    it('first nodes may not be moved up', inject(function() {
-      // Switch to a scope with no previous siblings
-      $scope = json.children[1].children[0].scope;
-
-      expect(function () {
-        $scope.moveUp();
-      }).toThrow(new Error("Cannot move first nodes up!"));
-    }));
-
-    it('nodes with next siblings may be moved down', inject(function () {
-      var new_previous = $scope.siblings[2];
-      $scope.moveDown();
-      expect($scope.siblings[2].path).toBe($scope.node.path);
-      expect($scope.siblings[1].path).toBe(new_previous.path);
-      expect($scope.siblings.length).toEqual(3);
-    }));
-    it('last nodes may not be moved down', inject(function() {
-      // Switch to a scope with no next siblings
-      $scope = json.children[1].children[2].scope;
-
-      expect(function () {
-        $scope.moveDown();
-      }).toThrow(new Error("Cannot move last nodes down!"));
-    }));
-  });
-
   describe('cursor:', function () {
     beforeEach(inject(function() {
       // Switch to the first node
