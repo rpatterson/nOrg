@@ -222,14 +222,33 @@ var nOrg = (function nOrg() {
     }};
 
 
+  // expand/collapse node
+  Node.prototype.toggle = function toggle() {
+    if (this.cursorNode.length) {
+      this.cursorNode.collapsed = ! this.cursorNode.collapsed;
+    }};
+
+  // expand/collapse headers
+  Node.prototype.toggleHeaders = function toggleHeaders() {
+    if (this.headers.keys().length) {
+      this.cursorNode.headers.collapsed = (
+        ! this.cursorNode.headers.collapsed);
+    }
+  };
+
   function Headers() {
+    this.init();
   }
+  Headers.prototype.init = function init() {
+    this.collapsed = true;
+  };
   Headers.prototype.newChild = function newChild() {
     // prototypical inheritance from parent headerss
     function Headers() {}
     var child;
     Headers.prototype = this;
     child = new Headers();
+    child.init();
     return child;
   };
   Headers.prototype.extend = function extend(object) {
@@ -246,7 +265,8 @@ var nOrg = (function nOrg() {
   function newRoot(object) {
     root = new Node();
     root.root = root;           // for looking up the root node
-    root.headers.hiddenKeys = {"Subject": true, "Message-ID": true};
+    root.headers.hiddenKeys = {"Subject": true, "Message-ID": true,
+                               "collapsed": true};
     root.extend(object);
     return root;
   }

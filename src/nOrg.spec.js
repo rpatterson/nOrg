@@ -361,5 +361,39 @@ describe('nOrg', function() {
       expect(node.cursor).toBeTruthy();
     });
   });
+  describe('collapse/expand:', function () {
+    it('nodes are initially collapsed', function() {
+      expect(node.collapsed).toBeTruthy();
+    });
+    it('can toggle nodes with children', function() {
+      node.cursorTo(node);
+      node.toggle();
+      expect(node.collapsed).toBeFalsy();
+      node.toggle();
+      expect(node.collapsed).toBeTruthy();
+    });
+    it('cannot toggle nodes without children', function() {
+      node = node.prevSibling;
+      node.cursorTo(node);
+      node.toggle();
+      expect(node.collapsed).toBeTruthy();
+    });
+    it('headers are initially collapsed', function() {
+      expect(node.headers.collapsed).toBeTruthy();
+    });
+    it('can toggle nodes with headers', function() {
+      node.cursorTo(node);
+      node.toggleHeaders();
+      expect(node.headers.collapsed).toBeFalsy();
+      node.toggleHeaders();
+      expect(node.headers.collapsed).toBeTruthy();
+    });
+    it('cannot toggle nodes without headers', function() {
+      node = node.prevSibling;
+      node.cursorTo(node);
+      node.toggleHeaders();
+      expect(node.headers.collapsed).toBeTruthy();
+    });
+  });
 });
 

@@ -37,44 +37,19 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'
       // Load the initial nodes JSON
       $scope.node = node;
     });
-
-
-    // expand/collapse
-
-    // node
-    $scope.toggleNode = function toggleNode($event) {
-      if (! $scope.cursorScope.node.children.length) {
-        $log.debug("Cannot expand/collapse nodes without children.");
-      } else {
-        $scope.cursorScope.collapsed = ! $scope.cursorScope.collapsed;
-        $event.preventDefault();
-      }};
-
-    // headers
-    $scope.toggleHeaders = function toggleHeaders($event) {
-      if (! $scope.cursorScope.header_keys.length) {
-        $log.debug(
-          "Cannot expand/collapse headers for nodes without headers.");
-      } else {
-        $scope.cursorScope.headersCollapsed = (
-          ! $scope.cursorScope.headersCollapsed);
-      }};
   })
 
   .controller('NOrgNodeCtrl', function NOrgNodeCtrl ($scope) {
-
     $scope.controlName = 'NOrgNodeCtrl';
 
-    // A list of header names that the UI will care about
-    $scope.headersCollapsed = true;
-    $scope.headers = {};        // header scopes
-  })
-
-  .controller('NOrgHeaderCtrl', function NOrgHeaderCtrl ($scope) {
-    $scope.controlName = 'NOrgHeaderCtrl';
-
-    $scope.value = $scope.node.headers[$scope.key];
-    $scope.headers[$scope.key] = $scope;
+    $scope.toggle = function toggle($event) {
+      $scope.node.toggle($event);
+      $event.preventDefault();
+    };
+    $scope.toggleHeaders = function toggleHeaders($event) {
+      $scope.node.toggleHeaders($event);
+      $event.preventDefault();
+    };
   })
 
   .directive('norgCursor', function norgCursor() {
