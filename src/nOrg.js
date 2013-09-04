@@ -4,10 +4,10 @@ var nOrg = (function nOrg() {
   function Node() {
     this.init();
   }
-  Node.prototype.init =  function init() {
+  Node.prototype.init = function init() {
     this.headers = new Headers(this);
   };
-  Node.prototype.newChild =  function newChild(object) {
+  Node.prototype.newChild = function newChild(object) {
     // prototypical inheritance from parent nodes
     var child;
     function Node() {}
@@ -36,10 +36,10 @@ var nOrg = (function nOrg() {
   function Headers(node) {
     this.init(node);
   }
-  Headers.prototype.init =  function init(node) {
+  Headers.prototype.init = function init(node) {
     this.node = node;
   };
-  Headers.prototype.newChild =  function newChild(node) {
+  Headers.prototype.newChild = function newChild(node) {
     // prototypical inheritance from parent headerss
     var child;
     function Headers() {}
