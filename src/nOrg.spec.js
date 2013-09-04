@@ -3,7 +3,8 @@ describe('nOrg', function() {
 
   beforeEach(function () {
     nOrg.root = new nOrg.Node();
-    node = nOrg.root.newChild({"path": "foo"});
+    node = nOrg.root.newChild({"path": "foo",
+                               "headers": {"Subject": "Foo Subject"}});
   });
 
   it('exports module contents', function () {
@@ -23,17 +24,12 @@ describe('nOrg', function() {
     });
     it('inherits attrs and headers from parent', function () {
       var child = node.newChild();
-      node.path = 'foo';
-      node.headers['Subject'] = "Foo Subject";
-
       expect(child.path).toBe('foo');
       expect(child.headers.node.path).toBe('foo');
       expect(child.headers['Subject']).toBe("Foo Subject");
     });
     it('child may override parent attrs and headers', function () {
       var child = node.newChild();
-      node.path = 'foo';
-      node.headers['Subject'] = "Foo Subject";
       child.path = 'bar';
       child.headers['Subject'] = 'Bar Subject';
 
@@ -77,8 +73,6 @@ describe('nOrg', function() {
       var object = {"path": "bar",
                     "headers": {"Subject": "Bar Subject"}};
       var child = node.newChild();
-      node.path = 'foo';
-      node.headers['Subject'] = "Foo Subject";
 
       child.extend(object);
       expect(child.path).toBe('bar');
