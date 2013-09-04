@@ -68,6 +68,10 @@ describe('nOrg', function() {
     });
   });
 
+  it('generates valid, CSS select-able ids for nodes', function () {
+    expect((/[<@\.>]/).test(node.toId())).toBeFalsy();
+  });
+
   describe('nodes from objects:', function () {
     it('nodes may be created from objects', function () {
       var object = {"path": "bar",

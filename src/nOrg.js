@@ -14,6 +14,11 @@ var nOrg = (function nOrg() {
     this.nextSibling = undefined;
     this.prevSibling = undefined;
   };
+  Node.prototype.toId = function toId(object) {
+    // Generate a valid HTML ID and CSS selector from the message
+    // ID using base64 encoding
+    return window.btoa(this.headers["Message-ID"]).slice(0, -1);
+  };
   Node.prototype.newChild = function newChild(object) {
     // prototypical inheritance from parent nodes
     function Node() {

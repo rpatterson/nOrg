@@ -163,10 +163,6 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'
     // Sibling processing
     $scope.siblings = $scope.parentNode.node.children;
 
-    // Generate a valid HTML ID and CSS selector from the message
-    // ID using base64 encoding
-    $scope.id = window.btoa($scope.node.headers["Message-ID"]).slice(0, -1);
-
     // A list of header names that the UI will care about
     $scope.headersCollapsed = true;
     $scope.header_keys = [];

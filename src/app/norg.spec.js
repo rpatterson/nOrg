@@ -85,15 +85,6 @@ describe('N-Org', function() {
     }));
   });
 
-  describe('node ids:', function () {
-    it('generates an element id for nodes', inject(function () {
-      expect($scope.id).toBeTruthy();
-    }));
-    it('generates valid, CSS select-able ids for nodes', inject(function () {
-      expect((/[<@\.>]/).test($scope.id)).toBeFalsy();
-    }));
-  });
-
   describe('node headers:', function () {
     beforeEach(function () {
     });
