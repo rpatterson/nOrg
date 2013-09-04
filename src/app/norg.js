@@ -39,11 +39,6 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'
     });
 
 
-    $scope.nodeScope = function nodeScope() {
-      return $scope;
-    };
-
-
     // expand/collapse
 
     // node
@@ -69,29 +64,6 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'
   .controller('NOrgNodeCtrl', function NOrgNodeCtrl ($scope) {
 
     $scope.controlName = 'NOrgNodeCtrl';
-
-    // Parent/Children processing
-    $scope.parentNode = $scope.$parent.nodeScope();
-    $scope.node.children = $scope.node.children || [];
-
-    $scope.childHeadNode = undefined;
-    if ($scope.$first) {
-      $scope.parentNode.childHeadNode = $scope;
-    }
-
-    $scope.childTailNode = undefined;
-    $scope.prevSiblingNode = $scope.parentNode.childTailNode;
-    if (typeof $scope.prevSiblingNode != "undefined") {
-      $scope.prevSiblingNode.nextSiblingNode = $scope;
-    }
-    $scope.parentNode.childTailNode = $scope;
-      
-    $scope.nodeScope = function nodeScope() {
-      return $scope;
-    };
-
-    // Sibling processing
-    $scope.siblings = $scope.parentNode.node.children;
 
     // A list of header names that the UI will care about
     $scope.headersCollapsed = true;
