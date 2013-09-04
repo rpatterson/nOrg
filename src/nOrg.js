@@ -9,8 +9,8 @@ var nOrg = (function nOrg() {
   };
   Node.prototype.newChild = function newChild(object) {
     // prototypical inheritance from parent nodes
-    var child;
     function Node() {}
+    var child;
     Node.prototype = this;
     child = new Node();
     child.parent = this;
@@ -41,8 +41,8 @@ var nOrg = (function nOrg() {
   };
   Headers.prototype.newChild = function newChild(node) {
     // prototypical inheritance from parent headerss
-    var child;
     function Headers() {}
+    var child;
     Headers.prototype = this;
     child = new Headers();
     child.node = node;
