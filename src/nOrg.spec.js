@@ -2,7 +2,8 @@ describe('nOrg', function() {
   var node;
 
   beforeEach(function () {
-    node = nOrg.root.newChild();
+    nOrg.root = new nOrg.Node();
+    node = nOrg.root.newChild({"path": "foo"});
   });
 
   it('exports module contents', function () {
@@ -41,6 +42,29 @@ describe('nOrg', function() {
     });
   });
 
+  describe('node children:', function () {
+    it('nodes may have children', function () {
+      expect(nOrg.root.childHead.path).toBe(node.path);
+      expect(nOrg.root.childTail.path).toBe(node.path);
+      expect(nOrg.root.prevSibling).toBeUndefined();
+      expect(nOrg.root.nextSibling).toBeUndefined();
+      expect(node.prevSibling).toBeUndefined();
+      expect(node.nextSibling).toBeUndefined();
+
+      var last = nOrg.root.newChild({"path": "bar"});
+
+      expect(nOrg.root.childHead.path).toBe(node.path);
+      expect(nOrg.root.childTail.path).toBe(last.path);
+      expect(node.childHead).toBeUndefined();
+      expect(node.childTail).toBeUndefined();
+
+      expect(node.nextSibling.path).toBe(last.path);
+      expect(node.prevSibling).toBeUndefined();
+      expect(last.prevSibling.path).toBe(node.path);
+      expect(last.nextSibling).toBeUndefined();
+    });
+  });
+
   describe('nodes from objects:', function () {
     it('nodes may be created from objects', function () {
       var object = {"path": "bar",
@@ -69,14 +93,15 @@ describe('nOrg', function() {
                        "headers": {"Subject": "Garply Subject"}}]};
       var child = node.newChild(object);
 
-      expect(child.children[0].path).toBe('bar');
-      expect(child.children[0].headers["Subject"]).toBe("Corge Subject");
+      expect(child.childHead.path).toBe('bar');
+      expect(child.childHead.headers["Subject"]).toBe("Corge Subject");
 
-      expect(child.children[1].path).toBe('bar/grault');
-      expect(child.children[1].headers["Subject"]).toBe("Bar Subject");
+      expect(child.childHead.nextSibling.path).toBe('bar/grault');
+      expect(child.childHead.nextSibling.headers["Subject"]).toBe(
+        "Bar Subject");
 
-      expect(child.children[2].path).toBe('bar/garply');
-      expect(child.children[2].headers["Subject"]).toBe("Garply Subject");
+      expect(child.childTail.path).toBe('bar/garply');
+      expect(child.childTail.headers["Subject"]).toBe("Garply Subject");
     });
   });
 });

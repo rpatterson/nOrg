@@ -1,11 +1,17 @@
 var nOrg = (function nOrg() {
   var root;
+  var reservedAttrs = ['childHead', 'childTail', 'nextSibling', 'prevSibling'];
 
   function Node() {
     this.init();
   }
   Node.prototype.init = function init() {
     this.headers = new Headers(this);
+
+    // ensure that internally used attrs are not inherited
+    reservedAttrs.forEach(function (attr) {
+      this[attr] = undefined;
+    }, this);
   };
   Node.prototype.newChild = function newChild(object) {
     // prototypical inheritance from parent nodes
@@ -16,7 +22,8 @@ var nOrg = (function nOrg() {
     Node.prototype = this;
     child = new Node();
     child.parent = this;
-    child.headers = this.headers.newChild();
+    this.pushChild(child);
+    child.headers = this.headers.newChild(child);
     child.headers.node = this;
 
     if (object) {
@@ -25,13 +32,21 @@ var nOrg = (function nOrg() {
 
     return child;
   };
+  Node.prototype.pushChild = function pushChild(child) {
+    if (this.childHead) {
+      child.prevSibling = this.childTail;
+      this.childTail.nextSibling = child;
+    } else {
+      this.childHead = child;
+    }
+    this.childTail = child;
+  };
   Node.prototype.extend = function extend(object) {
     for (var key in object) {
       if (key === 'headers') {
         this.headers.extend(object.headers);
       } else if (key === 'children') {
-        this.children = [];
-        object.children.forEach(extendChild, this);
+        object.children.forEach(this.newChild, this);
       } else {
         this[key] = object[key];
       }
@@ -61,10 +76,6 @@ var nOrg = (function nOrg() {
   };
 
   root = new Node();
-
-  function extendChild(child) {
-    this.children.push( this.newChild(child));
-  }
 
   return {
     Node: Node,
