@@ -4,45 +4,33 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'
   .controller('NOrgCtrl', function NOrgCtrl($scope, $http, $log) {
     $scope.controlName = 'NOrgCtrl';
 
-    $scope.keymap = {
+    $scope.keydown = {
       'tab': 'toggleNode($event)',
-      'h': 'toggleHeaders($event)',
+      72: 'toggleHeaders($event)', // h
 
-      'down': 'cursorDown($event)',
-      'up': 'cursorUp($event)',
-      'right': 'cursorRight($event)',
-      'left': 'cursorLeft($event)'
+      'down': 'node.cursorDown($event)',
+      'up': 'node.cursorUp($event)',
+      'right': 'node.cursorRight($event)',
+      'left': 'node.cursorLeft($event)'
     };
-    $scope.keymap_aliases = {
-      'j': 'down',
-      'k': 'up',
-      'w': 'up',
-      's': 'down',
-      'a': 'left',
-      'd': 'right'
+    $scope.keydown_aliases = {
+      74: 'down',               // j
+      75: 'up',                 // k
+      87: 'up',                 // w
+      83: 'down',               // s
+      65: 'left',               // a
+      68: 'right'               // d
     };
-    for (var alias in $scope.keymap_aliases) {
-      $scope.keymap[alias] = $scope.keymap[$scope.keymap_aliases[alias]];
+    for (var alias in $scope.keydown_aliases) {
+      $scope.keydown[alias] = $scope.keydown[$scope.keydown_aliases[alias]];
     }
-    $scope.keydown = {};
-    for (var key in $scope.keymap) {
-      if (key.length === 1) {
-        $scope.keydown[key.toUpperCase().charCodeAt()] = $scope.keymap[key];
-      } else {
-        $scope.keydown[key] = $scope.keymap[key];
-      }}
-
 
     $http.get('app/nodes.json').success(function loadNode(node) {
       // Load the initial nodes JSON
-      $scope.node = node;
+      $scope.node = nOrg.newRoot(node);
     });
-  })
 
-  .controller('NOrgNodeCtrl', function NOrgNodeCtrl ($scope) {
-    $scope.controlName = 'NOrgNodeCtrl';
-
-    $scope.toggle = function toggle($event) {
+    $scope.toggleNode = function toggleNode($event) {
       $scope.node.toggle($event);
       $event.preventDefault();
     };
