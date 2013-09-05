@@ -1,25 +1,28 @@
 var nOrg = (function nOrg() {
+  // Properties prefixed with '$' are considered internal to the
+  // UI/porcelain and will not be written back to the server.
+
   function Node() {
     this.init();
   }
   Node.prototype.init = function init() {
     this.headers = new Headers(this);
-    this.length = 0;
+    this.$length = 0;
 
     // ensure that internally used attrs are not inherited
 
-    this.childHead = undefined;
-    this.childTail = undefined;
-    this.nextSibling = undefined;
-    this.prevSibling = undefined;
+    this.$childHead = undefined;
+    this.$childTail = undefined;
+    this.$nextSibling = undefined;
+    this.$prevSibling = undefined;
 
-    this.collapsed = true;
+    this.$collapsed = true;
 
     // Cursor initialization
     // child nodes must override parent to avoid scope inheritance
     // leaking the cursor down
-    this.cursor = false;
-    if (this.root && (! this.cursorNode)) {
+    this.$cursor = false;
+    if (this.$root && (! this.$cursorObject)) {
       // Cursor defaults to first node
       this.cursorTo(this);
     }
@@ -37,7 +40,7 @@ var nOrg = (function nOrg() {
     var child;
     Node.prototype = this;
     child = new Node();
-    child.parent = this;
+    child.$parent = this;
     this.pushChild(child);
     child.headers = this.headers.newChild(child);
 
@@ -48,21 +51,21 @@ var nOrg = (function nOrg() {
     return child;
   };
   Node.prototype.pushChild = function pushChild(child) {
-    this.length++;
-    if (this.childHead) {
-      child.prevSibling = this.childTail;
-      this.childTail.nextSibling = child;
+    this.$length++;
+    if (this.$childHead) {
+      child.$prevSibling = this.$childTail;
+      this.$childTail.$nextSibling = child;
     } else {
-      this.childHead = child;
+      this.$childHead = child;
     }
-    this.childTail = child;
+    this.$childTail = child;
   };
   Node.prototype.children = function children() {
     var results = [];
-    var child = this.childHead;
+    var child = this.$childHead;
     while (child) {
       results.push(child);
-      child = child.nextSibling;
+      child = child.$nextSibling;
     }
     return results;
   };
@@ -83,90 +86,90 @@ var nOrg = (function nOrg() {
 
   Node.prototype.demote = function demote() {
     // Demote a node if appropriate
-    if (! this.prevSibling) {
+    if (! this.$prevSibling) {
       throw new Error("Cannot demote first sibling!");
     }
 
     // Hook sibling nodes to eachother
-    this.prevSibling.nextSibling = this.nextSibling;
-    this.nextSibling.prevSibling = this.prevSibling;
+    this.$prevSibling.$nextSibling = this.$nextSibling;
+    this.$nextSibling.$prevSibling = this.$prevSibling;
 
-    if (! this.nextSibling) {
+    if (! this.$nextSibling) {
       // update parent last child
-      this.parent.childTail = this.prevSibling;
+      this.$parent.$childTail = this.$prevSibling;
     }
 
-    this.prevSibling.collapsed = false;
-    this.prevSibling.pushChild(this);
+    this.$prevSibling.$collapsed = false;
+    this.$prevSibling.pushChild(this);
   };
 
   Node.prototype.promote = function promote() {
     // Promote a node if appropriate
-    if (typeof this.parent.parent == "undefined") {
+    if (typeof this.$parent.$parent == "undefined") {
       throw new Error("Cannot promote nodes without parents!");
     }
 
     // Hook sibling nodes to eachother
-    this.prevSibling.nextSibling = this.nextSibling;
-    this.nextSibling.prevSibling = this.prevSibling;
+    this.$prevSibling.$nextSibling = this.$nextSibling;
+    this.$nextSibling.$prevSibling = this.$prevSibling;
 
-    if (! this.prevSibling) {
+    if (! this.$prevSibling) {
       // update parent first child
-      this.parent.childHead = this.nextSibling;
+      this.$parent.$childHead = this.$nextSibling;
     }
-    if (! this.nextSibling) {
+    if (! this.$nextSibling) {
       // update parent last child
-      this.parent.childTail = this.prevSibling;
+      this.$parent.$childTail = this.$prevSibling;
     }
 
-    if (! this.parent.nextSibling) {
+    if (! this.$parent.$nextSibling) {
       // last sibling
-      this.parent.parent.childTail = this;
-    } else if (this.parent.nextSibling) {
+      this.$parent.$parent.$childTail = this;
+    } else if (this.$parent.$nextSibling) {
       // insert between
-      this.parent.nextSibling.prevSibling = this;
+      this.$parent.$nextSibling.$prevSibling = this;
     }
-    this.parent.nextSibling = this;
-    this.parent = this.parent.parent;
+    this.$parent.$nextSibling = this;
+    this.$parent = this.$parent.$parent;
   };
 
   Node.prototype.moveUp = function moveUp() {
     // Move a node up relative to it's siblings if appropriate
-    if (! this.prevSibling) {
+    if (! this.$prevSibling) {
       throw new Error("Cannot move first nodes up!");
     }
 
-    this.nextSibling = this.prevSibling;
-    this.prevSibling = this.prevSibling.prevSibling;
-    if (this.prevSibling) {
-      this.prevSibling.nextSibling = this;
+    this.$nextSibling = this.$prevSibling;
+    this.$prevSibling = this.$prevSibling.$prevSibling;
+    if (this.$prevSibling) {
+      this.$prevSibling.$nextSibling = this;
     } else {
-      this.parent.childHead = this;
+      this.$parent.$childTail = this;
     }
-    if (this.nextSibling) {
-      this.nextSibling.prevSibling = this;
+    if (this.$nextSibling) {
+      this.$nextSibling.$prevSibling = this;
     } else {
-      this.parent.childTail = this;
+      this.$parent.$childTail = this;
     }
   };
 
   Node.prototype.moveDown = function moveDown() {
     // Move a node down relative to it's siblings if appropriate
-    if (! this.nextSibling) {
+    if (! this.$nextSibling) {
       throw new Error("Cannot move last nodes down!");
     }
 
-    this.prevSibling = this.nextSibling;
-    this.nextSibling = this.nextSibling.nextSibling;
-    if (this.nextSibling) {
-      this.nextSibling.prevSibling = this;
+    this.$prevSibling = this.$nextSibling;
+    this.$nextSibling = this.$nextSibling.$nextSibling;
+    if (this.$nextSibling) {
+      this.$nextSibling.$prevSibling = this;
     } else {
-      this.parent.childTail = this;
+      this.$parent.$childTail = this;
     }
-    if (this.prevSibling) {
-      this.prevSibling.nextSibling = this;
+    if (this.$prevSibling) {
+      this.$prevSibling.$nextSibling = this;
     } else {
-      this.parent.childHead = this;
+      this.$parent.$childHead = this;
     }
   };
 
@@ -176,63 +179,63 @@ var nOrg = (function nOrg() {
     if (typeof node == "undefined") {
       node = this;
     }
-    if (this.cursorNode) {
-      this.cursorNode.cursor = false;
+    if (this.$cursorObject) {
+      this.$cursorObject.$cursor = false;
     }
-    node.cursor = true;
-    this.root.cursorNode = node;
+    node.$cursor = true;
+    this.$root.$cursorNode = node;
   };
   
   Node.prototype.cursorDown = function cursorDown() {
-    var node = this.cursorNode;
-    if (node.length && (! node.collapsed)) {
-      return this.cursorTo(node.childHead);
+    var node = this.$cursorNode;
+    if (node.$length && (! node.$collapsed)) {
+      return this.cursorTo(node.$childHead);
     }
-    while ((! node.nextSibling) && node.parent.parent) {
-      node = node.parent;
+    while ((! node.$nextSibling) && node.$parent.$parent) {
+      node = node.$parent;
     }
-    if (node.nextSibling) {
-      this.cursorTo(node.nextSibling);
+    if (node.$nextSibling) {
+      this.cursorTo(node.$nextSibling);
     }};
 
   Node.prototype.cursorUp = function cursorUp() {
-    var node = this.cursorNode;
-    if (node.prevSibling &&
-        node.prevSibling.length &&
-        (! node.prevSibling.collapsed)) {
-      return this.cursorTo(node.prevSibling.childTail);
+    var node = this.$cursorNode;
+    if (node.$prevSibling &&
+        node.$prevSibling.$length &&
+        (! node.$prevSibling.$collapsed)) {
+      return this.cursorTo(node.$prevSibling.$childTail);
     }
-    if (! node.prevSibling) {
-      if (node.parent.parent) {
-        this.cursorTo(node.parent);
+    if (! node.$prevSibling) {
+      if (node.$parent.$parent) {
+        this.cursorTo(node.$parent);
       }
     } else {
-      this.cursorTo(node.prevSibling);
+      this.cursorTo(node.$prevSibling);
     }};
 
   Node.prototype.cursorRight = function cursorRight() {
-    if (this.cursorNode.length) {
-      this.cursorNode.collapsed = false;
-      this.cursorTo(this.cursorNode.childHead);
+    if (this.cursorNode.$length) {
+      this.cursorNode.$collapsed = false;
+      this.cursorTo(this.cursorNode.$childHead);
     }};
 
   Node.prototype.cursorLeft = function cursorLeft() {
-    if (this.cursorNode.parent.parent) {
-      this.cursorTo(this.cursorNode.parent);
+    if (this.cursorNode.$parent.$parent) {
+      this.cursorTo(this.cursorNode.$parent);
     }};
 
 
   // expand/collapse node
   Node.prototype.toggle = function toggle() {
-    if (this.cursorNode.length) {
-      this.cursorNode.collapsed = ! this.cursorNode.collapsed;
+    if (this.cursorNode.$length) {
+      this.cursorNode.$collapsed = ! this.cursorNode.$collapsed;
     }};
 
   // expand/collapse headers
   Node.prototype.toggleHeaders = function toggleHeaders() {
     if (this.headers.keys().length) {
-      this.cursorNode.headers.collapsed = (
-        ! this.cursorNode.headers.collapsed);
+      this.cursorNode.headers.$collapsed = (
+        ! this.cursorNode.headers.$collapsed);
     }
   };
 
@@ -240,7 +243,7 @@ var nOrg = (function nOrg() {
     this.init();
   }
   Headers.prototype.init = function init() {
-    this.collapsed = true;
+    this.$collapsed = true;
   };
   Headers.prototype.newChild = function newChild() {
     // prototypical inheritance from parent headerss
@@ -256,15 +259,14 @@ var nOrg = (function nOrg() {
       this[key] = object[key];
     }
   };
-  Headers.prototype.keys = function keys() {
-    return Object.keys(this).filter(function (key) {
-      return !(key in this.hiddenKeys);
-      }, this);
+  Headers.prototype.push = function push(key, value) {
+    this[key] = value;
+    this['NOrg-User-Headers'].push(key);
   };
 
   function newRoot(object) {
     root = new Node();
-    root.root = root;           // for looking up the root node
+    root.$root = root;  // for looking up the root node
     root.headers.hiddenKeys = {"Subject": true, "Message-ID": true,
                                "collapsed": true};
     root.extend(object);
