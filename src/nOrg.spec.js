@@ -1,3 +1,10 @@
+// Globals
+var describe = describe;
+var beforeEach = beforeEach;
+var it = it;
+var expect = expect;
+
+var nOrg = nOrg;
 describe('nOrg', function() {
   var node;
   var json = {
@@ -410,6 +417,7 @@ describe('nOrg', function() {
 
  [rocco]: http://rtomayko.github.com/rocco/
  */
+var jasmine = jasmine;
 (function() {
   if (! jasmine.HtmlReporter) {
     // Running under Karma

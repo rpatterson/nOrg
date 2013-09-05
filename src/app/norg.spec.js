@@ -1,3 +1,10 @@
+// Globals
+var describe = describe;
+var beforeEach = beforeEach;
+var it = it;
+var expect = expect;
+var module = module;
+var inject = inject;
 describe('N-Org', function() {
   var $scope;
   var NOrgNodeCtrl;

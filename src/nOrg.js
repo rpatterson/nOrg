@@ -265,7 +265,7 @@ var nOrg = (function nOrg() {
   };
 
   function newRoot(object) {
-    root = new Node();
+    var root = new Node();
     root.$root = root;  // for looking up the root node
     root.headers.hiddenKeys = {"Subject": true, "Message-ID": true,
                                "collapsed": true};

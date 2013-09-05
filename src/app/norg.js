@@ -1,5 +1,7 @@
-angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'
-])
+// Globals
+var angular = angular;
+var nOrg = nOrg;
+angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'])
 
   .controller('NOrgCtrl', function NOrgCtrl($scope, $http, $log) {
     $scope.controlName = 'NOrgCtrl';
