@@ -7,8 +7,8 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'])
     $scope.controlName = 'NOrgCtrl';
 
     $scope.keydown = {
-      'tab': 'toggleNode($event)',
-      72: 'toggleHeaders($event)', // h
+      'tab': 'node.toggle($event)',
+      72: 'node.toggleHeaders($event)', // h
 
       'down': 'node.cursorDown($event)',
       'up': 'node.cursorUp($event)',
@@ -31,15 +31,6 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'])
       // Load the initial nodes JSON
       $scope.node = nOrg.newRoot(node);
     });
-
-    $scope.toggleNode = function toggleNode($event) {
-      $scope.node.toggle($event);
-      $event.preventDefault();
-    };
-    $scope.toggleHeaders = function toggleHeaders($event) {
-      $scope.node.toggleHeaders($event);
-      $event.preventDefault();
-    };
   })
 
   .directive('norgCursor', function norgCursor() {

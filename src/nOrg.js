@@ -186,8 +186,12 @@ var nOrg = (function nOrg() {
     this.$root.$cursorNode = node;
   };
   
-  Node.prototype.cursorDown = function cursorDown() {
+  Node.prototype.cursorDown = function cursorDown(event) {
     var node = this.$cursorNode;
+    if (event) {
+      event.preventDefault();
+    }
+
     if (node.$length && (! node.$collapsed)) {
       return this.cursorTo(node.$childHead);
     }
@@ -198,7 +202,11 @@ var nOrg = (function nOrg() {
       this.cursorTo(node.$nextSibling);
     }};
 
-  Node.prototype.cursorUp = function cursorUp() {
+  Node.prototype.cursorUp = function cursorUp(event) {
+    if (event) {
+      event.preventDefault();
+    }
+
     var node = this.$cursorNode;
     if (node.$prevSibling &&
         node.$prevSibling.$length &&
@@ -213,26 +221,43 @@ var nOrg = (function nOrg() {
       this.cursorTo(node.$prevSibling);
     }};
 
-  Node.prototype.cursorRight = function cursorRight() {
+  Node.prototype.cursorRight = function cursorRight(event) {
+    if (event) {
+      event.preventDefault();
+    }
+
     if (this.cursorNode.$length) {
       this.cursorNode.$collapsed = false;
       this.cursorTo(this.cursorNode.$childHead);
     }};
 
-  Node.prototype.cursorLeft = function cursorLeft() {
+  Node.prototype.cursorLeft = function cursorLeft(event) {
+    if (event) {
+      event.preventDefault();
+    }
+
     if (this.cursorNode.$parent.$parent) {
       this.cursorTo(this.cursorNode.$parent);
     }};
 
 
   // expand/collapse node
-  Node.prototype.toggle = function toggle() {
+  Node.prototype.toggle = function toggle(event) {
+    if (event) {
+      event.preventDefault();
+    }
+
     if (this.cursorNode.$length) {
       this.cursorNode.$collapsed = ! this.cursorNode.$collapsed;
     }};
 
   // expand/collapse headers
-  Node.prototype.toggleHeaders = function toggleHeaders() {
+  Node.prototype.toggleHeaders = function toggleHeaders(event) {
+    var headers;
+    if (event) {
+      event.preventDefault();
+    }
+
     if (this.headers.keys().length) {
       this.cursorNode.headers.$collapsed = (
         ! this.cursorNode.headers.$collapsed);
