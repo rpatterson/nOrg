@@ -8,17 +8,19 @@
 
   </head>
   <body>
-    <ol id="norg-edit" class="norg-nodes"
-        tabindex="0"
-        ng:controller="NOrgCtrl"
-        ui:keydown="keydown">
-      <li ng:repeat="node in node.children()"
-          id="Message-ID-{{node.toId()}}"
-          class="norg-node">
-        <span ng:include="'app/node.tpl.html'">
-        </span>
-      </li>
-    </ol>
+    <div class="container-fluid well well-large">
+      <ol id="norg-edit" class="norg-nodes"
+          tabindex="0"
+          ng:controller="NOrgCtrl"
+          ui:keydown="keydown">
+        <li ng:repeat="node in node.children()"
+            id="Message-ID-{{node.toId()}}"
+            class="norg-node">
+          <span ng:include="'app/node.tpl.html'">
+          </span>
+        </li>
+      </ol>
+    </div>
 
     <!-- In production use:
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
