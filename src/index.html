@@ -1,34 +1,34 @@
 <!doctype html>
 <html lang="en" ng:app="nOrg">
-<head>
-  <meta charset="utf-8">
-  <title>N-Org Demo</title>
-  <link href="../vendor/bootstrap/css/bootstrap.css" rel="stylesheet">
-  <link href="app/norg.css" rel="stylesheet">
-</head>
-<body>
-  <ol id="norg-edit" class="norg-nodes"
-      tabindex="0"
-      ng:controller="NOrgCtrl"
-      ui:keydown="keydown">
-    <li ng:repeat="node in node.children()"
-        id="Message-ID-{{node.toId()}}"
-        class="norg-node">
-      <span ng:include="'app/node.tpl.html'">
-      </span>
-    </li>
-  </ol>
+  <head>
+    <meta charset="utf-8">
+    <title>N-Org Demo</title>
+    <link href="../vendor/bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <link href="app/norg.css" rel="stylesheet" />
 
+  </head>
+  <body>
+    <ol id="norg-edit" class="norg-nodes"
+        tabindex="0"
+        ng:controller="NOrgCtrl"
+        ui:keydown="keydown">
+      <li ng:repeat="node in node.children()"
+          id="Message-ID-{{node.toId()}}"
+          class="norg-node">
+        <span ng:include="'app/node.tpl.html'">
+        </span>
+      </li>
+    </ol>
 
-  <!-- In production use:
-  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
-  -->
-  <script src="../vendor/angular/build/angular.js"></script>
-  <script src="../vendor/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-  <script src="../vendor/angular-ui-utils/modules/keypress/keypress.js"></script>
+    <!-- In production use:
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+    -->
+    <script src="../vendor/angular/build/angular.js"></script>
+    <script src="../vendor/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script src="../vendor/angular-ui-utils/modules/keypress/keypress.js"></script>
 
-  <script type="text/javascript" src="nOrg.js"></script>
-  <script src="app/norg.js"></script>
+    <script type="text/javascript" src="nOrg.js"></script>
+    <script src="app/norg.js"></script>
 
-</body>
+  </body>
 </html>
