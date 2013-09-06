@@ -51,7 +51,8 @@ var nOrg = (function nOrg() {
     }
     this.$childTail = child;
     this.$length++;
-  }; Node.prototype.popFromParent = function popFromParent() {
+  };
+  Node.prototype.popFromParent = function popFromParent() {
     // Remove this node from it's parent
     this.$parent.$length--;
 
