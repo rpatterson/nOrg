@@ -1,138 +1,122 @@
-  <div>
-    <span class="btn-toolbar pull-left">
-      <span class="btn-group">
+<div>
+  <div class="input-prepend input-append">
+    <span class="btn-group">
+      <button type="button"
+              class="btn cursor-button"
+              ng:class="{'btn-primary': node.$cursor,
+                        'btn-default': ! node.$cursor}"
+              title="Node cursor"
+              ng:click="node.cursorTo(node)"
+              norg:cursor="{{node.$cursor}}">
+        <span class="icon-th">
+        </span>
+      </button>
+      <button type="button"
+              class="btn btn-default collapse-button"
+              title="Expand/Collapse this node's children"
+              ng:disabled="! node.$length"
+              ng:click="node.$collapsed = !node.$collapsed">
+        <span ng:class="{'icon-chevron-down': node.$length && node.$collapsed,
+                        'icon-chevron-up': !(node.$length && node.$collapsed),
+                        'icon-chevron-up': !(node.$length && node.$collapsed),
+                        'muted': ! node.$length}">
+        </span>
+      </button>
+      <button type="button"
+              class="btn btn-default headers-expand"
+              title="Expand/Collapse headers/fields"
+              ng:disabled="! node.headers['NOrg-User-Headers'].length"
+              ng:click="node.headers.$collapsed = !node.headers.$collapsed">
+        <span class="icon-th-list"
+              ng:class="{'text-muted':
+                        ! node.headers['NOrg-User-Headers'].length}">
+        </span>
+      </button>
+    </span>
+
+    <span class="add-on">
+      <input type="checkbox" name="Message-ID-{{node.toId()}}" />
+    </span>
+    <input type="text" class="norg-node-subject"
+           name="Message-ID-{{node.toId()}}-headers-Subject"
+           ng-model="node.headers['Subject']" />
+
+    <span class="btn-group">
+      <button type="button"
+              class="btn btn-default add"
+              title="Add a new node"
+              ng:click="node.newSibling()">
+        <span class="icon-plus"></span>
+      </button>
+      <button type="button"
+              class="btn btn-default promote"
+              title="Promote this node"
+              ng:disabled="! node.$parent.$parent"
+              ng:click="node.promote()">
+        <span class="icon-arrow-left"
+              ng:class="{'muted': ! node.$parent.$parent}"></span>
+      </button>
+      <button type="button"
+              class="btn btn-default demote"
+              title="Demote this node"
+              ng:disabled="! node.$prevSibling"
+              ng:click="node.demote()">
+        <span class="icon-arrow-right"
+              ng:class="{'muted': ! node.$prevSibling}"></span>
+      </button>
+      <button type="button"
+              class="btn btn-default promote"
+              title="Promote this node"
+              ng:disabled="! node.$prevSibling"
+              ng:click="node.moveUp()">
+        <span class="icon-arrow-up"
+              ng:class="{'muted': ! node.$prevSibling}"></span>
+      </button>
+      <button type="button"
+              class="btn btn-default demote"
+              title="Demote this node"
+              ng:disabled="! node.$nextSibling"
+              ng:click="node.moveDown()">
+        <span class="icon-arrow-down"
+              ng:class="{'muted': ! node.$nextSibling}"></span>
+      </button>
+    </span>
+  </div>
+
+  <div id="Message-ID-{{node.toId()}}-headers"
+       class="norg-headers offset1"
+       collapse="node.headers.$collapsed">
+    <div class="row-fluid"
+         ng:repeat="(index, key) in node.headers['NOrg-User-Headers']">
+      <div class="input-prepend">
         <button type="button"
-                class="btn btn-mini cursor-button"
-                ng:class="{'btn-primary': node.$cursor,
-                           'btn-default': ! node.$cursor}"
+                class="btn cursor-button"
+                ng:class="{'btn-primary': (node.headers.$cursor && (node.$cursorIndex == index)),
+                          'btn-default': ! (node.headers.$cursor && (node.$cursorIndex == index))}"
                 title="Node cursor"
-                ng:click="node.cursorTo(node)"
-                norg:cursor="{{node.$cursor}}">
+                ng:click="node.cursorTo(node.headers, index)"
+                norg:cursor="{{node.headers.$cursor && (node.$cursorIndex == index)}}">
           <span class="icon-th">
           </span>
         </button>
-        <button type="button"
-                class="btn btn-default btn-mini select-button"
-                title="Select/deselect node">
-          <input type="checkbox" name="Message-ID-{{node.toId()}}" />
-        </button>
-        <button type="button"
-                class="btn btn-default btn-mini collapse-button"
-                title="Expand/Collapse this node's children"
-                ng:disabled="! node.$length"
-                ng:click="node.$collapsed = !node.$collapsed">
-          <span ng:class="{'icon-chevron-down': node.$length && node.$collapsed,
-                           'icon-chevron-up': !(node.$length && node.$collapsed),
-                           'icon-chevron-up': !(node.$length && node.$collapsed),
-                           'muted': ! node.$length}">
-          </span>
-        </button>
-        <button type="button"
-                class="btn btn-default btn-mini headers-expand"
-                title="Expand/Collapse headers/fields"
-                ng:disabled="! node.headers['NOrg-User-Headers'].length"
-                ng:click="node.headers.$collapsed = !node.headers.$collapsed">
-          <span class="icon-th-list"
-                ng:class="{'text-muted':
-                          ! node.headers['NOrg-User-Headers'].length}">
-          </span>
-        </button>
-      </span>
-      <span class="btn-group">
-      </span>
-    </span>
-
-    <span class="norg-node-details">
-      <h5 class="norg-node-subject" contentEditable="true"
-          ng:keydown="$event.stopPropagation()"
-          ng:bind="node.headers['Subject']">
-      </h5>
-
-      <div id="Message-ID-{{node.toId()}}-headers"
-           class="norg-headers"
-           collapse="node.headers.$collapsed">
-        <table class="table table-condensed table-bordered table-striped"
-               title="Node header, AKA field or property, name and value pairs">
-          <caption>Node header, AKA field or property, name and value pairs</caption>
-          <tr ng:repeat="(index, key) in node.headers['NOrg-User-Headers']"
-              class="norg-headers--{{key}}">
-            <th class="cursor-cell">
-              <button type="button"
-                      class="btn btn-mini cursor-button"
-                      ng:class="{'btn-primary': (node.headers.$cursor && (node.$cursorIndex == index)),
-                                'btn-default': ! (node.headers.$cursor && (node.$cursorIndex == index))}"
-                      title="Node cursor"
-                      ng:click="node.cursorTo(node.headers, index)"
-                      norg:cursor="{{node.headers.$cursor && (node.$cursorIndex == index)}}">
-                <span class="icon-th">
-                </span>
-              </button>
-            </th>
-            <th>
-            <span contentEditable="true"
-                  ng:bind="key"
-                  ng:keydown="$event.stopPropagation()"></span>
-            </th>
-            <td contentEditable="true"
-                ng:bind="node.headers[key]"
-                ng:keydown="$event.stopPropagation()">
-            </td>
-          </tr>
-        </table>
+        <input type="text"
+               name="Message-ID-{{node.toId()}}-header-key-{{key}}"
+               ng:model="key" />
       </div>
-    </span>
-
-    <span class="btn-toolbar pull-right">
-      <span class="btn-group">
-        <button type="button"
-                class="btn btn-default btn-mini add"
-                title="Add a new node"
-                ng:click="node.newSibling()">
-          <span class="icon-plus"></span>
-        </button>
-      </span>
-      <span class="btn-group">
-        <button type="button"
-                class="btn btn-default btn-mini promote"
-                title="Promote this node"
-                ng:disabled="! node.$parent.$parent"
-                ng:click="node.promote()">
-          <span class="icon-arrow-left"
-                ng:class="{'muted': ! node.$parent.$parent}"></span>
-        </button>
-        <button type="button"
-                class="btn btn-default btn-mini demote"
-                title="Demote this node"
-                ng:disabled="! node.$prevSibling"
-                ng:click="node.demote()">
-          <span class="icon-arrow-right"
-                ng:class="{'muted': ! node.$prevSibling}"></span>
-        </button>
-        <button type="button"
-                class="btn btn-default btn-mini promote"
-                title="Promote this node"
-                ng:disabled="! node.$prevSibling"
-                ng:click="node.moveUp()">
-          <span class="icon-arrow-up"
-                ng:class="{'muted': ! node.$prevSibling}"></span>
-        </button>
-        <button type="button"
-                class="btn btn-default btn-mini demote"
-                title="Demote this node"
-                ng:disabled="! node.$nextSibling"
-                ng:click="node.moveDown()">
-          <span class="icon-arrow-down"
-                ng:class="{'muted': ! node.$nextSibling}"></span>
-        </button>
-      </span>
-    </span>
+      <div class="input-append">
+        <input type="text"
+               name="Message-ID-{{node.toId()}}-header-value-{{key}}"
+               ng:model="node.headers[key]" />
+      </div>
+    </div>
   </div>
 
   <ol id="children" class="norg-nodes" collapse="node.$collapsed">
     <li ng:repeat="node in node.children()"
         id="Message-ID-{{node.toId()}}"
-        class="norg-node">
+        class="norg-node row-fluid">
       <span ng:include="'app/node.tpl.html'">
       </span>
     </li>
   </ol>
+</div>

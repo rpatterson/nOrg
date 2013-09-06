@@ -3,36 +3,7 @@
     list-style: none;
 }
 
-.norg-node-details {
-    display: inline-block;
-}
-.norg-node-subject {
-    margin: 0em;
-}
-
-.norg-headers .table {
-    width: initial;
-    margin: 0em;
-}
-.norg-headers caption {
-    display: none;
-}
-
 #norg-edit .btn.disabled,
 #norg-edit .btn[disabled] {
     opacity: 0.25;
-}
-#norg-edit .btn-toolbar {
-    margin: 0em;  /* Fix sibling <li> recursive indenting */
-}
-.norg-headers .btn.cursor-button {
-    border: none;
-}
-.norg-headers .table-condensed th,
-.norg-headers .table-condensed td {
-    padding-top: 0em;
-    padding-bottom: 0em;
-}    
-.norg-headers .cursor-cell {
-    padding: 0em;
 }
