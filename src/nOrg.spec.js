@@ -124,17 +124,29 @@ describe('nOrg', function() {
       expect(Boolean(child.$prevSibling)).toBeFalsy();
       expect(Boolean(child.$nextSibling)).toBeFalsy();
 
+      expect(node.$length).toBe(2);
+      expect(node.children().length).toBe(2);
       expect(node.$childTail.$prevSibling.path).toBe(node.$childHead.path);
       expect(node.$childHead.$nextSibling.path).toBe(node.$childTail.path);
 
-      node.$childTail.popFromParent();
-      var only = node.$childHead;
+      var first = node.$childHead;
+      first.popFromParent();
+
+      expect(node.$length).toBe(1);
+      expect(node.children().length).toBe(1);
+      expect(node.$childTail.path).toBe(node.$childHead.path);
+      expect(Boolean(node.$childHead.$prevSibling)).toBeFalsy();
+      expect(Boolean(node.$childHead.$nextSibling)).toBeFalsy();
+
+      var only = node.$childTail;
       only.popFromParent();
       
       expect(Boolean(only.parent)).toBeFalsy();
       expect(Boolean(only.$prevSibling)).toBeFalsy();
       expect(Boolean(only.$nextSibling)).toBeFalsy();
 
+      expect(node.$length).toBe(0);
+      expect(node.children().length).toBe(0);
       expect(Boolean(node.$childHead)).toBeFalsy();
       expect(Boolean(node.$childTail)).toBeFalsy();
     });
@@ -224,6 +236,8 @@ describe('nOrg', function() {
       node = node.$childHead;
 
       node.promote();
+      expect(nOrg.root.$childHead.$nextSibling.$length).toBe(2);
+      expect(nOrg.root.$childHead.$nextSibling.children().length).toBe(2);
       expect(nOrg.root.$childTail.$prevSibling.path).toBe(node.path);
       expect(nOrg.root.$childHead.$nextSibling.$nextSibling.path).toBe(node.path);
       expect(nOrg.root.$childHead.$nextSibling.path).toBe(node.$prevSibling.path);
@@ -243,9 +257,29 @@ describe('nOrg', function() {
     it('nodes with previous siblings may be moved up', function () {
       var new_next = node.$prevSibling;
       node.moveUp();
+
       expect(new_next.$prevSibling.path).toBe(node.path);
       expect(node.$nextSibling.path).toBe(new_next.path);
-      expect(node.$length).toEqual(3);
+      expect(Boolean(node.$prevSibling)).toBeFalsy();
+
+      expect(nOrg.root.$childHead.path).toBe(node.path);
+      expect(nOrg.root.$childTail.$prevSibling.path)
+        .toBe(nOrg.root.$childHead.$nextSibling.path);
+
+      expect(nOrg.root.$length).toEqual(3);
+      expect(nOrg.root.children().length).toEqual(3);
+
+      // last node
+      node = nOrg.root.$childHead.$childTail;
+      node.moveUp();
+
+      expect(node.$parent.$childTail.path).toBe(node.$nextSibling.path);
+
+      expect(node.$parent.$childHead.$nextSibling.path).toBe(node.path);
+      expect(node.$parent.$childTail.$prevSibling.path).toBe(node.path);
+
+      expect(node.$parent.$length).toEqual(3);
+      expect(node.$parent.children().length).toEqual(3);
     });
     it('first nodes may not be moved up', function() {
       // Switch to a scope with no previous siblings
@@ -259,9 +293,23 @@ describe('nOrg', function() {
     it('nodes with next siblings may be moved down', function () {
       var new_previous = node.$nextSibling;
       node.moveDown();
+
       expect(new_previous.$nextSibling.path).toBe(node.path);
       expect(node.$prevSibling.path).toBe(new_previous.path);
-      expect(node.$length).toEqual(3);
+      expect(Boolean(node.$nextSibling)).toBeFalsy();
+      expect(node.$parent.$childTail.path).toBe(node.path);
+      expect(node.$parent.$childHead.$nextSibling.path)
+        .toBe(new_previous.path);
+
+      node = node.$parent.$childHead;
+      node.moveDown();
+
+      expect(node.$parent.$childTail.$prevSibling.path)
+        .toBe(node.path);
+      expect(Boolean(node.$parent.$childHead.$prevSibling)).toBeFalsy();
+
+      expect(node.$parent.$length).toEqual(3);
+      expect(node.$parent.children().length).toEqual(3);
     });
     it('last nodes may not be moved down', function() {
       // Switch to a scope with no next siblings
@@ -270,6 +318,21 @@ describe('nOrg', function() {
       expect(function () {
         node.moveDown();
       }).toThrow(new Error("Cannot move last nodes down!"));
+    });
+
+    it('may be moved around and back', function () {
+      node.moveDown();
+      node.demote();
+      node.promote();
+      node.moveUp();
+      node.moveUp();
+      node.moveDown();
+
+      expect(node.$prevSibling.path).toBe(nOrg.root.$childHead.path);
+      expect(node.$nextSibling.path).toBe(nOrg.root.$childTail.path);
+
+      expect(nOrg.root.$childHead.$nextSibling.path).toBe(node.path);
+      expect(nOrg.root.$childTail.$prevSibling.path).toBe(node.path);
     });
   });
 

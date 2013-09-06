@@ -58,12 +58,12 @@ var nOrg = (function nOrg() {
     if (this.$prevSibling) {
       this.$prevSibling.$nextSibling = this.$nextSibling;
     } else {
-      this.$parent.$childHead = undefined;
+      this.$parent.$childHead = this.$nextSibling;
     }
     if (this.$nextSibling) {
       this.$nextSibling.$prevSibling = this.$prevSibling;
     } else {
-      this.$parent.$childTail = undefined;
+      this.$parent.$childTail = this.$prevSibling;
     }
 
     this.$parent = undefined;
@@ -143,6 +143,7 @@ var nOrg = (function nOrg() {
       throw new Error("Cannot move first nodes up!");
     }
 
+    $nextSibling.$nextSibling = this.$nextSibling;
     if (this.$nextSibling) {
       // not last child
       this.$nextSibling.$prevSibling = $nextSibling;
@@ -152,9 +153,11 @@ var nOrg = (function nOrg() {
     }
     this.$nextSibling = $nextSibling;
 
+    this.$prevSibling = $nextSibling.$prevSibling;
     if ($nextSibling.$prevSibling) {
       // not first child
       this.$prevSibling = $nextSibling.$prevSibling;
+      this.$prevSibling.$nextSibling = this;
     } else {
       // now first child
       this.$parent.$childHead = this;
@@ -169,6 +172,7 @@ var nOrg = (function nOrg() {
       throw new Error("Cannot move last nodes down!");
     }
 
+    $prevSibling.$prevSibling = this.$prevSibling;
     if (this.$prevSibling) {
       // not first child
       this.$prevSibling.$nextSibling = $prevSibling;
@@ -178,12 +182,12 @@ var nOrg = (function nOrg() {
     }
     this.$prevSibling = $prevSibling;
 
-    if ($prevSibling.$nextSibling) {
-      // not last child
-      this.$nextSibling = $prevSibling.$nextSibling;
-    } else {
+    this.$nextSibling = $prevSibling.$nextSibling;
+    if (! this.$nextSibling) {
       // now last child
       this.$parent.$childTail = this;
+    } else {
+          this.$nextSibling.$prevSibling = this;
     }
     $prevSibling.$nextSibling = this;
   };
