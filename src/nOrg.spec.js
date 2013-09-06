@@ -79,23 +79,59 @@ describe('nOrg', function() {
     it('nodes may have children', function () {
       expect(nOrg.root.$childHead.$nextSibling.path).toBe(node.path);
       expect(nOrg.root.$childTail.$prevSibling.path).toBe(node.path);
-      expect(typeof nOrg.root.$prevSibling).toBe('undefined');
-      expect(typeof nOrg.root.$nextSibling).toBe('undefined');
-      expect(typeof node.$prevSibling.$prevSibling).toBe('undefined');
-      expect(typeof node.$nextSibling.$nextSibling).toBe('undefined');
-
       expect(nOrg.root.$length).toBe(3);
-
-      expect(nOrg.root.$childHead.$nextSibling.path).toBe(node.path);
-      expect(nOrg.root.$childTail.$prevSibling.path).toBe(node.path);
+      expect(Boolean(nOrg.root.$nextSibling)).toBeFalsy();
+      expect(Boolean(nOrg.root.$prevSibling)).toBeFalsy();
       expect(node.$childHead.$length).toBe(0);
-      expect(typeof node.$prevSibling.$childHead).toBe('undefined');
-      expect(typeof node.$prevSibling.$childTail).toBe('undefined');
+      expect(node.$length).toBe(3);
+      expect(Boolean(node.$nextSibling.$nextSibling)).toBeFalsy();
+      expect(Boolean(node.$prevSibling.$childHead)).toBeFalsy();
+      expect(Boolean(node.$prevSibling.$childTail)).toBeFalsy();
+      expect(Boolean(node.$prevSibling.$prevSibling)).toBeFalsy();
+    });
+    it('accepts a node to append as a child', function () {
+      var child = new nOrg.Node();
+      child.path = 'baz';
+      node.pushChild(child);
 
-      expect(nOrg.root.$childHead.$nextSibling.path).toBe(node.path);
-      expect(typeof node.$prevSibling.$prevSibling).toBe('undefined');
-      expect(nOrg.root.$childTail.$prevSibling.path).toBe(node.path);
-      expect(typeof node.$nextSibling.$nextSibling).toBe('undefined');
+      expect(node.$childTail.path).toBe(child.path);
+      expect(child.$prevSibling.path)
+        .toBe(node.$childHead.$nextSibling.$nextSibling.path);
+      expect(Boolean(child.$nextSibling)).toBeFalsy();
+      expect(node.$length).toBe(4);
+
+      node = node.$prevSibling;
+      var only = new nOrg.Node();
+      only.path = 'baz';
+      node.pushChild(only);
+
+      expect(node.$childTail.path).toBe(only.path);
+      expect(node.$childHead.path).toBe(only.path);
+      expect(Boolean(only.$nextSibling)).toBeFalsy();
+      expect(Boolean(only.$prevSibling)).toBeFalsy();
+      expect(node.$length).toBe(1);
+    });
+    it('removes itself from its parent', function () {
+      var child = node.$childHead.$nextSibling;
+      child.popFromParent();
+      
+      expect(Boolean(child.parent)).toBeFalsy();
+      expect(Boolean(child.$prevSibling)).toBeFalsy();
+      expect(Boolean(child.$nextSibling)).toBeFalsy();
+
+      expect(node.$childTail.$prevSibling.path).toBe(node.$childHead.path);
+      expect(node.$childHead.$nextSibling.path).toBe(node.$childTail.path);
+
+      node.$childTail.popFromParent();
+      var only = node.$childHead;
+      only.popFromParent();
+      
+      expect(Boolean(only.parent)).toBeFalsy();
+      expect(Boolean(only.$prevSibling)).toBeFalsy();
+      expect(Boolean(only.$nextSibling)).toBeFalsy();
+
+      expect(Boolean(node.$childHead)).toBeFalsy();
+      expect(Boolean(node.$childTail)).toBeFalsy();
     });
     it('assembles children into an array', function () {
       var children = node.children();
@@ -150,8 +186,10 @@ describe('nOrg', function() {
     it('nodes with previous siblings may be demoted', function () {
       expect(node.$prevSibling.$collapsed).toBeTruthy();
       node.demote();
-      expect(node.$prevSibling.$childHead.path).toBe(node.path);
-      expect(node.$prevSibling.$collapsed).toBeFalsy();
+      expect(nOrg.root.$childHead.$childHead.path).toBe(node.path);
+      expect(node.$parent.$length).toBe(1);
+      expect(node.$parent.$parent.$length).toBe(2);
+      expect(node.$parent.$collapsed).toBeFalsy();
     });
     it('first sibling nodes may not be demoted', function () {
       // Switch to a scope with no previous siblings
@@ -168,11 +206,33 @@ describe('nOrg', function() {
 
       node.promote();
       expect(nOrg.root.$childTail.$prevSibling.path).toBe(node.path);
+      expect(node.$parent.$length).toBe(4);
+      expect(node.$prevSibling.$length).toBe(2);
     });
     it('nodes without parents may not be promoted', function () {
       expect(function () {
         node.promote();
       }).toThrow(new Error("Cannot promote nodes without parents!"));
+    });
+    it('first children may be promoted', function () {
+      // Switch to a first child
+      node = node.$childHead;
+
+      node.promote();
+      expect(nOrg.root.$childTail.$prevSibling.path).toBe(node.path);
+      expect(nOrg.root.$childHead.$nextSibling.$nextSibling.path).toBe(node.path);
+      expect(nOrg.root.$childHead.$nextSibling.path).toBe(node.$prevSibling.path);
+      expect(nOrg.root.$childTail.path).toBe(node.$nextSibling.path);
+    });
+    it('last children may be promoted', function () {
+      // Switch to a first child
+      node = node.$childTail;
+
+      node.promote();
+      expect(nOrg.root.$childTail.$prevSibling.path).toBe(node.path);
+      expect(nOrg.root.$childHead.$nextSibling.$nextSibling.path).toBe(node.path);
+      expect(nOrg.root.$childHead.$nextSibling.path).toBe(node.$prevSibling.path);
+      expect(nOrg.root.$childTail.path).toBe(node.$nextSibling.path);
     });
 
     it('nodes with previous siblings may be moved up', function () {

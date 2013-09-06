@@ -6,43 +6,33 @@ var nOrg = (function nOrg() {
     this.init();
   }
   Node.prototype.init = function init() {
-    this.headers = new Headers(this);
+    // child nodes must override parent to avoid scope inheritance
+    // leaking the cursor down
     this.$length = 0;
-
-    // ensure that internally used attrs are not inherited
-
     this.$childHead = undefined;
     this.$childTail = undefined;
     this.$nextSibling = undefined;
     this.$prevSibling = undefined;
-
     this.$collapsed = true;
+    this.$cursor = false;
+
+    this.headers = new Headers(this);
 
     // Cursor initialization
-    // child nodes must override parent to avoid scope inheritance
-    // leaking the cursor down
-    this.$cursor = false;
     if (this.$root && (! this.$cursorObject)) {
       // Cursor defaults to first node
       this.cursorTo(this);
     }
   };
-  Node.prototype.toId = function toId() {
-    // Generate a valid HTML ID and CSS selector from the message
-    // ID using base64 encoding
-    return window.btoa(this.headers["Message-ID"]).slice(0, -1);
-  };
   Node.prototype.newChild = function newChild(object) {
-    // prototypical inheritance from parent nodes
     function Node() {
       this.init();
     }
     var child;
     Node.prototype = this;
     child = new Node();
-    child.$parent = this;
-    this.pushChild(child);
     child.headers = this.headers.newChild(child);
+    this.pushChild(child);
 
     if (object) {
       child.extend(object);
@@ -51,7 +41,8 @@ var nOrg = (function nOrg() {
     return child;
   };
   Node.prototype.pushChild = function pushChild(child) {
-    this.$length++;
+    // Take a child node and append it to this node as the last child
+    child.$parent = this;
     if (this.$childHead) {
       child.$prevSibling = this.$childTail;
       this.$childTail.$nextSibling = child;
@@ -59,8 +50,28 @@ var nOrg = (function nOrg() {
       this.$childHead = child;
     }
     this.$childTail = child;
+    this.$length++;
+  }; Node.prototype.popFromParent = function popFromParent() {
+    // Remove this node from it's parent
+    this.$parent.$length--;
+
+    if (this.$prevSibling) {
+      this.$prevSibling.$nextSibling = this.$nextSibling;
+    } else {
+      this.$parent.$childHead = undefined;
+    }
+    if (this.$nextSibling) {
+      this.$nextSibling.$prevSibling = this.$prevSibling;
+    } else {
+      this.$parent.$childTail = undefined;
+    }
+
+    this.$parent = undefined;
+    this.$prevSibling = undefined;
+    this.$nextSibling = undefined;
   };
   Node.prototype.children = function children() {
+    // Avoid using this if there's a way to iterate
     var results = [];
     var child = this.$childHead;
     while (child) {
@@ -80,97 +91,101 @@ var nOrg = (function nOrg() {
       }
     }
   };
+  Node.prototype.toId = function toId() {
+    // Generate a valid HTML ID and CSS selector from the message
+    // ID using base64 encoding
+    return window.btoa(this.headers["Message-ID"]).slice(0, -1);
+  };
 
 
   // Moving nodes
 
   Node.prototype.demote = function demote() {
     // Demote a node if appropriate
-    if (! this.$prevSibling) {
+    var parent = this.$prevSibling;
+    if (! parent) {
       throw new Error("Cannot demote first sibling!");
     }
 
-    // Hook sibling nodes to eachother
-    this.$prevSibling.$nextSibling = this.$nextSibling;
-    this.$nextSibling.$prevSibling = this.$prevSibling;
-
-    if (! this.$nextSibling) {
-      // update parent last child
-      this.$parent.$childTail = this.$prevSibling;
-    }
-
-    this.$prevSibling.$collapsed = false;
-    this.$prevSibling.pushChild(this);
+    this.popFromParent();
+    parent.$collapsed = false;
+    parent.pushChild(this);
   };
 
   Node.prototype.promote = function promote() {
     // Promote a node if appropriate
-    if (typeof this.$parent.$parent == "undefined") {
+    var $prevSibling = this.$parent;
+    if (! $prevSibling.$parent) {
       throw new Error("Cannot promote nodes without parents!");
     }
 
-    // Hook sibling nodes to eachother
-    this.$prevSibling.$nextSibling = this.$nextSibling;
-    this.$nextSibling.$prevSibling = this.$prevSibling;
-
-    if (! this.$prevSibling) {
-      // update parent first child
-      this.$parent.$childHead = this.$nextSibling;
-    }
-    if (! this.$nextSibling) {
-      // update parent last child
-      this.$parent.$childTail = this.$prevSibling;
+    this.popFromParent();
+    if (! $prevSibling.$childHead) {
+      $prevSibling.collapsed = true;
     }
 
-    if (! this.$parent.$nextSibling) {
-      // last sibling
-      this.$parent.$parent.$childTail = this;
-    } else if (this.$parent.$nextSibling) {
-      // insert between
-      this.$parent.$nextSibling.$prevSibling = this;
+    this.$parent = $prevSibling.$parent;
+    this.$prevSibling = $prevSibling;
+    if ($prevSibling.$nextSibling) {
+      this.$nextSibling = $prevSibling.$nextSibling;
+      this.$nextSibling.$prevSibling = this;
+    } else {
+      this.$parent.$childTail = this;
     }
-    this.$parent.$nextSibling = this;
-    this.$parent = this.$parent.$parent;
+    $prevSibling.$nextSibling = this;
+    this.$parent.$length++;
   };
 
   Node.prototype.moveUp = function moveUp() {
     // Move a node up relative to it's siblings if appropriate
-    if (! this.$prevSibling) {
+    var $nextSibling = this.$prevSibling; 
+    if (! $nextSibling) {
       throw new Error("Cannot move first nodes up!");
     }
 
-    this.$nextSibling = this.$prevSibling;
-    this.$prevSibling = this.$prevSibling.$prevSibling;
-    if (this.$prevSibling) {
-      this.$prevSibling.$nextSibling = this;
-    } else {
-      this.$parent.$childTail = this;
-    }
     if (this.$nextSibling) {
-      this.$nextSibling.$prevSibling = this;
+      // not last child
+      this.$nextSibling.$prevSibling = $nextSibling;
     } else {
-      this.$parent.$childTail = this;
+      // now last child
+      this.$parent.$childTail = $nextSibling;
     }
+    this.$nextSibling = $nextSibling;
+
+    if ($nextSibling.$prevSibling) {
+      // not first child
+      this.$prevSibling = $nextSibling.$prevSibling;
+    } else {
+      // now first child
+      this.$parent.$childHead = this;
+    }
+    $nextSibling.$prevSibling = this;
   };
 
   Node.prototype.moveDown = function moveDown() {
     // Move a node down relative to it's siblings if appropriate
-    if (! this.$nextSibling) {
+    var $prevSibling = this.$nextSibling; 
+    if (! $prevSibling) {
       throw new Error("Cannot move last nodes down!");
     }
 
-    this.$prevSibling = this.$nextSibling;
-    this.$nextSibling = this.$nextSibling.$nextSibling;
-    if (this.$nextSibling) {
-      this.$nextSibling.$prevSibling = this;
+    if (this.$prevSibling) {
+      // not first child
+      this.$prevSibling.$nextSibling = $prevSibling;
     } else {
+      // now first child
+      this.$parent.$childHead = $prevSibling;
+    }
+    this.$prevSibling = $prevSibling;
+
+    if ($prevSibling.$nextSibling) {
+      // not last child
+      this.$nextSibling = $prevSibling.$nextSibling;
+    } else {
+      // now last child
       this.$parent.$childTail = this;
     }
-    if (this.$prevSibling) {
-      this.$prevSibling.$nextSibling = this;
-    } else {
-      this.$parent.$childHead = this;
-    }
+    $prevSibling.$nextSibling = this;
   };
 
 
