@@ -6,11 +6,13 @@
   {"path": "/bar/.nod",
    "headers": {"Subject": "Bar Project",
                "Message-ID": "<2@foo.com>",
+               "NOrg-User-Headers": ["Bar-Property"],
                "Bar-Property": "Bar Property"},
    "children": [
      {"path": "/bar/corge.nod",
       "headers": {"Subject": "Corge Node",
                   "Message-ID": "<3@foo.com>",
+                  "NOrg-User-Headers": ["Corge-Property"],
                   "Corge-Property": "Corge Property"}},
      {"path": "/bar/grault.nod",
       "headers": {"Subject": "Grault Node",

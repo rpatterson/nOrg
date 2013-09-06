@@ -190,70 +190,127 @@ var nOrg = (function nOrg() {
 
 
   // Root cursor state
-  Node.prototype.cursorTo = function cursorTo(node) {
-    if (typeof node == "undefined") {
-      node = this;
+  Node.prototype.cursorTo = function cursorTo(object, index) {
+    if (typeof object == "undefined") {
+      object = this;
     }
     if (this.$cursorObject) {
       this.$cursorObject.$cursor = false;
     }
-    node.$cursor = true;
-    this.$root.$cursorNode = node;
+    object.$cursor = true;
+    this.$root.$cursorObject = object;
+    this.$root.$cursorIndex = index;
+
+    return object;
   };
   
   Node.prototype.cursorDown = function cursorDown(event) {
-    var node = this.$cursorNode;
+    var object = this.$cursorObject;
     if (event) {
       event.preventDefault();
     }
 
-    if (node.$length && (! node.$collapsed)) {
-      return this.cursorTo(node.$childHead);
+    if ((! object.headers) && object['NOrg-User-Headers'][this.$cursorIndex + 1]) {
+      // next header
+      return this.cursorTo(object, this.$cursorIndex + 1);
+    } else if (object.headers && object.headers['NOrg-User-Headers'].length &&
+               (! object.headers.$collapsed)) {
+      // first expanded header
+      return this.cursorTo(object.headers, 0);
     }
-    while ((! node.$nextSibling) && node.$parent.$parent) {
-      node = node.$parent;
+
+    // no more header cases
+    object = object.$node || object;
+    if (object.$length && (! object.$collapsed)) {
+      // first expanded child
+      return this.cursorTo(object.$childHead);
     }
-    if (node.$nextSibling) {
-      this.cursorTo(node.$nextSibling);
-    }};
+    while ((! object.$nextSibling) && object.$parent.$parent) {
+      object = object.$parent;
+    }
+    if (object.$nextSibling) {
+      // next ancestor node with a next sibling
+      return this.cursorTo(object.$nextSibling);
+    }
+    return false;
+  };
 
   Node.prototype.cursorUp = function cursorUp(event) {
+    var object = this.$cursorObject;
+    var cursor;
     if (event) {
       event.preventDefault();
     }
 
-    var node = this.$cursorNode;
-    if (node.$prevSibling &&
-        node.$prevSibling.$length &&
-        (! node.$prevSibling.$collapsed)) {
-      return this.cursorTo(node.$prevSibling.$childTail);
-    }
-    if (! node.$prevSibling) {
-      if (node.$parent.$parent) {
-        this.cursorTo(node.$parent);
+    if (! object.headers) {
+      if (object['NOrg-User-Headers'][this.$cursorIndex - 1]) {
+        // previous header
+        return this.cursorTo(object, this.$cursorIndex - 1);
+      } else {
+        // header node
+        return this.cursorTo(object.$node);
       }
-    } else {
-      this.cursorTo(node.$prevSibling);
-    }};
+    }
+    // no more header cases
+    object = object.$node || object;
+
+    if (object.$prevSibling &&
+        object.$prevSibling.$length &&
+        (! object.$prevSibling.$collapsed)) {
+      // previous expanded $parent sibling last child
+      cursor = object.$prevSibling.$childTail;
+    }
+    if (! object.$prevSibling) {
+      if (object.$parent.$parent) {
+        // parent
+        cursor = object.$parent;
+      }
+    } else if (!cursor) {
+      // previous sibling
+      cursor = object.$prevSibling;
+    }
+    if (cursor) {
+      if ((! cursor.headers.$collapsed) &&
+          cursor.headers['NOrg-User-Headers'].length) {
+        return this.cursorTo(cursor.headers,
+                             cursor.headers['NOrg-User-Headers'].length - 1);
+      } else {
+        return this.cursorTo(cursor);
+      }
+    }
+    return false;
+  };
 
   Node.prototype.cursorRight = function cursorRight(event) {
     if (event) {
       event.preventDefault();
     }
 
-    if (this.cursorNode.$length) {
-      this.cursorNode.$collapsed = false;
-      this.cursorTo(this.cursorNode.$childHead);
-    }};
+    if (this.$cursorObject.headers &&
+        (! this.$cursorObject.headers.$collapsed) &&
+        this.$cursorObject.headers['NOrg-User-Headers'].length) {
+      // first expanded header
+      return this.cursorTo(this.$cursorObject.headers, 0);
+    } else if (this.$cursorObject.$length) {
+      // expand and move to first child
+      this.$cursorObject.$collapsed = false;
+      return this.cursorTo(this.$cursorObject.$childHead);
+    }
+    return false;
+  };
 
   Node.prototype.cursorLeft = function cursorLeft(event) {
     if (event) {
       event.preventDefault();
     }
 
-    if (this.cursorNode.$parent.$parent) {
-      this.cursorTo(this.cursorNode.$parent);
-    }};
+    if (! this.$cursorObject.headers) {
+      return this.cursorTo(this.$cursorObject.$node);
+    } else if (this.$cursorObject.$parent.$parent) {
+      return this.cursorTo(this.$cursorObject.$parent);
+    }
+    return false;
+  };
 
 
   // expand/collapse node
@@ -262,8 +319,8 @@ var nOrg = (function nOrg() {
       event.preventDefault();
     }
 
-    if (this.cursorNode.$length) {
-      this.cursorNode.$collapsed = ! this.cursorNode.$collapsed;
+    if (this.$cursorObject.$length) {
+      this.$cursorObject.$collapsed = ! this.$cursorObject.$collapsed;
     }};
 
   // expand/collapse headers
@@ -273,31 +330,38 @@ var nOrg = (function nOrg() {
       event.preventDefault();
     }
 
-    if (this.headers.keys().length) {
-      this.cursorNode.headers.$collapsed = (
-        ! this.cursorNode.headers.$collapsed);
+    headers = this.$cursorObject.headers || this.$cursorObject;
+    if (headers['NOrg-User-Headers'].length) {
+      if (headers.$node) {
+        this.cursorTo(headers.$node);
+      }
+      headers.$collapsed = (! headers.$collapsed);
     }
   };
 
-  function Headers() {
-    this.init();
+  function Headers(node) {
+    this.init(node);
   }
-  Headers.prototype.init = function init() {
+  Headers.prototype.init = function init(node) {
+    this.$node = node;
     this.$collapsed = true;
+    this.$cursor = false;
+    this['NOrg-User-Headers'] = [];
   };
-  Headers.prototype.newChild = function newChild() {
+  Headers.prototype.newChild = function newChild(node) {
     // prototypical inheritance from parent headerss
     function Headers() {}
     var child;
     Headers.prototype = this;
     child = new Headers();
-    child.init();
+    child.init(node);
     return child;
   };
   Headers.prototype.extend = function extend(object) {
     for (var key in object) {
       this[key] = object[key];
     }
+    this['NOrg-User-Headers'] = object['NOrg-User-Headers'] || [];
   };
   Headers.prototype.push = function push(key, value) {
     this[key] = value;

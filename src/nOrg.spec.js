@@ -15,11 +15,13 @@ describe('nOrg', function() {
         {"path": "/bar/.nod",
          "headers": {"Subject": "Bar Subject",
                      "Message-ID": "<2@foo.com>",
+                     "NOrg-User-Headers": ["Bar-Property"],
                      "Bar-Property": "Bar Property"},
          "children": [
            {"path": "/bar/corge.nod",
             "headers": {"Subject": "Corge Node",
                         "Message-ID": "<3@foo.com>",
+                        "NOrg-User-Headers": ["Corge-Property"],
                         "Corge-Property": "Corge Property"}},
            {"path": "/bar/grault.nod",
             "headers": {"Subject": "Grault Node",
@@ -46,8 +48,9 @@ describe('nOrg', function() {
     it('child nodes have headers', function () {
       expect(node.hasOwnProperty("headers")).toBeTruthy();
     });
-    it('lists of headers to include in UI', function () {
-      expect(node.headers.keys()).toEqual(['Bar-Property']);
+    it('lists headers to include in UI', function () {
+      expect(node.headers['NOrg-User-Headers'])
+        .toEqual(json.children[1].headers['NOrg-User-Headers']);
     });
   });
 
@@ -275,32 +278,32 @@ describe('nOrg', function() {
     });
 
     it('cursor is initially at the first node', function() {
-      expect(node.$cursorNode.path).toBe(node.path);
+      expect(node.$cursorObject.path).toBe(node.path);
       expect(node.$cursor).toBeTruthy();
 
       // Switch to the next node
       node = node.$nextSibling;
 
-      expect(node.$cursorNode).not.toBe(node);
+      expect(node.$cursorObject).not.toBe(node);
       expect(node.$cursor).toBeFalsy();
     });
     it('cursor may be changed to any other node', function() {
-      var old_cursor = node.$cursorNode;
+      var old_cursor = node.$cursorObject;
       // Switch to the next node
       node = node.$nextSibling;
 
       nOrg.root.cursorTo(node);
-      expect(node.$cursorNode.path).toBe(node.path);
+      expect(node.$cursorObject.path).toBe(node.path);
       expect(node.$cursor).toBeTruthy();
       expect(old_cursor.$cursor).toBeFalsy();
     });
     it('cursor can be moved down to next sibling', function() {
-      var old_cursor = node.$cursorNode;
+      var old_cursor = node.$cursorObject;
       // Switch to the next node
       node = node.$nextSibling;
 
       nOrg.root.cursorDown();
-      expect(node.$cursorNode.path).toBe(node.path);
+      expect(node.$cursorObject.path).toBe(node.path);
       expect(node.$cursor).toBeTruthy();
       expect(old_cursor.$cursor).toBeFalsy();
     });
@@ -310,18 +313,18 @@ describe('nOrg', function() {
 
       nOrg.root.cursorTo(node);
       nOrg.root.cursorDown();
-      expect(node.$cursorNode.path).toBe(node.path);
+      expect(node.$cursorObject.path).toBe(node.path);
       expect(node.$cursor).toBeTruthy();
     });
     it('cursor can move down to next expanded child', function() {
       // Switch to node with children
       node = node.$nextSibling;
       nOrg.root.cursorTo(node);
-      expect(node.$cursorNode.$collapsed).toBeTruthy();
-      node.$cursorNode.$collapsed = false;
+      expect(node.$cursorObject.$collapsed).toBeTruthy();
+      node.$cursorObject.$collapsed = false;
 
       nOrg.root.cursorDown();
-      expect(node.$cursorNode.path).toBe(node.$childHead.path);
+      expect(node.$cursorObject.path).toBe(node.$childHead.path);
       expect(node.$cursor).toBeFalsy();
       expect(node.$childHead.$cursor).toBeTruthy();
     });
@@ -330,18 +333,18 @@ describe('nOrg', function() {
       node = node.$nextSibling.$childTail;
       nOrg.root.cursorTo(node);
       nOrg.root.cursorDown();
-      expect(node.$cursorNode.path).toBe(node.$parent.$nextSibling.path);
+      expect(node.$cursorObject.path).toBe(node.$parent.$nextSibling.path);
       expect(node.$cursor).toBeFalsy();
       expect(node.$parent.$nextSibling.$cursor).toBeTruthy();
     });
     it('cursor can move up to previous sibling', function() {
-      var old_cursor = node.$cursorNode;
+      var old_cursor = node.$cursorObject;
       // Switch to the next node
       node = node.$nextSibling;
 
       nOrg.root.cursorTo(node);
       nOrg.root.cursorUp();
-      expect(node.$cursorNode.path).toBe(old_cursor.path);
+      expect(node.$cursorObject.path).toBe(old_cursor.path);
       expect(node.$cursor).toBeFalsy();
       expect(old_cursor.$cursor).toBeTruthy();
     });
@@ -350,17 +353,18 @@ describe('nOrg', function() {
          // Switch to node after one with children
          node = node.$parent.$childTail;
          nOrg.root.cursorTo(node);
-         expect(node.$cursorNode.$prevSibling.$collapsed).toBeTruthy();
-         node.$cursorNode.$prevSibling.$collapsed = false;
+         expect(node.$cursorObject.$prevSibling.$collapsed).toBeTruthy();
+         node.$cursorObject.$prevSibling.$collapsed = false;
 
          nOrg.root.cursorUp();
-         expect(node.$cursorNode.path).toBe(node.$prevSibling.$childTail.path);
+         expect(node.$cursorObject.path)
+           .toBe(node.$prevSibling.$childTail.path);
          expect(node.$cursor).toBeFalsy();
          expect(node.$prevSibling.$childTail.$cursor).toBeTruthy();
        });
     it('cursor cannot be moved up above first sibling', function() {
       nOrg.root.cursorUp();
-      expect(node.$cursorNode.path).toBe(node.path);
+      expect(node.$cursorObject.path).toBe(node.path);
       expect(node.$cursor).toBeTruthy();
     });
     it('cursor can move to previous parent from first child',
@@ -369,7 +373,7 @@ describe('nOrg', function() {
          node = node.$nextSibling.$childHead;
          nOrg.root.cursorTo(node);
          nOrg.root.cursorUp();
-         expect(node.$cursorNode.path).toBe(node.$parent.path);
+         expect(node.$cursorObject.path).toBe(node.$parent.path);
          expect(node.$cursor).toBeFalsy();
          expect(node.$parent.$cursor).toBeTruthy();
        });
@@ -379,18 +383,18 @@ describe('nOrg', function() {
       // Create a child
       node = node.$nextSibling;
       nOrg.root.cursorTo(node);
-      old_cursor = node.$cursorNode;
+      old_cursor = node.$cursorObject;
 
       node = node.$childHead;
 
       nOrg.root.cursorRight();
-      expect(node.$cursorNode.path).toBe(node.path);
+      expect(node.$cursorObject.path).toBe(node.path);
       expect(node.$cursor).toBeTruthy();
       expect(old_cursor.$cursor).toBeFalsy();
     });
     it('cursor cannot be moved right without children', function() {
       nOrg.root.cursorRight();
-      expect(node.$cursorNode.path).toBe(node.path);
+      expect(node.$cursorObject.path).toBe(node.path);
       expect(node.$cursor).toBeTruthy();
     });
     it('cursor can expand and move into collapsed first child',
@@ -401,7 +405,7 @@ describe('nOrg', function() {
          expect(node.$collapsed).toBeTruthy();
 
          nOrg.root.cursorRight();
-         expect(node.$cursorNode.path).toBe(node.$childHead.path);
+         expect(node.$cursorObject.path).toBe(node.$childHead.path);
          expect(node.$cursor).toBeFalsy();
          expect(node.$childHead.$cursor).toBeTruthy();
          expect(node.$collapsed).toBeFalsy();
@@ -412,22 +416,169 @@ describe('nOrg', function() {
       node = node.$nextSibling;
 
       nOrg.root.cursorTo(node);
-      old_cursor = node.$cursorNode;
+      old_cursor = node.$cursorObject;
 
       node = node.$childHead;
       nOrg.root.cursorTo(node);
 
       nOrg.root.cursorLeft();
-      expect(node.$cursorNode.path).toBe(old_cursor.path);
+      expect(node.$cursorObject.path).toBe(old_cursor.path);
       expect(node.$cursor).toBeFalsy();
       expect(old_cursor.$cursor).toBeTruthy();
     });
     it('cursor cannot be moved up above first sibling', function() {
       nOrg.root.cursorLeft();
-      expect(node.$cursorNode.path).toBe(node.path);
+      expect(node.$cursorObject.path).toBe(node.path);
       expect(node.$cursor).toBeTruthy();
     });
   });
+
+  describe("headers cursor:", function () {
+    beforeEach(function() {
+      node.headers.$collapsed = false;
+      node.headers.push('Bah-Property', 'Bah Property');
+    });
+
+    it('cursor is not initially at a header', function () {
+      expect(node.$cursorObject['NOrg-User-Headers']).toBeUndefined();
+      expect(node.$cursorObject.headers.$cursor).toBeFalsy();
+    });
+    it('cursor will move right into expanded headers', function () {
+      nOrg.root.cursorTo(node);
+      nOrg.root.cursorRight();
+
+      expect(node.$cursorObject[node.$cursorObject['NOrg-User-Headers'][
+        node.$cursorIndex]]).toBe("Bar Property");
+      expect(node.headers.$cursor).toBeTruthy();
+      expect(node.$cursorObject.path).toBeUndefined();
+      expect(node.$cursor).toBeFalsy();
+    });
+    it('cursor will move down into expanded headers', function () {
+      nOrg.root.cursorTo(node);
+      nOrg.root.cursorDown();
+
+      expect(node.$cursorObject[node.$cursorObject['NOrg-User-Headers'][
+        node.$cursorIndex]]).toBe("Bar Property");
+      expect(node.headers.$cursor).toBeTruthy();
+      expect(node.$cursorObject.path).toBeUndefined();
+      expect(node.$cursor).toBeFalsy();
+    });
+    it('cursor will move left out of headers', function () {
+      nOrg.root.cursorTo(node.headers, 1);
+
+      nOrg.root.cursorLeft();
+
+      expect(node.$cursorObject.path).toBe("/bar/.nod");
+      expect(node.$cursor).toBeTruthy();
+      expect(node.$cursorObject['NOrg-User-Headers']).toBeUndefined();
+      expect(node.headers.$cursor).toBeFalsy();
+    });
+    it('cursor will move down within headers', function () {
+      nOrg.root.cursorTo(node.headers, 0);
+
+      nOrg.root.cursorDown();
+
+      expect(node.headers.$cursor).toBeTruthy();
+      expect(node.$cursorObject[node.$cursorObject['NOrg-User-Headers'][
+        node.$cursorIndex]]).toBe("Bah Property");
+    });
+    it('cursor will move up within headers', function () {
+      nOrg.root.cursorTo(node.headers, 1);
+
+      nOrg.root.cursorUp();
+
+      expect(node.$cursorObject[node.$cursorObject['NOrg-User-Headers'][
+        node.$cursorIndex]]).toBe("Bar Property");
+      expect(node.headers.$cursor).toBeTruthy();
+      expect(node.$cursorObject[1]).toBeUndefined();
+    });
+    it('cursor will move down to next node past last header', function () {
+      node.$collapsed = false;
+      nOrg.root.cursorTo(node.headers, 1);
+
+      nOrg.root.cursorDown();
+
+      expect(node.$childHead.$cursor).toBeTruthy();
+      expect(node.headers.$cursor).toBeFalsy();
+      expect(node.$cursorObject['NOrg-User-Headers']).toBeUndefined();
+
+      node.$childHead.headers.$collapsed = false;
+      nOrg.root.cursorTo(node.$childHead.headers, 0);
+
+      nOrg.root.cursorDown();
+
+      expect(node.$childHead.$nextSibling.$cursor).toBeTruthy();
+      expect(node.$childHead.headers.$cursor).toBeFalsy();
+      expect(node.$cursorObject['NOrg-User-Headers']).toBeUndefined();
+    });
+    it('cursor will move up to node past first header', function () {
+      node.$collapsed = false;
+      node.headers.$collapsed = false;
+      nOrg.root.cursorTo(node.headers, 0);
+
+      nOrg.root.cursorUp();
+
+      expect(node.$cursor).toBeTruthy();
+      expect(node.headers.$cursor).toBeFalsy();
+      expect(node.$cursorObject['NOrg-User-Headers']).toBeUndefined();
+
+      node.$childHead.headers.$collapsed = false;
+      nOrg.root.cursorTo(node.$childHead.headers, 0);
+
+      nOrg.root.cursorUp();
+
+      expect(node.$childHead.$cursor).toBeTruthy();
+      expect(node.$childHead.headers.$cursor).toBeFalsy();
+      expect(node.$cursorObject['NOrg-User-Headers']).toBeUndefined();
+    });
+    it('cursor will move up into expanded header', function () {
+      node.$collapsed = false;
+      node.headers.$collapsed = false;
+      nOrg.root.cursorTo(node.$childHead);
+
+      nOrg.root.cursorUp();
+
+      expect(node.headers.$cursor).toBeTruthy();
+      expect(node.$childHead.$cursor).toBeFalsy();
+      expect(node.$cursor).toBeFalsy();
+      expect(node.$cursorObject['NOrg-User-Headers'])
+        .toBe(node.headers['NOrg-User-Headers']);
+    });
+    it('cursor will not move right within headers', function () {
+      nOrg.root.cursorTo(node.headers, 0);
+
+      nOrg.root.cursorRight();
+
+      expect(node.$cursorObject[node.$cursorObject['NOrg-User-Headers'][
+        node.$cursorIndex]]).toBe("Bar Property");
+      expect(node.headers.$cursor).toBeTruthy();
+      expect(node.$cursorObject.path).toBeUndefined();
+      expect(node.$cursor).toBeFalsy();
+    });
+    it('cursor will not move right into collapsed headers', function () {
+      node.headers.$collapsed = true;
+      nOrg.root.cursorTo(node);
+
+      nOrg.root.cursorRight();
+      
+      expect(node.$cursorObject.path).toBe(node.$childHead.path);
+      expect(node.$childHead.$cursor).toBeTruthy();
+      expect(node.$cursorObject['NOrg-User-Headers']).toBeUndefined();
+      expect(node.headers.$cursor).toBeFalsy();
+    });
+    it('cursor will not move down into collapsed headers', function () {
+      node.headers.$collapsed = true;
+      nOrg.root.cursorTo(node);
+
+      nOrg.root.cursorDown();
+      
+      expect(node.$cursorObject.path).toBe(node.$nextSibling.path);
+      expect(node.$nextSibling.$cursor).toBeTruthy();
+      expect(node.$cursorObject['NOrg-User-Headers']).toBeUndefined();
+      expect(node.headers.$cursor).toBeFalsy();
+    });
+  });
+
   describe('collapse/expand:', function () {
     it('nodes are initially collapsed', function() {
       expect(node.$collapsed).toBeTruthy();
@@ -458,6 +609,7 @@ describe('nOrg', function() {
     it('cannot toggle nodes without headers', function() {
       node = node.$prevSibling;
       nOrg.root.cursorTo(node);
+      expect(node.headers.$collapsed).toBeTruthy();
       node.toggleHeaders();
       expect(node.headers.$collapsed).toBeTruthy();
     });
