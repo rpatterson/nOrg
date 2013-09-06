@@ -85,6 +85,14 @@
     <span class="btn-toolbar pull-right">
       <span class="btn-group">
         <button type="button"
+                class="btn btn-default btn-mini add"
+                title="Add a new node"
+                ng:click="node.newSibling()">
+          <span class="icon-plus"></span>
+        </button>
+      </span>
+      <span class="btn-group">
+        <button type="button"
                 class="btn btn-default btn-mini promote"
                 title="Promote this node"
                 ng:disabled="! node.$parent.$parent"

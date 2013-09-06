@@ -24,15 +24,15 @@ var nOrg = (function nOrg() {
       this.cursorTo(this);
     }
   };
-  Node.prototype.newChild = function newChild(object) {
+  Node.prototype.newNode = function newNode(object) {
     function Node() {
       this.init();
     }
     var child;
     Node.prototype = this;
     child = new Node();
+    child.$parent = this;
     child.headers = this.headers.newChild(child);
-    this.pushChild(child);
 
     if (object) {
       child.extend(object);
@@ -51,6 +51,24 @@ var nOrg = (function nOrg() {
     }
     this.$childTail = child;
     this.$length++;
+  };
+  Node.prototype.newChild = function newChild(object) {
+    var child = this.newNode(object);
+    this.pushChild(child);
+    return child;
+  };
+  Node.prototype.newSibling = function newSibling(object) {
+    var child = this.$parent.newNode(object);
+
+    child.$nextSibling = this.$nextSibling;
+    this.$nextSibling = child;
+    child.$prevSibling = this;
+    if (! child.$nextSibling) {
+      this.$parent.$childTail = child;
+    }
+    this.$parent.$length++;
+
+    return child;
   };
   Node.prototype.popFromParent = function popFromParent() {
     // Remove this node from it's parent

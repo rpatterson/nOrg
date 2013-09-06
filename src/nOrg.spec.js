@@ -335,6 +335,29 @@ describe('nOrg', function() {
     });
   });
 
+  describe('adding nodes:', function () {
+    it('adds a sibling', function () {
+      var nextSibling = node.$nextSibling;
+      var added = node.newSibling();
+      var last;
+
+      expect(added.$parent.path).toBe(node.$parent.path);
+      expect(node.$nextSibling.path).toBe(added.path);
+      expect(added.$prevSibling.path).toBe(node.path);
+      expect(added.$nextSibling.path).toBe(nextSibling.path);
+      expect(nextSibling.$prevSibling.path).toBe(node.path);
+
+      node = node.$childTail;
+      last = node.newSibling();
+
+      expect(last.$parent.path).toBe(node.$parent.path);
+      expect(node.$nextSibling.path).toBe(last.path);
+      expect(last.$prevSibling.path).toBe(node.path);
+      expect(Boolean(last.$nextSibling)).toBeFalsy();
+      expect(node.$parent.$childTail.path).toBe(last.path);
+    });
+  });
+
   describe('cursor:', function () {
     beforeEach(function() {
       // Switch to the first node
