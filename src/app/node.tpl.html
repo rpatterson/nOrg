@@ -12,6 +12,11 @@
           </span>
         </button>
         <button type="button"
+                class="btn btn-default btn-mini select-button"
+                title="Select/deselect node">
+          <input type="checkbox" name="Message-ID-{{node.toId()}}" />
+        </button>
+        <button type="button"
                 class="btn btn-default btn-mini collapse-button"
                 title="Expand/Collapse this node's children"
                 ng:disabled="! node.$length"
@@ -23,9 +28,14 @@
           </span>
         </button>
         <button type="button"
-                class="btn btn-default btn-mini select-button"
-                title="Select/deselect node">
-          <input type="checkbox" name="Message-ID-{{node.toId()}}" />
+                class="btn btn-default btn-mini headers-expand"
+                title="Expand/Collapse headers/fields"
+                ng:disabled="! node.headers['NOrg-User-Headers'].length"
+                ng:click="node.headers.$collapsed = !node.headers.$collapsed">
+          <span class="icon-th-list"
+                ng:class="{'text-muted':
+                          ! node.headers['NOrg-User-Headers'].length}">
+          </span>
         </button>
       </span>
       <span class="btn-group">
@@ -73,18 +83,6 @@
     </span>
 
     <span class="btn-toolbar pull-right">
-      <span class="btn-group">
-        <button type="button"
-                class="btn btn-default btn-mini headers-expand"
-                title="Expand/Collapse headers/fields"
-                ng:disabled="! node.headers['NOrg-User-Headers'].length"
-                ng:click="node.headers.$collapsed = !node.headers.$collapsed">
-          <span class="icon-th-list"
-                ng:class="{'text-muted':
-                          ! node.headers['NOrg-User-Headers'].length}">
-          </span>
-        </button>
-      </span>
       <span class="btn-group">
         <button type="button"
                 class="btn btn-default btn-mini promote"
