@@ -248,6 +248,7 @@ var nOrg = (function nOrg() {
   Node.prototype.cursorDown = function cursorDown(event) {
     var object = this.$cursorObject;
     if (event) {
+      event.stopPropagation();
       event.preventDefault();
     }
 
@@ -280,6 +281,7 @@ var nOrg = (function nOrg() {
     var object = this.$cursorObject;
     var cursor;
     if (event) {
+      event.stopPropagation();
       event.preventDefault();
     }
 
@@ -324,6 +326,7 @@ var nOrg = (function nOrg() {
 
   Node.prototype.cursorRight = function cursorRight(event) {
     if (event) {
+      event.stopPropagation();
       event.preventDefault();
     }
 
@@ -342,6 +345,7 @@ var nOrg = (function nOrg() {
 
   Node.prototype.cursorLeft = function cursorLeft(event) {
     if (event) {
+      event.stopPropagation();
       event.preventDefault();
     }
 
@@ -357,6 +361,7 @@ var nOrg = (function nOrg() {
   // expand/collapse node
   Node.prototype.toggle = function toggle(event) {
     if (event) {
+      event.stopPropagation();
       event.preventDefault();
     }
 
