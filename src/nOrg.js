@@ -63,7 +63,7 @@ var nOrg = (function nOrg() {
   Node.prototype.newChildEach = function newChild(object, index, array) {
     this.newChild(object);
   };
-  Node.prototype.newSibling = function newSibling(object, event) {
+  Node.prototype.newSibling = function newSibling(event, object) {
     var child = this.$parent.newNode(object);
 
     child.$nextSibling = this.$nextSibling;
@@ -237,13 +237,19 @@ var nOrg = (function nOrg() {
 
     return object;
   };
-  Node.prototype.callCursor = function callCursor(method, event) {
-      event.stopPropagation();
-      try {
-        return this[method].call(this, event);
-      } catch (exception) {
-        return false;
+  Node.prototype.applyCursor = function applyCursor(method, event, args) {
+    var params = [event];
+    event.stopPropagation();
+    if (args) {
+      for (var arg in args) {
+        params.push(arg);
       }
+    }
+    try {
+      return this[method].apply(this, params);
+    } catch (exception) {
+      return false;
+    }
   };
   Node.prototype.cursorDown = function cursorDown(event) {
     var object = this.$cursorObject;

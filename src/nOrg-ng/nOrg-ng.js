@@ -15,10 +15,12 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'])
       'right': 'node.cursorRight($event)',  // d
       'left': 'node.cursorLeft($event)',    // a
 
-      'shift-down': 'node.callCursor("moveDown", $event)',
-      'shift-up': 'node.callCursor("moveUp", $event)',
-      'shift-right': 'node.callCursor("demote", $event)',
-      'shift-left': 'node.callCursor("promote", $event)'
+      'shift-down': 'node.applyCursor("moveDown", $event)',
+      'shift-up': 'node.applyCursor("moveUp", $event)',
+      'shift-right': 'node.applyCursor("demote", $event)',
+      'shift-left': 'node.applyCursor("promote", $event)',
+
+      'shift-enter': 'node.applyCursor("newSibling", $event, [{}])'
     };
 
     $http.get('../nOrg-nodes.json').success(function loadNode(node) {
