@@ -12,7 +12,6 @@
   <body ui:keydown="keydown">
     <form class="form-inline container-fluid well well-large">
       <ol id="norg-edit" class="norg-nodes"
-          tabindex="0"
           ng:controller="NOrgCtrl">
         <li ng:repeat="node in node.children()"
             ui:keydown="keydown"
