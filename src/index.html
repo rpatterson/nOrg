@@ -9,12 +9,11 @@
     <link href="../vendor/jasmine/lib/jasmine-core/jasmine.css" rel="stylesheet"
           />
   </head>
-  <body>
+  <body ui:keydown="keydown">
     <form class="form-inline container-fluid well well-large">
       <ol id="norg-edit" class="norg-nodes"
           tabindex="0"
-          ng:controller="NOrgCtrl"
-          ui:keydown="keydown">
+          ng:controller="NOrgCtrl">
         <li ng:repeat="node in node.children()"
             ui:keydown="keydown"
             id="Message-ID-{{node.toId()}}"
