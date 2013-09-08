@@ -8,24 +8,13 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'])
 
     $scope.keydown = {
       'tab': 'node.toggle($event)',
-      72: 'node.toggleHeaders($event)', // h
+      '72': 'node.toggleHeaders($event)', // h
 
-      'down': 'node.cursorDown($event)',
-      'up': 'node.cursorUp($event)',
-      'right': 'node.cursorRight($event)',
-      'left': 'node.cursorLeft($event)'
+      'down 74 83': 'node.cursorDown($event)', // j, s
+      'up 75 87': 'node.cursorUp($event)',     // k, w
+      'right 68': 'node.cursorRight($event)',  // d
+      'left 65': 'node.cursorLeft($event)',    // a
     };
-    $scope.keydown_aliases = {
-      74: 'down',               // j
-      75: 'up',                 // k
-      87: 'up',                 // w
-      83: 'down',               // s
-      65: 'left',               // a
-      68: 'right'               // d
-    };
-    for (var alias in $scope.keydown_aliases) {
-      $scope.keydown[alias] = $scope.keydown[$scope.keydown_aliases[alias]];
-    }
 
     $http.get('app/nodes.json').success(function loadNode(node) {
       // Load the initial nodes JSON
