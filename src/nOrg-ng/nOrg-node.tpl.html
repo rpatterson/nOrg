@@ -48,7 +48,7 @@
       <button type="button"
               class="btn btn-default add"
               title="Add a new node"
-              ng:click="node.newSibling()"
+              ng:click="node.newSibling({}, $event)"
               ng:focus="node.cursorTo()">
         <span class="icon-plus"></span>
       </button>

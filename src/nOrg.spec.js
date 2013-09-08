@@ -1,6 +1,7 @@
 // Globals
 var describe = describe;
 var beforeEach = beforeEach;
+var afterEach = afterEach;
 var it = it;
 var expect = expect;
 
@@ -38,6 +39,11 @@ describe('nOrg', function() {
       ]};
     nOrg.root = nOrg.newRoot(json);
     node = nOrg.root.$childHead.$nextSibling;
+  });
+
+  afterEach(function () {
+    nOrg.root.$cursorObject.cursor = undefined;
+    nOrg.root.$cursorObject = undefined;
   });
 
   it('exports module contents', function () {
@@ -338,7 +344,7 @@ describe('nOrg', function() {
   describe('adding nodes:', function () {
     it('adds a sibling', function () {
       var nextSibling = node.$nextSibling;
-      var added = node.newSibling();
+      var added = node.newSibling({}, {});
       var last;
 
       expect(added.$parent.basename).toBe(node.$parent.basename);
@@ -346,6 +352,10 @@ describe('nOrg', function() {
       expect(added.$prevSibling.basename).toBe(node.basename);
       expect(added.$nextSibling.basename).toBe(nextSibling.basename);
       expect(nextSibling.$prevSibling.basename).toBe(node.basename);
+
+      expect(node.$cursorObject.basename).toBe(added.basename);
+      expect(added.$cursor).toBeTruthy();
+      expect(nOrg.root.$childHead.$cursor).toBeFalsy();
 
       node = node.$childTail;
       last = node.newSibling();

@@ -52,12 +52,18 @@ var nOrg = (function nOrg() {
     this.$childTail = child;
     this.$length++;
   };
-  Node.prototype.newChild = function newChild(object) {
+  Node.prototype.newChild = function newChild(object, event) {
     var child = this.newNode(object);
     this.pushChild(child);
+    if (event) {
+      this.cursorTo(child);
+    }
     return child;
   };
-  Node.prototype.newSibling = function newSibling(object) {
+  Node.prototype.newChildEach = function newChild(object, index, array) {
+    this.newChild(object);
+  };
+  Node.prototype.newSibling = function newSibling(object, event) {
     var child = this.$parent.newNode(object);
 
     child.$nextSibling = this.$nextSibling;
@@ -68,6 +74,9 @@ var nOrg = (function nOrg() {
     }
     this.$parent.$length++;
 
+    if (event) {
+      this.cursorTo(child);
+    }
     return child;
   };
   Node.prototype.popFromParent = function popFromParent() {
@@ -104,7 +113,7 @@ var nOrg = (function nOrg() {
       if (key === 'headers') {
         this.headers.extend(object.headers);
       } else if (key === 'children') {
-        object.children.forEach(this.newChild, this);
+        object.children.forEach(this.newChildEach, this);
       } else {
         this[key] = object[key];
       }
