@@ -33,13 +33,16 @@
                         ! node.headers['NOrg-User-Headers'].length}">
         </span>
       </button>
+      <button type="button"
+              class="btn btn-default node-select"
+              title="Select this node for multi-node actions"
+              ng:focus="node.cursorTo()">
+        <input type="checkbox" name="Message-ID-{{node.toId()}}"
+               ng:focus="node.cursorTo()" />
+      </button>
     </span>
 
-    <span class="add-on">
-      <input type="checkbox" name="Message-ID-{{node.toId()}}"
-             ng:focus="node.cursorTo()" />
-    </span>
-    <input type="text" class="norg-node-subject"
+    <input type="text" class="norg-node-subject input-xxlarge"
            name="Message-ID-{{node.toId()}}-headers-Subject"
            ng:model="node.headers['Subject']"
            norg:focus="{{node.$cursor}}" />
@@ -92,7 +95,7 @@
   </div>
 
   <div id="Message-ID-{{node.toId()}}-headers"
-       class="norg-headers offset1"
+       class="norg-headers"
        collapse="node.headers.$collapsed">
     <div class="row-fluid"
          ng:repeat="(index, key) in node.headers['NOrg-User-Headers']">
@@ -106,13 +109,13 @@
           <span class="icon-th">
           </span>
         </button>
-        <input type="text"
+        <input type="text" class="norg-headers-key"
                name="Message-ID-{{node.toId()}}-header-key-{{key}}"
                ng:model="key"
                ng:focus="node.cursorTo(node.headers, index)" />
       </div>
       <div class="input-append">
-        <input type="text"
+        <input type="text" class="input-xlarge"
                name="Message-ID-{{node.toId()}}-header-value-{{key}}"
                ng:model="node.headers[key]"
                ng:focus="node.cursorTo(node.headers, index)"

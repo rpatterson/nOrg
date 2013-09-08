@@ -7,3 +7,10 @@
 #norg-edit .btn[disabled] {
     opacity: 0.25;
 }
+
+.norg-headers {
+    margin-left: 152px;
+}
+input.norg-headers-key {
+    width: 203px;
+}
