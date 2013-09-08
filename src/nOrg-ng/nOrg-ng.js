@@ -8,21 +8,17 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'])
 
     $scope.keydown = {
       'tab': 'node.toggle($event)',
-      '72': 'node.toggleHeaders($event)', // h
+      'shift-tab': 'node.toggleHeaders($event)', // h
 
-      'down 74 83': 'node.cursorDown($event)', // j, s
-      'up 75 87': 'node.cursorUp($event)',     // k, w
-      'right 68': 'node.cursorRight($event)',  // d
-      'left 65': 'node.cursorLeft($event)',    // a
+      'down': 'node.cursorDown($event)', // j, s
+      'up': 'node.cursorUp($event)',     // k, w
+      'right': 'node.cursorRight($event)',  // d
+      'left': 'node.cursorLeft($event)',    // a
 
-      'shift-down shift-74 shift-83': // j, s
-      'node.callCursor("moveDown", $event)',
-      'shift-up shift-75 shift-87':   // k, w
-      'node.callCursor("moveUp", $event)',
-      'shift-right shift-68':         // d
-      'node.callCursor("demote", $event)',
-      'shift-left shift-65':          // a
-      'node.callCursor("promote", $event)'
+      'shift-down': 'node.callCursor("moveDown", $event)',
+      'shift-up': 'node.callCursor("moveUp", $event)',
+      'shift-right': 'node.callCursor("demote", $event)',
+      'shift-left': 'node.callCursor("promote", $event)'
     };
 
     $http.get('../nOrg-nodes.json').success(function loadNode(node) {
@@ -31,9 +27,9 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'])
     });
   })
 
-  .directive('norgCursor', function norgCursor() {
+  .directive('norgFocus', function norgFocus() {
     return function (scope, element, attrs) {
-      attrs.$observe('norgCursor', function (newValue) {
+      attrs.$observe('norgFocus', function (newValue) {
         if (newValue === 'true') {
           element[0].focus();
         }

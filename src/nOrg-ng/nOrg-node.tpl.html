@@ -3,11 +3,10 @@
     <span class="btn-group">
       <button type="button"
               class="btn cursor-button"
+              title="Node cursor"
               ng:class="{'btn-primary': node.$cursor,
                         'btn-default': ! node.$cursor}"
-              title="Node cursor"
-              ng:click="node.cursorTo(node)"
-              norg:cursor="{{node.$cursor}}">
+              ng:focus="node.cursorTo()">
         <span class="icon-th">
         </span>
       </button>
@@ -15,7 +14,8 @@
               class="btn btn-default collapse-button"
               title="Expand/Collapse this node's children"
               ng:disabled="! node.$length"
-              ng:click="node.$collapsed = !node.$collapsed">
+              ng:click="node.$collapsed = !node.$collapsed"
+              ng:focus="node.cursorTo()">
         <span ng:class="{'icon-chevron-down': node.$length && node.$collapsed,
                         'icon-chevron-up': !(node.$length && node.$collapsed),
                         'icon-chevron-up': !(node.$length && node.$collapsed),
@@ -26,7 +26,8 @@
               class="btn btn-default headers-expand"
               title="Expand/Collapse headers/fields"
               ng:disabled="! node.headers['NOrg-User-Headers'].length"
-              ng:click="node.headers.$collapsed = !node.headers.$collapsed">
+              ng:click="node.headers.$collapsed = !node.headers.$collapsed"
+              ng:focus="node.cursorTo()">
         <span class="icon-th-list"
               ng:class="{'text-muted':
                         ! node.headers['NOrg-User-Headers'].length}">
@@ -35,24 +36,28 @@
     </span>
 
     <span class="add-on">
-      <input type="checkbox" name="Message-ID-{{node.toId()}}" />
+      <input type="checkbox" name="Message-ID-{{node.toId()}}"
+             ng:focus="node.cursorTo()" />
     </span>
     <input type="text" class="norg-node-subject"
            name="Message-ID-{{node.toId()}}-headers-Subject"
-           ng-model="node.headers['Subject']" />
+           ng:model="node.headers['Subject']"
+           norg:focus="{{node.$cursor}}" />
 
     <span class="btn-group">
       <button type="button"
               class="btn btn-default add"
               title="Add a new node"
-              ng:click="node.newSibling()">
+              ng:click="node.newSibling()"
+              ng:focus="node.cursorTo()">
         <span class="icon-plus"></span>
       </button>
       <button type="button"
               class="btn btn-default promote"
               title="Promote this node"
               ng:disabled="! node.$parent.$parent"
-              ng:click="node.promote()">
+              ng:click="node.promote()"
+              ng:focus="node.cursorTo()">
         <span class="icon-arrow-left"
               ng:class="{'muted': ! node.$parent.$parent}"></span>
       </button>
@@ -60,7 +65,8 @@
               class="btn btn-default demote"
               title="Demote this node"
               ng:disabled="! node.$prevSibling"
-              ng:click="node.demote()">
+              ng:click="node.demote()"
+              ng:focus="node.cursorTo()">
         <span class="icon-arrow-right"
               ng:class="{'muted': ! node.$prevSibling}"></span>
       </button>
@@ -68,7 +74,8 @@
               class="btn btn-default promote"
               title="Promote this node"
               ng:disabled="! node.$prevSibling"
-              ng:click="node.moveUp()">
+              ng:click="node.moveUp()"
+              ng:focus="node.cursorTo()">
         <span class="icon-arrow-up"
               ng:class="{'muted': ! node.$prevSibling}"></span>
       </button>
@@ -76,7 +83,8 @@
               class="btn btn-default demote"
               title="Demote this node"
               ng:disabled="! node.$nextSibling"
-              ng:click="node.moveDown()">
+              ng:click="node.moveDown()"
+              ng:focus="node.cursorTo()">
         <span class="icon-arrow-down"
               ng:class="{'muted': ! node.$nextSibling}"></span>
       </button>
@@ -94,19 +102,22 @@
                 ng:class="{'btn-primary': (node.headers.$cursor && (node.$cursorIndex == index)),
                           'btn-default': ! (node.headers.$cursor && (node.$cursorIndex == index))}"
                 title="Node cursor"
-                ng:click="node.cursorTo(node.headers, index)"
-                norg:cursor="{{node.headers.$cursor && (node.$cursorIndex == index)}}">
+                ng:click="node.cursorTo(node.headers, index)">
           <span class="icon-th">
           </span>
         </button>
         <input type="text"
                name="Message-ID-{{node.toId()}}-header-key-{{key}}"
-               ng:model="key" />
+               ng:model="key"
+               ng:focus="node.cursorTo(node.headers, index)" />
       </div>
       <div class="input-append">
         <input type="text"
                name="Message-ID-{{node.toId()}}-header-value-{{key}}"
-               ng:model="node.headers[key]" />
+               ng:model="node.headers[key]"
+               ng:focus="node.cursorTo(node.headers, index)"
+               norg:focus="{{node.headers.$cursor &&
+                             (node.$cursorIndex == index)}}" />
       </div>
     </div>
   </div>
