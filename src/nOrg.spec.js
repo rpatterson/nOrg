@@ -622,19 +622,19 @@ describe('nOrg', function() {
       expect(node.$cursor).toBeFalsy();
       expect(old_cursor.$cursor).toBeTruthy();
     });
-    it("cursor can move up into previous expanded sibling's last child",
+    it("moves cursor up into previous sibling's last expanded descendant",
        function() {
-         // Switch to node after one with children
-         node = node.$parent.$childTail;
-         nOrg.root.cursorTo(node);
-         expect(node.$cursorObject.$prevSibling.$collapsed).toBeTruthy();
-         node.$cursorObject.$prevSibling.$collapsed = false;
+         // Switch to node nested several levels into expanded parents
+         node = node.$nextSibling.$childTail;
+         node.$parent.$collapsed = false;
+         node.demote();
+         node.$parent.demote();
+         nOrg.root.cursorTo(nOrg.root.$childTail);
 
          nOrg.root.cursorUp();
-         expect(node.$cursorObject.basename)
-           .toBe(node.$prevSibling.$childTail.basename);
-         expect(node.$cursor).toBeFalsy();
-         expect(node.$prevSibling.$childTail.$cursor).toBeTruthy();
+         expect(nOrg.root.$cursorObject.basename).toBe(node.basename);
+         expect(node.$cursor).toBeTruthy();
+         expect(nOrg.root.$childTail.$cursor).toBeFalsy();
        });
     it('cannot be moved up above first sibling', function() {
       nOrg.root.cursorUp();

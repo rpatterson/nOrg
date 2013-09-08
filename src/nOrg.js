@@ -284,49 +284,42 @@ var nOrg = (function nOrg() {
   };
 
   Node.prototype.cursorUp = function cursorUp(event) {
-    var object = this.$cursorObject;
-    var cursor;
+    var node = this.$cursorObject.$node || this.$cursorObject;
     if (event) {
       event.stopPropagation();
       event.preventDefault();
     }
 
-    if (! object.headers) {
-      if (object['NOrg-User-Headers'][this.$cursorIndex - 1]) {
+    if (! this.$cursorObject.headers) {
+      if (this.$cursorObject['NOrg-User-Headers'][this.$cursorIndex - 1]) {
         // previous header
-        return this.cursorTo(object, this.$cursorIndex - 1);
+        return this.cursorTo(this.$cursorObject, this.$cursorIndex - 1);
       } else {
         // header node
-        return this.cursorTo(object.$node);
+        return this.cursorTo(this.$cursorObject.$node);
       }
     }
-    // no more header cases
-    object = object.$node || object;
 
-    if (object.$prevSibling &&
-        object.$prevSibling.$length &&
-        (! object.$prevSibling.$collapsed)) {
-      // previous expanded $parent sibling last child
-      cursor = object.$prevSibling.$childTail;
-    }
-    if (! object.$prevSibling) {
-      if (object.$parent.$parent) {
-        // parent
-        cursor = object.$parent;
+    // find the last/deepest expanded ancestor/header
+    if (node.$prevSibling) {
+      node = node.$prevSibling;
+      while (node.$length &&
+             (! node.$collapsed)) {
+        node = node.$childTail;
       }
-    } else if (!cursor) {
-      // previous sibling
-      cursor = object.$prevSibling;
+    } else if (node.$parent.$parent) {
+      node = node.$parent;
+    } else {
+      return false;
     }
-    if (cursor) {
-      if ((! cursor.headers.$collapsed) &&
-          cursor.headers['NOrg-User-Headers'].length) {
-        return this.cursorTo(cursor.headers,
-                             cursor.headers['NOrg-User-Headers'].length - 1);
-      } else {
-        return this.cursorTo(cursor);
-      }
+    if ((! node.headers.$collapsed) &&
+        node.headers['NOrg-User-Headers'].length) {
+      return this.cursorTo(node.headers,
+                           node.headers['NOrg-User-Headers'].length - 1);
+    } else {
+      return this.cursorTo(node);
     }
+
     return false;
   };
 
