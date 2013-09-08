@@ -16,6 +16,7 @@
           ng:controller="NOrgCtrl"
           ui:keydown="keydown">
         <li ng:repeat="node in node.children()"
+            ui:keydown="keydown"
             id="Message-ID-{{node.toId()}}"
             class="norg-node row-fluid">
           <span ng:include="'app/node.tpl.html'">

@@ -14,6 +14,15 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'])
       'up 75 87': 'node.cursorUp($event)',     // k, w
       'right 68': 'node.cursorRight($event)',  // d
       'left 65': 'node.cursorLeft($event)',    // a
+
+      'shift-down shift-74 shift-83': // j, s
+      'node.callCursor("moveDown", $event)',
+      'shift-up shift-75 shift-87':   // k, w
+      'node.callCursor("moveUp", $event)',
+      'shift-right shift-68':         // d
+      'node.callCursor("demote", $event)',
+      'shift-left shift-65':          // a
+      'node.callCursor("promote", $event)'
     };
 
     $http.get('app/nodes.json').success(function loadNode(node) {

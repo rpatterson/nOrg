@@ -226,7 +226,10 @@ var nOrg = (function nOrg() {
 
     return object;
   };
-  
+  Node.prototype.callCursor = function callCursor(method, event) {
+    return (this.$cursorObject.$node ||
+            this.$cursorObject)[method].call(this, event);
+  };
   Node.prototype.cursorDown = function cursorDown(event) {
     var object = this.$cursorObject;
     if (event) {
