@@ -67,11 +67,13 @@ var nOrg = (function nOrg() {
     var child = this.$parent.newNode(object);
 
     child.$nextSibling = this.$nextSibling;
-    this.$nextSibling = child;
     child.$prevSibling = this;
-    if (! child.$nextSibling) {
+    if (this.$nextSibling) {
+      child.$nextSibling.$prevSibling = child;
+    } else {
       this.$parent.$childTail = child;
     }
+    this.$nextSibling = child;
     this.$parent.$length++;
 
     if (event) {

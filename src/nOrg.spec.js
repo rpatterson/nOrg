@@ -205,15 +205,68 @@ describe('nOrg', function() {
   });
 
   describe('moving nodes:', function () {
-    it('nodes with previous siblings may be demoted', function () {
-      expect(node.$prevSibling.$collapsed).toBeTruthy();
+    it('demotes a node with previous siblings', function () {
+      var parent = nOrg.root.$childHead;
       node.demote();
-      expect(nOrg.root.$childHead.$childHead.basename).toBe(node.basename);
-      expect(node.$parent.$length).toBe(1);
-      expect(node.$parent.$parent.$length).toBe(2);
-      expect(node.$parent.$collapsed).toBeFalsy();
+
+      expect(parent.$childHead.basename).toBe(node.basename);
+      expect(node.$parent.basename).toBe(parent.basename);
+      expect(parent.$parent.$childHead.basename).toBe(parent.basename);
+      expect(parent.$parent.$childTail.basename).
+        toBe(parent.$nextSibling.basename);
+
+      expect(Boolean(node.$nextSibling)).toBeFalsy();
+      expect(Boolean(node.$prevSibling)).toBeFalsy();
+
+      expect(parent.$parent.$length).toBe(2);
+      expect(parent.$length).toBe(1);
+
+      expect(parent.children().indexOf(node)).toBe(0);
+      expect(parent.$parent.children().length).toBe(2);
+      expect(parent.children().length).toBe(1);
     });
-    it('first sibling nodes may not be demoted', function () {
+    it('demotes a last node with previous siblings', function () {
+      var parent = nOrg.root.$childHead.$nextSibling.$childHead.$nextSibling;
+      node = nOrg.root.$childHead.$nextSibling.$childTail;
+      node.demote();
+
+      expect(parent.$childHead.basename).toBe(node.basename);
+      expect(node.$parent.basename).toBe(parent.basename);
+      expect(parent.$parent.$childTail.basename).toBe(parent.basename);
+
+      expect(Boolean(node.$nextSibling)).toBeFalsy();
+      expect(Boolean(node.$prevSibling)).toBeFalsy();
+
+      expect(parent.$parent.$length).toBe(2);
+      expect(parent.$length).toBe(1);
+
+      expect(parent.children().indexOf(node)).toBe(0);
+      expect(parent.$parent.children().length).toBe(2);
+      expect(parent.children().length).toBe(1);
+    });
+    it('demotes node into a node with children', function () {
+      var parent = node;
+      node = nOrg.root.$childTail;
+      node.demote();
+
+      expect(parent.$childTail.basename).toBe(node.basename);
+      expect(node.$parent.basename).toBe(parent.basename);
+      expect(parent.$parent.$childTail.basename).toBe(parent.basename);
+
+      expect(Boolean(node.$nextSibling)).toBeFalsy();
+      expect(node.$prevSibling.basename)
+        .toBe(parent.$childHead.$nextSibling.$nextSibling.basename);
+      expect(parent.$childHead.$nextSibling.$nextSibling.$nextSibling.basename)
+        .toBe(node.basename);
+
+      expect(parent.$parent.$length).toBe(2);
+      expect(parent.$length).toBe(4);
+
+      expect(parent.children().indexOf(node)).toBe(3);
+      expect(parent.$parent.children().length).toBe(2);
+      expect(parent.children().length).toBe(4);
+    });
+    it('first nodes may not be demoted', function () {
       // Switch to a scope with no previous siblings
       node = node.$childHead;
 
@@ -221,72 +274,172 @@ describe('nOrg', function() {
         node.demote();
       }).toThrow(new Error("Cannot demote first sibling!"));
     });
-
-    it('nodes with parents may be promoted', function() {
-      // Switch to a scope beneath the previous
-      node = node.$childHead.$nextSibling;
-
-      node.promote();
-      expect(nOrg.root.$childTail.$prevSibling.basename).toBe(node.basename);
-      expect(node.$parent.$length).toBe(4);
-      expect(node.$prevSibling.$length).toBe(2);
+    it('expands new parent when demoted', function () {
+      expect(node.$prevSibling.$collapsed).toBeTruthy();
+      node.demote();
+      expect(node.$parent.$collapsed).toBeFalsy();
     });
-    it('nodes without parents may not be promoted', function () {
+
+    it('promotes a node with to the middle', function() {
+      // Switch to a scope beneath the previous
+      var parent = nOrg.root;
+      var prevSibling = node;
+      var nextSibling = prevSibling.$nextSibling;
+      node = node.$childHead.$nextSibling;
+      node.promote();
+
+      expect(node.$parent.basename).toBe(parent.basename);
+
+      expect(node.$prevSibling.basename).toBe(prevSibling.basename);
+      expect(prevSibling.$nextSibling.basename).toBe(node.basename);
+      expect(node.$nextSibling.basename).toBe(nextSibling.basename);
+      expect(nextSibling.$prevSibling.basename).toBe(node.basename);
+
+      expect(prevSibling.$childHead.$nextSibling.basename)
+        .toBe(prevSibling.$childTail.basename);
+      expect(prevSibling.$childTail.$prevSibling.basename)
+        .toBe(prevSibling.$childHead.basename);
+
+      expect(Boolean(node.$childHead)).toBeFalsy();
+      expect(Boolean(node.$childTail)).toBeFalsy();
+
+      expect(parent.$length).toBe(4);
+      expect(prevSibling.$length).toBe(2);
+
+      expect(parent.children().indexOf(node)).toBe(2);
+      expect(parent.children().length).toBe(4);
+      expect(prevSibling.children().length).toBe(2);
+    });
+    it('promotes a first child to the middle', function () {
+      // Switch to a first child
+      var parent = node.$parent;
+      var prevSibling = node;
+      var nextSibling = prevSibling.$nextSibling;
+      node = node.$childHead;
+      node.promote();
+
+      expect(node.$parent.basename).toBe(parent.basename);
+
+      expect(node.$prevSibling.basename).toBe(prevSibling.basename);
+      expect(prevSibling.$nextSibling.basename).toBe(node.basename);
+      expect(node.$nextSibling.basename).toBe(nextSibling.basename);
+      expect(nextSibling.$prevSibling.basename).toBe(node.basename);
+
+      expect(prevSibling.$childHead.$nextSibling.basename)
+        .toBe(prevSibling.$childTail.basename);
+      expect(prevSibling.$childTail.$prevSibling.basename)
+        .toBe(prevSibling.$childHead.basename);
+
+      expect(Boolean(node.$childHead)).toBeFalsy();
+      expect(Boolean(node.$childTail)).toBeFalsy();
+
+      expect(parent.$length).toBe(4);
+      expect(prevSibling.$length).toBe(2);
+
+      expect(parent.children().indexOf(node)).toBe(2);
+      expect(parent.children().length).toBe(4);
+      expect(prevSibling.children().length).toBe(2);
+    });
+    it('promotes a last child to middle', function () {
+      // Switch to a first child
+      var parent = node.$parent;
+      var prevSibling = node;
+      var nextSibling = prevSibling.$nextSibling;
+      node = node.$childTail;
+      node.promote();
+
+      expect(node.$parent.basename).toBe(parent.basename);
+
+      expect(node.$prevSibling.basename).toBe(prevSibling.basename);
+      expect(prevSibling.$nextSibling.basename).toBe(node.basename);
+      expect(node.$nextSibling.basename).toBe(nextSibling.basename);
+      expect(nextSibling.$prevSibling.basename).toBe(node.basename);
+
+      expect(prevSibling.$childHead.$nextSibling.basename)
+        .toBe(prevSibling.$childTail.basename);
+      expect(prevSibling.$childTail.$prevSibling.basename)
+        .toBe(prevSibling.$childHead.basename);
+
+      expect(Boolean(node.$childHead)).toBeFalsy();
+      expect(Boolean(node.$childTail)).toBeFalsy();
+
+      expect(parent.$length).toBe(4);
+      expect(prevSibling.$length).toBe(2);
+
+      expect(parent.children().indexOf(node)).toBe(2);
+      expect(parent.children().length).toBe(4);
+      expect(prevSibling.children().length).toBe(2);
+    });
+    it('promotes a child to the end', function () {
+      node.moveDown();
+      var prevSibling = node;
+      var parent = node.$parent;
+      node = node.$childHead.$nextSibling;
+      node.promote();
+
+      expect(node.$parent.basename).toBe(parent.basename);
+      expect(parent.$childTail.basename).toBe(node.basename);
+
+      expect(node.$prevSibling.basename).toBe(prevSibling.basename);
+      expect(prevSibling.$nextSibling.basename).toBe(node.basename);
+      expect(Boolean(node.$nextSibling)).toBeFalsy();
+
+      expect(prevSibling.$childHead.$nextSibling.basename)
+        .toBe(prevSibling.$childTail.basename);
+      expect(prevSibling.$childTail.$prevSibling.basename)
+        .toBe(prevSibling.$childHead.basename);
+
+      expect(Boolean(node.$childHead)).toBeFalsy();
+      expect(Boolean(node.$childTail)).toBeFalsy();
+
+      expect(parent.$length).toBe(4);
+      expect(prevSibling.$length).toBe(2);
+
+      expect(parent.children().indexOf(node)).toBe(3);
+      expect(parent.children().length).toBe(4);
+      expect(prevSibling.children().length).toBe(2);
+    });
+    it('does not promote a node without parents', function () {
       expect(function () {
         node.promote();
       }).toThrow(new Error("Cannot promote nodes without parents!"));
     });
-    it('first children may be promoted', function () {
-      // Switch to a first child
-      node = node.$childHead;
 
-      node.promote();
-      expect(nOrg.root.$childHead.$nextSibling.$length).toBe(2);
-      expect(nOrg.root.$childHead.$nextSibling.children().length).toBe(2);
-      expect(nOrg.root.$childTail.$prevSibling.basename).toBe(node.basename);
-      expect(nOrg.root.$childHead.$nextSibling.$nextSibling.basename).toBe(node.basename);
-      expect(nOrg.root.$childHead.$nextSibling.basename).toBe(node.$prevSibling.basename);
-      expect(nOrg.root.$childTail.basename).toBe(node.$nextSibling.basename);
-    });
-    it('last children may be promoted', function () {
-      // Switch to a first child
-      node = node.$childTail;
-
-      node.promote();
-      expect(nOrg.root.$childTail.$prevSibling.basename).toBe(node.basename);
-      expect(nOrg.root.$childHead.$nextSibling.$nextSibling.basename).toBe(node.basename);
-      expect(nOrg.root.$childHead.$nextSibling.basename).toBe(node.$prevSibling.basename);
-      expect(nOrg.root.$childTail.basename).toBe(node.$nextSibling.basename);
-    });
-
-    it('nodes with previous siblings may be moved up', function () {
-      var new_next = node.$prevSibling;
+    it('moves up a middle node to first node', function () {
+      var nextSibling = node.$prevSibling;
       node.moveUp();
 
-      expect(new_next.$prevSibling.basename).toBe(node.basename);
-      expect(node.$nextSibling.basename).toBe(new_next.basename);
+      expect(node.$nextSibling.basename).toBe(nextSibling.basename);
+      expect(Boolean(node.$prevSibling)).toBeFalsy();
+
+      expect(node.$parent.$childHead.basename).toBe(node.basename);
+
+      expect(nextSibling.$prevSibling.basename).toBe(node.basename);
+      expect(node.$nextSibling.basename).toBe(nextSibling.basename);
       expect(Boolean(node.$prevSibling)).toBeFalsy();
 
       expect(nOrg.root.$childHead.basename).toBe(node.basename);
       expect(nOrg.root.$childTail.$prevSibling.basename)
         .toBe(nOrg.root.$childHead.$nextSibling.basename);
 
-      expect(nOrg.root.$length).toEqual(3);
-      expect(nOrg.root.children().length).toEqual(3);
-
-      // last node
-      node = nOrg.root.$childHead.$childTail;
-      node.moveUp();
-
-      expect(node.$parent.$childTail.basename).toBe(node.$nextSibling.basename);
-
-      expect(node.$parent.$childHead.$nextSibling.basename).toBe(node.basename);
-      expect(node.$parent.$childTail.$prevSibling.basename).toBe(node.basename);
-
-      expect(node.$parent.$length).toEqual(3);
-      expect(node.$parent.children().length).toEqual(3);
+      expect(node.$parent.children().indexOf(node)).toBe(0);
     });
-    it('first nodes may not be moved up', function() {
+    it('moves up a last node to the middle', function () {
+      var prevSibling = node.$childHead;
+      node = node.$childTail;
+      var nextSibling = node.$prevSibling;
+      node.moveUp();
+      
+      expect(node.$nextSibling.basename).toBe(nextSibling.basename);
+      expect(nextSibling.$prevSibling.basename).toBe(node.basename);
+      expect(node.$prevSibling.basename).toBe(prevSibling.basename);
+      expect(prevSibling.$nextSibling.basename).toBe(node.basename);
+
+      expect(node.$parent.$childTail.basename).toBe(nextSibling.basename);
+
+      expect(node.$parent.children().indexOf(node)).toBe(1);
+    });
+    it('does not move up a first node', function() {
       // Switch to a scope with no previous siblings
       node = node.$childHead;
 
@@ -295,26 +448,32 @@ describe('nOrg', function() {
       }).toThrow(new Error("Cannot move first nodes up!"));
     });
 
-    it('nodes with next siblings may be moved down', function () {
-      var new_previous = node.$nextSibling;
+    it('moves down a middle node to last sibling', function () {
+      var prevSibling = node.$nextSibling;
       node.moveDown();
-
-      expect(new_previous.$nextSibling.basename).toBe(node.basename);
-      expect(node.$prevSibling.basename).toBe(new_previous.basename);
+      
+      expect(node.$prevSibling.basename).toBe(prevSibling.basename);
+      expect(prevSibling.$nextSibling.basename).toBe(node.basename);
       expect(Boolean(node.$nextSibling)).toBeFalsy();
+
       expect(node.$parent.$childTail.basename).toBe(node.basename);
-      expect(node.$parent.$childHead.$nextSibling.basename)
-        .toBe(new_previous.basename);
 
-      node = node.$parent.$childHead;
+      expect(node.$parent.children().indexOf(node)).toBe(2);
+    });
+    it('moves down a first node to middle', function () {
+      node = node.$childHead;
+      var prevSibling = node.$nextSibling;
+      var nextSibling = prevSibling.$nextSibling;
       node.moveDown();
+      
+      expect(node.$prevSibling.basename).toBe(prevSibling.basename);
+      expect(prevSibling.$nextSibling.basename).toBe(node.basename);
+      expect(node.$nextSibling.basename).toBe(nextSibling.basename);
+      expect(nextSibling.$prevSibling.basename).toBe(node.basename);
 
-      expect(node.$parent.$childTail.$prevSibling.basename)
-        .toBe(node.basename);
-      expect(Boolean(node.$parent.$childHead.$prevSibling)).toBeFalsy();
+      expect(node.$parent.$childHead.basename).toBe(prevSibling.basename);
 
-      expect(node.$parent.$length).toEqual(3);
-      expect(node.$parent.children().length).toEqual(3);
+      expect(node.$parent.children().indexOf(node)).toBe(1);
     });
     it('last nodes may not be moved down', function() {
       // Switch to a scope with no next siblings
@@ -325,7 +484,11 @@ describe('nOrg', function() {
       }).toThrow(new Error("Cannot move last nodes down!"));
     });
 
-    it('may be moved around and back', function () {
+    it('moves around and back', function () {
+      var parent = node.$parent;
+      var prevSibling = node.$prevSibling;
+      var nextSibling = node.$nextSibling;
+
       node.moveDown();
       node.demote();
       node.promote();
@@ -333,38 +496,52 @@ describe('nOrg', function() {
       node.moveUp();
       node.moveDown();
 
-      expect(node.$prevSibling.basename).toBe(nOrg.root.$childHead.basename);
-      expect(node.$nextSibling.basename).toBe(nOrg.root.$childTail.basename);
+      expect(node.$prevSibling.basename).toBe(prevSibling.basename);
+      expect(prevSibling.$nextSibling.basename).toBe(node.basename);
 
-      expect(nOrg.root.$childHead.$nextSibling.basename).toBe(node.basename);
-      expect(nOrg.root.$childTail.$prevSibling.basename).toBe(node.basename);
+      expect(node.$nextSibling.basename).toBe(nextSibling.basename);
+      expect(nextSibling.$prevSibling.basename).toBe(node.basename);
+
+      expect(parent.$childHead.basename).toBe(prevSibling.basename);
+      expect(parent.$childTail.basename).toBe(nextSibling.basename);
+
+      expect(Boolean(node.$nextSibling.$childHead)).toBeFalsy();
+      expect(Boolean(node.$nextSibling.$childTail)).toBeFalsy();
     });
   });
 
   describe('adding nodes:', function () {
-    it('adds a sibling', function () {
+    it('adds a sibling to the middle', function () {
       var nextSibling = node.$nextSibling;
-      var added = node.newSibling({}, {});
-      var last;
+      var prevSibling = node;
+      node = prevSibling.newSibling({basename: "baz"}, {});
 
-      expect(added.$parent.basename).toBe(node.$parent.basename);
-      expect(node.$nextSibling.basename).toBe(added.basename);
-      expect(added.$prevSibling.basename).toBe(node.basename);
-      expect(added.$nextSibling.basename).toBe(nextSibling.basename);
+      expect(node.$parent.basename).toBe(prevSibling.$parent.basename);
+
+      expect(node.$nextSibling.basename).toBe(nextSibling.basename);
       expect(nextSibling.$prevSibling.basename).toBe(node.basename);
 
-      expect(node.$cursorObject.basename).toBe(added.basename);
-      expect(added.$cursor).toBeTruthy();
-      expect(nOrg.root.$childHead.$cursor).toBeFalsy();
+      expect(node.$prevSibling.basename).toBe(prevSibling.basename);
+      expect(prevSibling.$nextSibling.basename).toBe(node.basename);
 
-      node = node.$childTail;
-      last = node.newSibling();
+      expect(node.$cursorObject.basename).toBe(node.basename);
+      expect(node.$cursor).toBeTruthy();
+      expect(prevSibling.$parent.$childHead.$cursor).toBeFalsy();
+    });
+    it('adds a sibling to the end', function () {
+      var prevSibling = node.$parent.$childTail;
+      node = prevSibling.newSibling({basename: "baz"}, {});
 
-      expect(last.$parent.basename).toBe(node.$parent.basename);
-      expect(node.$nextSibling.basename).toBe(last.basename);
-      expect(last.$prevSibling.basename).toBe(node.basename);
-      expect(Boolean(last.$nextSibling)).toBeFalsy();
-      expect(node.$parent.$childTail.basename).toBe(last.basename);
+      expect(node.$parent.basename).toBe(prevSibling.$parent.basename);
+
+      expect(Boolean(node.$nextSibling)).toBeFalsy();
+
+      expect(node.$prevSibling.basename).toBe(prevSibling.basename);
+      expect(prevSibling.$nextSibling.basename).toBe(node.basename);
+
+      expect(node.$cursorObject.basename).toBe(node.basename);
+      expect(node.$cursor).toBeTruthy();
+      expect(prevSibling.$parent.$childHead.$cursor).toBeFalsy();
     });
   });
 
