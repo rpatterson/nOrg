@@ -236,8 +236,12 @@ var nOrg = (function nOrg() {
     return object;
   };
   Node.prototype.callCursor = function callCursor(method, event) {
-    return (this.$cursorObject.$node ||
-            this.$cursorObject)[method].call(this, event);
+      event.stopPropagation();
+      try {
+        return this[method].call(this, event);
+      } catch (exception) {
+        return false;
+      }
   };
   Node.prototype.cursorDown = function cursorDown(event) {
     var object = this.$cursorObject;
@@ -363,6 +367,7 @@ var nOrg = (function nOrg() {
     var headers;
     if (event) {
       event.preventDefault();
+      event.stopPropagation();
     }
 
     headers = this.$cursorObject.headers || this.$cursorObject;
