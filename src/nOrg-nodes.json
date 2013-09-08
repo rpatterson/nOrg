@@ -1,27 +1,27 @@
 {"children": [
-  {"path": "/foo.nod",
+  {"basename": "foo",
    "headers": {"Subject": "Foo Project",
                "Message-ID": "<1@foo.com>"}
   },
-  {"path": "/bar/.nod",
+  {"basename": "bar",
    "headers": {"Subject": "Bar Project",
                "Message-ID": "<2@foo.com>",
                "NOrg-User-Headers": ["Bar-Property"],
                "Bar-Property": "Bar Property"},
    "children": [
-     {"path": "/bar/corge.nod",
+     {"basename": "corge",
       "headers": {"Subject": "Corge Node",
                   "Message-ID": "<3@foo.com>",
                   "NOrg-User-Headers": ["Corge-Property"],
                   "Corge-Property": "Corge Property"}},
-     {"path": "/bar/grault.nod",
+     {"basename": "grault",
       "headers": {"Subject": "Grault Node",
                   "Message-ID": "<4@foo.com>"}},
-     {"path": "/bar/garply.nod",
+     {"basename": "garply",
       "headers": {"Subject": "Garply Node",
                   "Message-ID": "<5@foo.com>"}}
    ]},
-  {"path": "/qux/.nod/.nod",
+  {"basename": "qux",
    "headers": {"Subject": "Qux Project",
                "Message-ID": "<6@foo.com>"}
   }
