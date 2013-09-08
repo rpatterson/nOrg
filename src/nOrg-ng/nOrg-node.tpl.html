@@ -11,7 +11,7 @@
         </span>
       </button>
       <button type="button"
-              class="btn btn-default collapse-button"
+              class="btn btn-default norg-node-collapse-button"
               title="Expand/Collapse this node's children"
               ng:disabled="! node.$length"
               ng:click="node.$collapsed = !node.$collapsed"
@@ -23,7 +23,7 @@
         </span>
       </button>
       <button type="button"
-              class="btn btn-default headers-expand"
+              class="btn btn-default norg-headers-expand"
               title="Expand/Collapse headers/fields"
               ng:disabled="! node.headers['NOrg-User-Headers'].length"
               ng:click="node.headers.$collapsed = !node.headers.$collapsed"
@@ -34,7 +34,7 @@
         </span>
       </button>
       <button type="button"
-              class="btn btn-default node-select"
+              class="btn btn-default norg-node-select"
               title="Select this node for multi-node actions"
               ng:focus="node.cursorTo()">
         <input type="checkbox" name="Message-ID-{{node.toId()}}"
@@ -49,7 +49,7 @@
 
     <span class="btn-group">
       <button type="button"
-              class="btn btn-default add"
+              class="btn btn-default norg-add-node"
               title="Add a new node"
               ng:click="node.newSibling($event, {})">
         <span class="icon-plus"></span>
@@ -64,7 +64,7 @@
               ng:class="{'muted': ! node.$parent.$parent}"></span>
       </button>
       <button type="button"
-              class="btn btn-default demote"
+              class="btn btn-default norg-demote-node"
               title="Demote this node"
               ng:disabled="! node.$prevSibling"
               ng:click="node.demote()"
@@ -73,8 +73,8 @@
               ng:class="{'muted': ! node.$prevSibling}"></span>
       </button>
       <button type="button"
-              class="btn btn-default promote"
-              title="Promote this node"
+              class="btn btn-default norg-move-up-node"
+              title="Move this node up"
               ng:disabled="! node.$prevSibling"
               ng:click="node.moveUp()"
               ng:focus="node.cursorTo()">
@@ -82,8 +82,8 @@
               ng:class="{'muted': ! node.$prevSibling}"></span>
       </button>
       <button type="button"
-              class="btn btn-default demote"
-              title="Demote this node"
+              class="btn btn-default norg-move-down-node"
+              title="Move this node down"
               ng:disabled="! node.$nextSibling"
               ng:click="node.moveDown()"
               ng:focus="node.cursorTo()">
@@ -100,7 +100,7 @@
          ng:repeat="(index, key) in node.headers['NOrg-User-Headers']">
       <div class="input-prepend">
         <button type="button"
-                class="btn cursor-button"
+                class="btn norg-cursor-button"
                 ng:class="{'btn-primary': (node.headers.$cursor && (node.$cursorIndex == index)),
                           'btn-default': ! (node.headers.$cursor && (node.$cursorIndex == index))}"
                 title="Node cursor"
