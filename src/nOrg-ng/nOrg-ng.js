@@ -25,7 +25,7 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'])
       'node.callCursor("promote", $event)'
     };
 
-    $http.get('app/nodes.json').success(function loadNode(node) {
+    $http.get('../nOrg-nodes.json').success(function loadNode(node) {
       // Load the initial nodes JSON
       $scope.node = nOrg.newRoot(node);
     });
