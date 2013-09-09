@@ -117,7 +117,7 @@
       </div>
       <div class="input-prepend input-append">
         <input type="text" class="input-xlarge"
-               name="Message-ID-{{node.toId()}}-header-value-{{key}}"
+               name="Message-ID-{{node.toId()}}-header-{{key}}"
                ng:model="node[key]"
                ng:focus="node.cursorTo(node, index)"
                norg:focus="{{node.isCursor(node, index)}}" />
