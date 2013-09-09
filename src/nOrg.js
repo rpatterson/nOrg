@@ -2,10 +2,10 @@ var nOrg = (function nOrg() {
   // Properties prefixed with '$' are considered internal to the
   // UI/porcelain and will not be written back to the server.
 
-  function Node() {
-    this.init();
+  function Node(object) {
+    this.init(object);
   }
-  Node.prototype.init = function init() {
+  Node.prototype.init = function init(object) {
     // child nodes must override parent to avoid scope inheritance
     // leaking the cursor down
     this.$length = 0;
@@ -14,28 +14,41 @@ var nOrg = (function nOrg() {
     this.$nextSibling = undefined;
     this.$prevSibling = undefined;
     this.$collapsed = true;
-    this.$cursor = false;
+    this.$headersCollapsed = true;
+    this['NOrg-User-Headers'] = [];
 
-    this.headers = new Headers(this);
+    if (object) {
+      this.extend(object);
+    }
 
-    // Cursor initialization
-    if (this.$root && (! this.$cursorObject)) {
-      // Cursor defaults to first node
-      this.cursorTo(this);
+    if (! this.hasOwnProperty("$basename")) {
+      this["$basename"] = '';
+    }
+    for (var index in this['NOrg-Required-Keys']) {
+      if (! this.hasOwnProperty(this['NOrg-Required-Keys'][index])) {
+        this[this['NOrg-Required-Keys'][index]] = '';
+      }
     }
   };
   Node.prototype.newNode = function newNode(object) {
-    function Node() {
-      this.init();
+    if (! this.$root) {
+      // root initialization
+      // Trees require a root, so the first node without a root *is* root
+      this.$root = this;
+    }
+
+    function Node(object) {
+      this.init(object);
     }
     var child;
     Node.prototype = this;
-    child = new Node();
+    child = new Node(object);
     child.$parent = this;
-    child.headers = this.headers.newChild(child);
 
-    if (object) {
-      child.extend(object);
+    // Cursor initialization
+    if (! this.$cursorObject) {
+      // Cursor defaults to first node
+      this.cursorTo(child);
     }
 
     return child;
@@ -113,9 +126,8 @@ var nOrg = (function nOrg() {
   Node.prototype.extend = function extend(object) {
     for (var key in object) {
       if (key === 'headers') {
-        this.headers.extend(object.headers);
-      } else if (key === 'children') {
-        object.children.forEach(this.newChildEach, this);
+      } else if (key === '$children') {
+        object.$children.forEach(this.newChildEach, this);
       } else {
         this[key] = object[key];
       }
@@ -124,8 +136,15 @@ var nOrg = (function nOrg() {
   Node.prototype.toId = function toId() {
     // Generate a valid HTML ID and CSS selector from the message
     // ID using base64 encoding
-    return window.btoa(this.headers["Message-ID"]).slice(0, -1);
+    return window.btoa(this["Message-ID"]).slice(0, -1);
   };
+
+
+  Node.prototype.pushHeader = function pushHeader(key, value) {
+    this[key] = value;
+    this['NOrg-User-Headers'].push(key);
+  };
+
 
 
   // Moving nodes
@@ -224,14 +243,16 @@ var nOrg = (function nOrg() {
 
 
   // Root cursor state
+  Node.prototype.isCursor = function isCursor(object, index) {
+    if (typeof object == "undefined") {
+      object = this;
+    }
+    return object === object.$cursorObject && index === object.$cursorIndex;
+  };
   Node.prototype.cursorTo = function cursorTo(object, index) {
     if (typeof object == "undefined") {
       object = this;
     }
-    if (this.$cursorObject) {
-      this.$cursorObject.$cursor = false;
-    }
-    object.$cursor = true;
     this.$root.$cursorObject = object;
     this.$root.$cursorIndex = index;
 
@@ -258,17 +279,18 @@ var nOrg = (function nOrg() {
       event.preventDefault();
     }
 
-    if ((! object.headers) && object['NOrg-User-Headers'][this.$cursorIndex + 1]) {
+    if ((object.$cursorIndex !== undefined) &&
+        object['NOrg-User-Headers'][this.$cursorIndex + 1] !== undefined) {
       // next header
       return this.cursorTo(object, this.$cursorIndex + 1);
-    } else if (object.headers && object.headers['NOrg-User-Headers'].length &&
-               (! object.headers.$collapsed)) {
+    } else if ((object.$cursorIndex === undefined) &&
+               object['NOrg-User-Headers'].length &&
+               (! object.$headersCollapsed)) {
       // first expanded header
-      return this.cursorTo(object.headers, 0);
+      return this.cursorTo(object, 0);
     }
 
     // no more header cases
-    object = object.$node || object;
     if (object.$length && (! object.$collapsed)) {
       // first expanded child
       return this.cursorTo(object.$childHead);
@@ -284,19 +306,19 @@ var nOrg = (function nOrg() {
   };
 
   Node.prototype.cursorUp = function cursorUp(event) {
-    var node = this.$cursorObject.$node || this.$cursorObject;
+    var node = this.$cursorObject;
     if (event) {
       event.stopPropagation();
       event.preventDefault();
     }
 
-    if (! this.$cursorObject.headers) {
+    if (this.$cursorIndex !== undefined) {
       if (this.$cursorObject['NOrg-User-Headers'][this.$cursorIndex - 1]) {
         // previous header
         return this.cursorTo(this.$cursorObject, this.$cursorIndex - 1);
       } else {
         // header node
-        return this.cursorTo(this.$cursorObject.$node);
+        return this.cursorTo(this.$cursorObject);
       }
     }
 
@@ -312,10 +334,10 @@ var nOrg = (function nOrg() {
     } else {
       return false;
     }
-    if ((! node.headers.$collapsed) &&
-        node.headers['NOrg-User-Headers'].length) {
-      return this.cursorTo(node.headers,
-                           node.headers['NOrg-User-Headers'].length - 1);
+    if ((! node.$headersCollapsed) &&
+        node['NOrg-User-Headers'].length) {
+      return this.cursorTo(node,
+                           node['NOrg-User-Headers'].length - 1);
     } else {
       return this.cursorTo(node);
     }
@@ -329,11 +351,11 @@ var nOrg = (function nOrg() {
       event.preventDefault();
     }
 
-    if (this.$cursorObject.headers &&
-        (! this.$cursorObject.headers.$collapsed) &&
-        this.$cursorObject.headers['NOrg-User-Headers'].length) {
+    if (this.$cursorObject &&
+        (! this.$cursorObject.$headersCollapsed) &&
+        this.$cursorObject['NOrg-User-Headers'].length) {
       // first expanded header
-      return this.cursorTo(this.$cursorObject.headers, 0);
+      return this.cursorTo(this.$cursorObject, 0);
     } else if (this.$cursorObject.$length) {
       // expand and move to first child
       this.$cursorObject.$collapsed = false;
@@ -348,8 +370,8 @@ var nOrg = (function nOrg() {
       event.preventDefault();
     }
 
-    if (! this.$cursorObject.headers) {
-      return this.cursorTo(this.$cursorObject.$node);
+    if (this.$cursorIndex !== undefined) {
+      return this.cursorTo(this.$cursorObject);
     } else if (this.$cursorObject.$parent.$parent) {
       return this.cursorTo(this.$cursorObject.$parent);
     }
@@ -376,57 +398,28 @@ var nOrg = (function nOrg() {
       event.stopPropagation();
     }
 
-    headers = this.$cursorObject.headers || this.$cursorObject;
-    if (headers['NOrg-User-Headers'].length) {
-      if (headers.$node) {
-        this.cursorTo(headers.$node);
+    if (this.$cursorObject['NOrg-User-Headers'].length) {
+      if (this.$cursorIndex !== undefined) {
+        this.cursorTo(this.$cursorObject);
       }
-      headers.$collapsed = (! headers.$collapsed);
+      this.$cursorObject.$headersCollapsed = (
+        ! this.$cursorObject.$headersCollapsed);
     }
   };
 
-  function Headers(node) {
-    this.init(node);
-  }
-  Headers.prototype.init = function init(node) {
-    this.$node = node;
-    this.$collapsed = true;
-    this.$cursor = false;
-    this['NOrg-User-Headers'] = [];
-  };
-  Headers.prototype.newChild = function newChild(node) {
-    // prototypical inheritance from parent headerss
-    function Headers() {}
-    var child;
-    Headers.prototype = this;
-    child = new Headers();
-    child.init(node);
-    return child;
-  };
-  Headers.prototype.extend = function extend(object) {
-    for (var key in object) {
-      this[key] = object[key];
-    }
-    this['NOrg-User-Headers'] = object['NOrg-User-Headers'] || [];
-  };
-  Headers.prototype.push = function push(key, value) {
-    this[key] = value;
-    this['NOrg-User-Headers'].push(key);
-  };
 
   function newRoot(object) {
-    var root = new Node();
-    root.$root = root;  // for looking up the root node
-    root.headers.hiddenKeys = {"Subject": true, "Message-ID": true,
-                               "collapsed": true};
-    root.extend(object);
+    if (object) {
+      object = object || {};
+      object['NOrg-Required-Keys'] = ['Message-ID', 'Subject'];
+    }
+    var root = new Node(object);
     return root;
   }
 
 
   return {
     Node: Node,
-    Headers: Headers,
     newRoot: newRoot,
     root: newRoot()
   };

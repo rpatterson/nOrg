@@ -4,8 +4,8 @@
       <button type="button"
               class="btn cursor-button"
               title="Node cursor"
-              ng:class="{'btn-primary': node.$cursor,
-                        'btn-default': ! node.$cursor}"
+              ng:class="{'btn-primary': node.isCursor(),
+                        'btn-default': ! node.isCursor()}"
               ng:focus="node.cursorTo()">
         <span class="icon-th">
         </span>
@@ -25,12 +25,12 @@
       <button type="button"
               class="btn btn-default norg-headers-expand"
               title="Expand/Collapse headers/fields"
-              ng:disabled="! node.headers['NOrg-User-Headers'].length"
-              ng:click="node.headers.$collapsed = !node.headers.$collapsed"
+              ng:disabled="! node['NOrg-User-Headers'].length"
+              ng:click="node.$headersCollapsed = !node.$headersCollapsed"
               ng:focus="node.cursorTo()">
         <span class="icon-th-list"
               ng:class="{'text-muted':
-                        ! node.headers['NOrg-User-Headers'].length}">
+                        ! node['NOrg-User-Headers'].length}">
         </span>
       </button>
       <button type="button"
@@ -45,8 +45,8 @@
     <input type="text" required="true"
            class="norg-node-subject input-xxlarge"
            name="Message-ID-{{node.toId()}}-headers-Subject"
-           ng:model="node.headers['Subject']"
-           norg:focus="{{node.$cursor}}" />
+           ng:model="node['Subject']"
+           norg:focus="{{node.isCursor()}}" />
 
     <span class="btn-group">
       <button type="button"
@@ -96,31 +96,30 @@
 
   <div id="Message-ID-{{node.toId()}}-headers"
        class="norg-headers"
-       collapse="node.headers.$collapsed">
+       collapse="node.$headersCollapsed">
     <div class="row-fluid"
-         ng:repeat="(index, key) in node.headers['NOrg-User-Headers']">
+         ng:repeat="(index, key) in node['NOrg-User-Headers']">
       <div class="input-prepend">
         <button type="button"
                 class="btn norg-cursor-button"
-                ng:class="{'btn-primary': (node.headers.$cursor && (node.$cursorIndex == index)),
-                          'btn-default': ! (node.headers.$cursor && (node.$cursorIndex == index))}"
+                ng:class="{'btn-primary': node.isCursor(node, index),
+                          'btn-default': ! node.isCursor(node, index)}"
                 title="Node cursor"
-                ng:click="node.cursorTo(node.headers, index)">
+                ng:click="node.cursorTo(node, index)">
           <span class="icon-th">
           </span>
         </button>
         <input type="text" required="true" class="norg-headers-key"
                name="Message-ID-{{node.toId()}}-header-key-{{key}}"
                ng:model="key"
-               ng:focus="node.cursorTo(node.headers, index)" />
+               ng:focus="node.cursorTo(node, index)" />
       </div>
-      <div class="input-append">
+      <div class="input-prepend input-append">
         <input type="text" class="input-xlarge"
                name="Message-ID-{{node.toId()}}-header-value-{{key}}"
-               ng:model="node.headers[key]"
-               ng:focus="node.cursorTo(node.headers, index)"
-               norg:focus="{{node.headers.$cursor &&
-                             (node.$cursorIndex == index)}}" />
+               ng:model="node[key]"
+               ng:focus="node.cursorTo(node, index)"
+               norg:focus="{{node.isCursor(node, index)}}" />
       </div>
     </div>
   </div>

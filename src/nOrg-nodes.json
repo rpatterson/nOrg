@@ -1,28 +1,26 @@
-{"children": [
-  {"basename": "foo",
-   "headers": {"Subject": "Foo Project",
-               "Message-ID": "<1@foo.com>"}
-  },
-  {"basename": "bar",
-   "headers": {"Subject": "Bar Project",
-               "Message-ID": "<2@foo.com>",
-               "NOrg-User-Headers": ["Bar-Property"],
-               "Bar-Property": "Bar Property"},
-   "children": [
-     {"basename": "corge",
-      "headers": {"Subject": "Corge Node",
-                  "Message-ID": "<3@foo.com>",
-                  "NOrg-User-Headers": ["Corge-Property"],
-                  "Corge-Property": "Corge Property"}},
-     {"basename": "grault",
-      "headers": {"Subject": "Grault Node",
-                  "Message-ID": "<4@foo.com>"}},
-     {"basename": "garply",
-      "headers": {"Subject": "Garply Node",
-                  "Message-ID": "<5@foo.com>"}}
+{"$children": [
+  {"$basename": "foo",
+   "Subject": "Foo Project",
+   "Message-ID": "<1@foo.com>"},
+  {"$basename": "bar",
+   "Subject": "Bar Project",
+   "Message-ID": "<2@foo.com>",
+   "NOrg-User-Headers": ["Bar-Property"],
+   "Bar-Property": "Bar Property",
+   "$children": [
+     {"$basename": "corge",
+      "Subject": "Corge Node",
+      "Message-ID": "<3@foo.com>",
+      "NOrg-User-Headers": ["Corge-Property"],
+      "Corge-Property": "Corge Property"},
+     {"$basename": "grault",
+      "Subject": "Grault Node",
+      "Message-ID": "<4@foo.com>"},
+     {"$basename": "garply",
+      "Subject": "Garply Node",
+      "Message-ID": "<5@foo.com>"}
    ]},
-  {"basename": "qux",
-   "headers": {"Subject": "Qux Project",
-               "Message-ID": "<6@foo.com>"}
-  }
+  {"$basename": "qux",
+   "Subject": "Qux Project",
+   "Message-ID": "<6@foo.com>"}
 ]}
