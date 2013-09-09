@@ -14,7 +14,7 @@ var nOrg = (function nOrg() {
     this.$nextSibling = undefined;
     this.$prevSibling = undefined;
     this.$collapsed = true;
-    this.$headersCollapsed = true;
+    this.$propertiesCollapsed = true;
 
     if (object) {
       this.extend(object);
@@ -124,7 +124,7 @@ var nOrg = (function nOrg() {
   };
   Node.prototype.extend = function extend(object) {
     for (var key in object) {
-      if (key === 'headers') {
+      if (key === 'properties') {
       } else if (key === '$children') {
         object.$children.forEach(this.newChildEach, this);
       } else {
@@ -139,9 +139,9 @@ var nOrg = (function nOrg() {
   };
 
 
-  Node.prototype.$headerKeys = function $headerKeys() {
+  Node.prototype.$propertyKeys = function $propertyKeys() {
     var required = this['NOrg-Required-Keys'];
-    return Object.keys(this).filter(function filterHeaders(key) {
+    return Object.keys(this).filter(function filterProperties(key) {
       return (key[0] !== '$') && (required.indexOf(key) === -1);
       }).sort();
   };
@@ -281,17 +281,17 @@ var nOrg = (function nOrg() {
     }
 
     if ((object.$cursorIndex !== undefined) &&
-        object.$headerKeys()[this.$cursorIndex + 1] !== undefined) {
-      // next header
+        object.$propertyKeys()[this.$cursorIndex + 1] !== undefined) {
+      // next property
       return this.cursorTo(object, this.$cursorIndex + 1);
     } else if ((object.$cursorIndex === undefined) &&
-               object.$headerKeys().length &&
-               (! object.$headersCollapsed)) {
-      // first expanded header
+               object.$propertyKeys().length &&
+               (! object.$propertiesCollapsed)) {
+      // first expanded property
       return this.cursorTo(object, 0);
     }
 
-    // no more header cases
+    // no more property cases
     if (object.$length && (! object.$collapsed)) {
       // first expanded child
       return this.cursorTo(object.$childHead);
@@ -314,16 +314,16 @@ var nOrg = (function nOrg() {
     }
 
     if (this.$cursorIndex !== undefined) {
-      if (this.$cursorObject.$headerKeys()[this.$cursorIndex - 1]) {
-        // previous header
+      if (this.$cursorObject.$propertyKeys()[this.$cursorIndex - 1]) {
+        // previous property
         return this.cursorTo(this.$cursorObject, this.$cursorIndex - 1);
       } else {
-        // header node
+        // property node
         return this.cursorTo(this.$cursorObject);
       }
     }
 
-    // find the last/deepest expanded ancestor/header
+    // find the last/deepest expanded ancestor/property
     if (node.$prevSibling) {
       node = node.$prevSibling;
       while (node.$length &&
@@ -335,10 +335,10 @@ var nOrg = (function nOrg() {
     } else {
       return false;
     }
-    if ((! node.$headersCollapsed) &&
-        node.$headerKeys().length) {
+    if ((! node.$propertiesCollapsed) &&
+        node.$propertyKeys().length) {
       return this.cursorTo(node,
-                           node.$headerKeys().length - 1);
+                           node.$propertyKeys().length - 1);
     } else {
       return this.cursorTo(node);
     }
@@ -353,9 +353,9 @@ var nOrg = (function nOrg() {
     }
 
     if (this.$cursorObject &&
-        (! this.$cursorObject.$headersCollapsed) &&
-        this.$cursorObject.$headerKeys().length) {
-      // first expanded header
+        (! this.$cursorObject.$propertiesCollapsed) &&
+        this.$cursorObject.$propertyKeys().length) {
+      // first expanded property
       return this.cursorTo(this.$cursorObject, 0);
     } else if (this.$cursorObject.$length) {
       // expand and move to first child
@@ -391,20 +391,20 @@ var nOrg = (function nOrg() {
       this.$cursorObject.$collapsed = ! this.$cursorObject.$collapsed;
     }};
 
-  // expand/collapse headers
-  Node.prototype.toggleHeaders = function toggleHeaders(event) {
-    var headers;
+  // expand/collapse properties
+  Node.prototype.toggleProperties = function toggleProperties(event) {
+    var properties;
     if (event) {
       event.preventDefault();
       event.stopPropagation();
     }
 
-    if (this.$cursorObject.$headerKeys().length) {
+    if (this.$cursorObject.$propertyKeys().length) {
       if (this.$cursorIndex !== undefined) {
         this.cursorTo(this.$cursorObject);
       }
-      this.$cursorObject.$headersCollapsed = (
-        ! this.$cursorObject.$headersCollapsed);
+      this.$cursorObject.$propertiesCollapsed = (
+        ! this.$cursorObject.$propertiesCollapsed);
     }
   };
 

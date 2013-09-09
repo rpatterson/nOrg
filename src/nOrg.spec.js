@@ -51,14 +51,14 @@ describe('nOrg', function() {
     expect(Boolean(nOrg.root)).toBeTruthy();
   });
 
-  describe('node headers:', function () {
-    it('child nodes have headers', function () {
+  describe('node properties:', function () {
+    it('child nodes have properties', function () {
       expect(node.hasOwnProperty("Subject")).toBeTruthy();
     });
-    it('sorts headers by key', function () {
+    it('sorts properties by key', function () {
       // added after bar but sorts before
       node['Bah-Property'] = 'Bah Property';
-      expect(node.$headerKeys()).toEqual(
+      expect(node.$propertyKeys()).toEqual(
         ['Bah-Property', 'Bar-Property']);
     });
     it('generates valid, CSS select-able ids for nodes', function () {
@@ -71,13 +71,13 @@ describe('nOrg', function() {
       expect(Boolean(node)).toBeTruthy();
       expect(node.$parent).toBe(nOrg.root);
     });
-    it('inherits headers from parent', function () {
+    it('inherits properties from parent', function () {
       var child = node.newChild();
       expect(child.$basename).toBe('');
       expect(child['Bar-Property'])
         .toBe(json.$children[1]['Bar-Property']);
     });
-    it('child may override parent attrs and headers', function () {
+    it('child may override parent attrs and properties', function () {
       var child = node.newChild();
       child.$basename = 'baz';
       child['Subject'] = 'Baz Subject';
@@ -545,7 +545,7 @@ describe('nOrg', function() {
       expect(node.isCursor()).toBeTruthy();
       expect(prevSibling.$parent.$childHead.isCursor()).toBeFalsy();
     });
-    it('does not inherit certain headers when adding a node', function () {
+    it('does not inherit certain properties when adding a node', function () {
       var sibling = node.$childHead.newSibling();
       expect(sibling.$basename).toBe('');
       expect(sibling['Subject']).toBe('');
@@ -720,32 +720,32 @@ describe('nOrg', function() {
     });
   });
 
-  describe("headers cursor:", function () {
+  describe("properties cursor:", function () {
     beforeEach(function() {
-      node.$headersCollapsed = false;
+      node.$propertiesCollapsed = false;
       node['Bah-Property'] = 'Bah Property';
     });
 
-    it('is not initially at a header', function () {
+    it('is not initially at a property', function () {
       expect(node.$cursorIndex).toBeUndefined();
     });
-    it('can move right into expanded headers', function () {
+    it('can move right into expanded properties', function () {
       nOrg.root.cursorTo(node);
       nOrg.root.cursorRight();
 
-      expect(node.$cursorObject[node.$cursorObject.$headerKeys()[
+      expect(node.$cursorObject[node.$cursorObject.$propertyKeys()[
         node.$cursorIndex]]).toBe("Bah Property");
       expect(node.isCursor(node, 0)).toBeTruthy();
     });
-    it('can move down into expanded headers', function () {
+    it('can move down into expanded properties', function () {
       nOrg.root.cursorTo(node);
       nOrg.root.cursorDown();
 
-      expect(node.$cursorObject[node.$cursorObject.$headerKeys()[
+      expect(node.$cursorObject[node.$cursorObject.$propertyKeys()[
         node.$cursorIndex]]).toBe("Bah Property");
       expect(node.isCursor(node, 0)).toBeTruthy();
     });
-    it('can move left out of headers', function () {
+    it('can move left out of properties', function () {
       nOrg.root.cursorTo(node, 1);
 
       nOrg.root.cursorLeft();
@@ -754,26 +754,26 @@ describe('nOrg', function() {
       expect(node.isCursor()).toBeTruthy();
       expect(node.$cursorIndex).toBeUndefined();
     });
-    it('can move down within headers', function () {
+    it('can move down within properties', function () {
       nOrg.root.cursorTo(node, 0);
 
       nOrg.root.cursorDown();
 
       expect(node.isCursor(node, 1)).toBeTruthy();
-      expect(node.$cursorObject[node.$cursorObject.$headerKeys()[
+      expect(node.$cursorObject[node.$cursorObject.$propertyKeys()[
         node.$cursorIndex]]).toBe("Bar Property");
     });
-    it('can move up within headers', function () {
+    it('can move up within properties', function () {
       nOrg.root.cursorTo(node, 1);
 
       nOrg.root.cursorUp();
 
-      expect(node.$cursorObject[node.$cursorObject.$headerKeys()[
+      expect(node.$cursorObject[node.$cursorObject.$propertyKeys()[
         node.$cursorIndex]]).toBe("Bah Property");
       expect(node.isCursor(node, 0)).toBeTruthy();
       expect(node.$cursorObject[1]).toBeUndefined();
     });
-    it('can move down to next node past last header', function () {
+    it('can move down to next node past last property', function () {
       node.$collapsed = false;
       nOrg.root.cursorTo(node, 1);
 
@@ -782,7 +782,7 @@ describe('nOrg', function() {
       expect(node.$childHead.isCursor()).toBeTruthy();
       expect(node.$cursorIndex).toBeUndefined();
 
-      node.$childHead.$headersCollapsed = false;
+      node.$childHead.$propertiesCollapsed = false;
       nOrg.root.cursorTo(node.$childHead, 0);
 
       nOrg.root.cursorDown();
@@ -790,9 +790,9 @@ describe('nOrg', function() {
       expect(node.$childHead.$nextSibling.isCursor()).toBeTruthy();
       expect(node.$cursorIndex).toBeUndefined();
     });
-    it('can move up to node past first header', function () {
+    it('can move up to node past first property', function () {
       node.$collapsed = false;
-      node.$headersCollapsed = false;
+      node.$propertiesCollapsed = false;
       nOrg.root.cursorTo(node, 0);
 
       nOrg.root.cursorUp();
@@ -800,7 +800,7 @@ describe('nOrg', function() {
       expect(node.isCursor()).toBeTruthy();
       expect(node.$cursorIndex).toBeUndefined();
 
-      node.$childHead.$headersCollapsed = false;
+      node.$childHead.$propertiesCollapsed = false;
       nOrg.root.cursorTo(node.$childHead, 0);
 
       nOrg.root.cursorUp();
@@ -808,30 +808,30 @@ describe('nOrg', function() {
       expect(node.$childHead.isCursor()).toBeTruthy();
       expect(node.$cursorIndex).toBeUndefined();
     });
-    it('can move up into expanded header', function () {
+    it('can move up into expanded property', function () {
       node.$collapsed = false;
-      node.$headersCollapsed = false;
+      node.$propertiesCollapsed = false;
       nOrg.root.cursorTo(node.$childHead);
 
       nOrg.root.cursorUp();
 
       expect(node.isCursor(node, 1)).toBeTruthy();
       expect(node.$childHead.isCursor()).toBeFalsy();
-      expect(node.$cursorObject.$headerKeys())
-        .toEqual(node.$headerKeys());
+      expect(node.$cursorObject.$propertyKeys())
+        .toEqual(node.$propertyKeys());
     });
-    it('can not move right within headers', function () {
+    it('can not move right within properties', function () {
       nOrg.root.cursorTo(node, 0);
 
       nOrg.root.cursorRight();
 
-      expect(node.$cursorObject[node.$cursorObject.$headerKeys()[
+      expect(node.$cursorObject[node.$cursorObject.$propertyKeys()[
         node.$cursorIndex]]).toBe("Bah Property");
       expect(node.isCursor(node, 0)).toBeTruthy();
       expect(node.$cursorIndex).toBeDefined();
     });
-    it('can not move right into collapsed headers', function () {
-      node.$headersCollapsed = true;
+    it('can not move right into collapsed properties', function () {
+      node.$propertiesCollapsed = true;
       nOrg.root.cursorTo(node);
 
       nOrg.root.cursorRight();
@@ -841,8 +841,8 @@ describe('nOrg', function() {
       expect(node.$cursorIndex).toBeUndefined();
       expect(node.isCursor()).toBeFalsy();
     });
-    it('can not move down into collapsed headers', function () {
-      node.$headersCollapsed = true;
+    it('can not move down into collapsed properties', function () {
+      node.$propertiesCollapsed = true;
       nOrg.root.cursorTo(node);
 
       nOrg.root.cursorDown();
@@ -871,22 +871,22 @@ describe('nOrg', function() {
       node.toggle();
       expect(node.$collapsed).toBeTruthy();
     });
-    it('headers are initially collapsed', function() {
-      expect(node.$headersCollapsed).toBeTruthy();
+    it('properties are initially collapsed', function() {
+      expect(node.$propertiesCollapsed).toBeTruthy();
     });
-    it('can toggle nodes with headers', function() {
+    it('can toggle nodes with properties', function() {
       nOrg.root.cursorTo(node);
-      node.toggleHeaders();
-      expect(node.$headersCollapsed).toBeFalsy();
-      node.toggleHeaders();
-      expect(node.$headersCollapsed).toBeTruthy();
+      node.toggleProperties();
+      expect(node.$propertiesCollapsed).toBeFalsy();
+      node.toggleProperties();
+      expect(node.$propertiesCollapsed).toBeTruthy();
     });
-    it('cannot toggle nodes without headers', function() {
+    it('cannot toggle nodes without properties', function() {
       node = node.$prevSibling;
       nOrg.root.cursorTo(node);
-      expect(node.$headersCollapsed).toBeTruthy();
-      node.toggleHeaders();
-      expect(node.$headersCollapsed).toBeTruthy();
+      expect(node.$propertiesCollapsed).toBeTruthy();
+      node.toggleProperties();
+      expect(node.$propertiesCollapsed).toBeTruthy();
     });
   });
 });

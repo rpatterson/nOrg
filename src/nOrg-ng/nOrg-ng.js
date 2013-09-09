@@ -8,7 +8,7 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'])
 
     $scope.keydown = {
       'tab': 'node.toggle($event)',
-      'shift-tab': 'node.toggleHeaders($event)', // h
+      'shift-tab': 'node.toggleProperties($event)', // h
 
       'down': 'node.cursorDown($event)', // j, s
       'up': 'node.cursorUp($event)',     // k, w

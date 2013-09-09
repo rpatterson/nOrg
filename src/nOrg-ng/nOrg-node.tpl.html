@@ -23,14 +23,14 @@
         </span>
       </button>
       <button type="button"
-              class="btn btn-default norg-headers-expand"
-              title="Expand/Collapse headers/fields"
-              ng:disabled="! node.$headerKeys().length"
-              ng:click="node.$headersCollapsed = !node.$headersCollapsed"
+              class="btn btn-default norg-properties-expand"
+              title="Expand/Collapse properties/fields"
+              ng:disabled="! node.$propertyKeys().length"
+              ng:click="node.$propertiesCollapsed = !node.$propertiesCollapsed"
               ng:focus="node.cursorTo()">
         <span class="icon-th-list"
               ng:class="{'text-muted':
-                        ! node.$headerKeys().length}">
+                        ! node.$propertyKeys().length}">
         </span>
       </button>
       <button type="button"
@@ -44,7 +44,7 @@
 
     <input type="text" required="true"
            class="norg-node-subject input-xxlarge"
-           name="Message-ID-{{node.toId()}}-headers-Subject"
+           name="Message-ID-{{node.toId()}}-properties-Subject"
            ng:model="node['Subject']"
            norg:focus="{{node.isCursor()}}" />
 
@@ -94,11 +94,11 @@
     </span>
   </div>
 
-  <div id="Message-ID-{{node.toId()}}-headers"
-       class="norg-headers"
-       collapse="node.$headersCollapsed">
+  <div id="Message-ID-{{node.toId()}}-properties"
+       class="norg-properties"
+       collapse="node.$propertiesCollapsed">
     <div class="row-fluid"
-         ng:repeat="(index, key) in node.$headerKeys()">
+         ng:repeat="(index, key) in node.$propertyKeys()">
       <div class="input-prepend">
         <button type="button"
                 class="btn norg-cursor-button"
@@ -110,14 +110,14 @@
           </span>
         </button>
         <input type="text" required="true" disabled="true"
-               class="norg-headers-key"
-               name="Message-ID-{{node.toId()}}-header-key-{{key}}"
+               class="norg-properties-key"
+               name="Message-ID-{{node.toId()}}-property-key-{{key}}"
                ng:model="key"
                ng:focus="node.cursorTo(node, index)" />
       </div>
       <div class="input-prepend input-append">
         <input type="text" class="input-xlarge"
-               name="Message-ID-{{node.toId()}}-header-{{key}}"
+               name="Message-ID-{{node.toId()}}-property-{{key}}"
                ng:model="node[key]"
                ng:focus="node.cursorTo(node, index)"
                norg:focus="{{node.isCursor(node, index)}}" />
