@@ -2,6 +2,9 @@
 .norg-nodes {
     list-style: none;
 }
+.norg-nodes .norg-nodes {
+    margin-left: 38px;
+}
 
 #norg-edit .btn.disabled,
 #norg-edit .btn[disabled] {
