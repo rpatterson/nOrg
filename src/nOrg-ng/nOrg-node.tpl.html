@@ -11,6 +11,13 @@
         </span>
       </button>
       <button type="button"
+              class="btn btn-default norg-node-select"
+              title="Select this node for multi-node actions"
+              ng:focus="node.cursorTo()">
+        <input type="checkbox" name="Message-ID-{{node.toId()}}"
+               ng:focus="node.cursorTo()" />
+      </button>
+      <button type="button"
               class="btn btn-default norg-node-collapse-button"
               title="Expand/Collapse this node's children"
               ng:disabled="! node.$length"
@@ -32,13 +39,6 @@
               ng:class="{'text-muted':
                         ! node.$propertyKeys().length}">
         </span>
-      </button>
-      <button type="button"
-              class="btn btn-default norg-node-select"
-              title="Select this node for multi-node actions"
-              ng:focus="node.cursorTo()">
-        <input type="checkbox" name="Message-ID-{{node.toId()}}"
-               ng:focus="node.cursorTo()" />
       </button>
     </span>
 
