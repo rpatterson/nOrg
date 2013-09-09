@@ -42,7 +42,8 @@
       </button>
     </span>
 
-    <input type="text" class="norg-node-subject input-xxlarge"
+    <input type="text" required="true"
+           class="norg-node-subject input-xxlarge"
            name="Message-ID-{{node.toId()}}-headers-Subject"
            ng:model="node.headers['Subject']"
            norg:focus="{{node.$cursor}}" />
@@ -108,7 +109,7 @@
           <span class="icon-th">
           </span>
         </button>
-        <input type="text" class="norg-headers-key"
+        <input type="text" required="true" class="norg-headers-key"
                name="Message-ID-{{node.toId()}}-header-key-{{key}}"
                ng:model="key"
                ng:focus="node.cursorTo(node.headers, index)" />
