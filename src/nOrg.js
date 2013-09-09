@@ -23,10 +23,12 @@ var nOrg = (function nOrg() {
     if (! this.hasOwnProperty("$basename")) {
       this["$basename"] = '';
     }
-    for (var index in this['NOrg-Required-Keys']) {
-      if (! this.hasOwnProperty(this['NOrg-Required-Keys'][index])) {
-        this[this['NOrg-Required-Keys'][index]] = '';
-      }
+    if (this['NOrg-Required-Properties']) {
+      this['NOrg-Required-Properties'].forEach(function setRequired(property) {
+        if (! this.hasOwnProperty(property)) {
+          this[property] = undefined;
+        }
+      }, this);
     }
   };
   Node.prototype.newNode = function newNode(object) {
@@ -263,9 +265,9 @@ var nOrg = (function nOrg() {
     var params = [event];
     event.stopPropagation();
     if (args) {
-      for (var arg in args) {
+      args.forEach(function pushParam(arg) {
         params.push(arg);
-      }
+      });
     }
     try {
       return this[method].apply(this, params);
