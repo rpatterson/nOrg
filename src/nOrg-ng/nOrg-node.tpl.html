@@ -34,12 +34,11 @@
       <button type="button"
               class="btn btn-default norg-properties-expand"
               title="Expand/Collapse properties/fields"
-              ng:disabled="! node.$propertyKeys().length"
               ng:click="node.$propertiesCollapsed = !node.$propertiesCollapsed"
               ng:focus="node.cursorTo()">
         <span class="icon-th-list"
               ng:class="{'text-muted':
-                        ! node.$propertyKeys().length}">
+                        ! node.$properties().length}">
         </span>
         <span class="badge"
               ng:bind="{{node.$properties().length || ''}}"></span>
@@ -102,7 +101,7 @@
        class="norg-properties"
        collapse="node.$propertiesCollapsed">
     <div class="row-fluid"
-         ng:repeat="(index, key) in node.$propertyKeys()">
+         ng:repeat="(index, property) in node.$properties()">
       <div class="input-prepend">
         <button type="button"
                 class="btn norg-cursor-button"
@@ -114,22 +113,38 @@
           </span>
         </button>
         <input type="text" required="true" disabled="true"
-               class="norg-properties-key"
-               name="Message-ID-{{node.toId()}}-property-key-{{key}}"
-               ng:model="key"
-               ng:focus="node.cursorTo(node, index)" />
+               class="norg-property"
+               name="Message-ID-{{node.toId()}}-property-name-{{property}}"
+               ng:disabled="property"
+               ng:model="property" />
       </div>
       <div class="input-prepend input-append">
-        <input type="text" class="input-xlarge"
-               name="Message-ID-{{node.toId()}}-property-{{key}}"
-               ng:model="node[key]"
+        <input type="text" class="norg-properties-value input-xlarge"
+               name="Message-ID-{{node.toId()}}-property-{{property}}"
+               ng:model="node[property]"
                ng:focus="node.cursorTo(node, index)"
                norg:focus="{{node.isCursor(node, index)}}" />
       </div>
     </div>
+    <div class="row-fluid">
+      <div class="input-prepend">
+        <button type="button"
+                class="btn btn-default norg-add-property"
+                title="Add a new property"
+                ng:click="newProperty()">
+          <span class="icon-plus-sign"></span>
+        </button>
+        <input type="text"
+               class="norg-property"
+               name="Message-ID-{{node.toId()}}-new-property"
+               ng:model="property"
+               ui:keydown="{'enter': 'newProperty()'}" />
+      </div>
+    </div>
   </div>
 
-  <ol id="children" class="norg-nodes" collapse="node.$collapsed">
+  <ol id="children" class="norg-nodes" collapse="node.$collapsed"
+      ng:class="{'in': ! node.$collapsed}">
     <li ng:repeat="node in node.children()"
         ui:keydown="keydown"
         id="Message-ID-{{node.toId()}}"
