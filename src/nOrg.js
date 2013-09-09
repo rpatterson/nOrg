@@ -73,7 +73,7 @@ var nOrg = (function nOrg() {
     }
     return child;
   };
-  Node.prototype.newChildEach = function newChild(object, index, array) {
+  Node.prototype.newChildEach = function newChildEach(object, index, array) {
     this.newChild(object);
   };
   Node.prototype.newSibling = function newSibling(event, object) {
