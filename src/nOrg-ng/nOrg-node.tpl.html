@@ -18,8 +18,8 @@
                ng:focus="node.cursorTo()" />
       </button>
       <button type="button"
-              class="btn btn-default norg-node-collapse-button"
               title="Expand/Collapse this node's children"
+              class="btn btn-default norg-node-collapse-button"
               ng:disabled="! node.$length"
               ng:click="node.$collapsed = !node.$collapsed"
               ng:focus="node.cursorTo()">
