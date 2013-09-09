@@ -12,8 +12,15 @@
 }
 
 .norg-properties {
-    margin-left: 152px;
+    margin-left: 314px;
+}
+.norg-properties-value {
+    width: 309px;
 }
 input.norg-properties-key {
     width: 203px;
+}
+.norg-properties-expand {
+    width: 76px;
+    text-align: left;
 }

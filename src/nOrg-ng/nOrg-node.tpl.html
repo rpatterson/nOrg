@@ -28,6 +28,8 @@
                         'icon-chevron-up': !(node.$length && node.$collapsed),
                         'muted': ! node.$length}">
         </span>
+        <span class="badge badge-inverse"
+              ng:bind="{{node.$length || ''}}"></span>
       </button>
       <button type="button"
               class="btn btn-default norg-properties-expand"
@@ -39,6 +41,8 @@
               ng:class="{'text-muted':
                         ! node.$propertyKeys().length}">
         </span>
+        <span class="badge"
+              ng:bind="{{node.$properties().length || ''}}"></span>
       </button>
     </span>
 
