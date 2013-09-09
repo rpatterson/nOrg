@@ -21,7 +21,7 @@ var nOrg = (function nOrg() {
     }
 
     if (! this.hasOwnProperty("$basename")) {
-      this["$basename"] = '';
+      this["$basename"] = undefined;
     }
     if (this['NOrg-Required-Properties']) {
       this['NOrg-Required-Properties'].forEach(function setRequired(property) {
@@ -141,13 +141,20 @@ var nOrg = (function nOrg() {
   };
 
 
-  Node.prototype.$propertyKeys = function $propertyKeys() {
-    var required = this['NOrg-Required-Keys'];
-    return Object.keys(this).filter(function filterProperties(key) {
-      return (key[0] !== '$') && (required.indexOf(key) === -1);
+  Node.prototype.$properties = function $properties() {
+    var required = this['NOrg-Required-Properties'];
+    return Object.keys(this).filter(function filterProperties(property) {
+      return (property[0] !== '$') && (required.indexOf(property) === -1);
       }).sort();
   };
-
+  Node.prototype.$newProperty = function $newProperty(property, value) {
+    if (! property) {
+      throw new Error("Must provide a property name!");
+    }
+    this[property] = value;
+    this.$propertiesCollapsed = false;
+    this.cursorTo(this, this.$properties().indexOf(property));
+  };
 
 
   // Moving nodes
@@ -283,11 +290,11 @@ var nOrg = (function nOrg() {
     }
 
     if ((object.$cursorIndex !== undefined) &&
-        object.$propertyKeys()[this.$cursorIndex + 1] !== undefined) {
+        object.$properties()[this.$cursorIndex + 1] !== undefined) {
       // next property
       return this.cursorTo(object, this.$cursorIndex + 1);
     } else if ((object.$cursorIndex === undefined) &&
-               object.$propertyKeys().length &&
+               object.$properties().length &&
                (! object.$propertiesCollapsed)) {
       // first expanded property
       return this.cursorTo(object, 0);
@@ -316,7 +323,7 @@ var nOrg = (function nOrg() {
     }
 
     if (this.$cursorIndex !== undefined) {
-      if (this.$cursorObject.$propertyKeys()[this.$cursorIndex - 1]) {
+      if (this.$cursorObject.$properties()[this.$cursorIndex - 1]) {
         // previous property
         return this.cursorTo(this.$cursorObject, this.$cursorIndex - 1);
       } else {
@@ -338,9 +345,9 @@ var nOrg = (function nOrg() {
       return false;
     }
     if ((! node.$propertiesCollapsed) &&
-        node.$propertyKeys().length) {
+        node.$properties().length) {
       return this.cursorTo(node,
-                           node.$propertyKeys().length - 1);
+                           node.$properties().length - 1);
     } else {
       return this.cursorTo(node);
     }
@@ -356,7 +363,7 @@ var nOrg = (function nOrg() {
 
     if (this.$cursorObject &&
         (! this.$cursorObject.$propertiesCollapsed) &&
-        this.$cursorObject.$propertyKeys().length) {
+        this.$cursorObject.$properties().length) {
       // first expanded property
       return this.cursorTo(this.$cursorObject, 0);
     } else if (this.$cursorObject.$length) {
@@ -401,21 +408,20 @@ var nOrg = (function nOrg() {
       event.stopPropagation();
     }
 
-    if (this.$cursorObject.$propertyKeys().length) {
-      if (this.$cursorIndex !== undefined) {
-        this.cursorTo(this.$cursorObject);
-      }
-      this.$cursorObject.$propertiesCollapsed = (
-        ! this.$cursorObject.$propertiesCollapsed);
+    if (this.$cursorIndex !== undefined) {
+      this.cursorTo(this.$cursorObject);
     }
+    this.$cursorObject.$propertiesCollapsed = (
+      ! this.$cursorObject.$propertiesCollapsed);
   };
 
 
   function newRoot(object) {
-    if (object) {
-      object = object || {};
-      object['NOrg-Required-Keys'] = ['Message-ID', 'Subject'];
-    }
+    object = object || {};
+    object['NOrg-Required-Properties'] = object[
+      'NOrg-Required-Properties'] || ['Message-ID',
+                                      'Subject',
+                                      'Node-State'];
     var root = new Node(object);
     return root;
   }

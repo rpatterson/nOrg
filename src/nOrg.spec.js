@@ -58,11 +58,21 @@ describe('nOrg', function() {
     it('sorts properties by key', function () {
       // added after bar but sorts before
       node['Bah-Property'] = 'Bah Property';
-      expect(node.$propertyKeys()).toEqual(
+      expect(node.$properties()).toEqual(
         ['Bah-Property', 'Bar-Property']);
     });
     it('generates valid, CSS select-able ids for nodes', function () {
       expect((/[<@\.>]/).test(node.toId())).toBeFalsy();
+    });
+    it('adds a property', function () {
+      expect(node.isCursor()).toBeFalsy();
+      expect(node.isCursor(node, 0)).toBeFalsy();
+
+      node.$newProperty('Baz-Property');
+
+      expect(node.$properties()[1]).toBe('Baz-Property');
+      expect(node.$propertiesCollapsed).toBeFalsy();
+      expect(nOrg.root.isCursor(node, 1)).toBeTruthy();
     });
   });
 
@@ -73,7 +83,7 @@ describe('nOrg', function() {
     });
     it('inherits properties from parent', function () {
       var child = node.newChild();
-      expect(child.$basename).toBe('');
+      expect(child.$basename).toBeUndefined();
       expect(child['Bar-Property'])
         .toBe(json.$children[1]['Bar-Property']);
     });
@@ -546,15 +556,19 @@ describe('nOrg', function() {
       expect(prevSibling.$parent.$childHead.isCursor()).toBeFalsy();
     });
     it('does not inherit certain properties when adding a node', function () {
+      expect(node.$childHead['Node-State']).toBeUndefined();
+
       var sibling = node.$childHead.newSibling();
-      expect(sibling.$basename).toBe('');
-      expect(sibling['Subject']).toBe('');
-      expect(sibling['Message-ID']).toBe('');
+      expect(sibling.$basename).toBeUndefined();
+      expect(sibling['Subject']).toBeUndefined();
+      expect(sibling['Message-ID']).toBeUndefined();
+      expect(sibling['Node-State']).toBeUndefined();
 
       var child = node.newChild();
-      expect(child.$basename).toBe('');
-      expect(child['Subject']).toBe('');
-      expect(child['Message-ID']).toBe('');
+      expect(child.$basename).toBeUndefined();
+      expect(child['Subject']).toBeUndefined();
+      expect(child['Message-ID']).toBeUndefined();
+      expect(child['Node-State']).toBeUndefined();
     });
   });
 
@@ -733,7 +747,7 @@ describe('nOrg', function() {
       nOrg.root.cursorTo(node);
       nOrg.root.cursorRight();
 
-      expect(node.$cursorObject[node.$cursorObject.$propertyKeys()[
+      expect(node.$cursorObject[node.$cursorObject.$properties()[
         node.$cursorIndex]]).toBe("Bah Property");
       expect(node.isCursor(node, 0)).toBeTruthy();
     });
@@ -741,7 +755,7 @@ describe('nOrg', function() {
       nOrg.root.cursorTo(node);
       nOrg.root.cursorDown();
 
-      expect(node.$cursorObject[node.$cursorObject.$propertyKeys()[
+      expect(node.$cursorObject[node.$cursorObject.$properties()[
         node.$cursorIndex]]).toBe("Bah Property");
       expect(node.isCursor(node, 0)).toBeTruthy();
     });
@@ -760,7 +774,7 @@ describe('nOrg', function() {
       nOrg.root.cursorDown();
 
       expect(node.isCursor(node, 1)).toBeTruthy();
-      expect(node.$cursorObject[node.$cursorObject.$propertyKeys()[
+      expect(node.$cursorObject[node.$cursorObject.$properties()[
         node.$cursorIndex]]).toBe("Bar Property");
     });
     it('can move up within properties', function () {
@@ -768,7 +782,7 @@ describe('nOrg', function() {
 
       nOrg.root.cursorUp();
 
-      expect(node.$cursorObject[node.$cursorObject.$propertyKeys()[
+      expect(node.$cursorObject[node.$cursorObject.$properties()[
         node.$cursorIndex]]).toBe("Bah Property");
       expect(node.isCursor(node, 0)).toBeTruthy();
       expect(node.$cursorObject[1]).toBeUndefined();
@@ -817,15 +831,15 @@ describe('nOrg', function() {
 
       expect(node.isCursor(node, 1)).toBeTruthy();
       expect(node.$childHead.isCursor()).toBeFalsy();
-      expect(node.$cursorObject.$propertyKeys())
-        .toEqual(node.$propertyKeys());
+      expect(node.$cursorObject.$properties())
+        .toEqual(node.$properties());
     });
     it('can not move right within properties', function () {
       nOrg.root.cursorTo(node, 0);
 
       nOrg.root.cursorRight();
 
-      expect(node.$cursorObject[node.$cursorObject.$propertyKeys()[
+      expect(node.$cursorObject[node.$cursorObject.$properties()[
         node.$cursorIndex]]).toBe("Bah Property");
       expect(node.isCursor(node, 0)).toBeTruthy();
       expect(node.$cursorIndex).toBeDefined();
@@ -878,13 +892,6 @@ describe('nOrg', function() {
       nOrg.root.cursorTo(node);
       node.toggleProperties();
       expect(node.$propertiesCollapsed).toBeFalsy();
-      node.toggleProperties();
-      expect(node.$propertiesCollapsed).toBeTruthy();
-    });
-    it('cannot toggle nodes without properties', function() {
-      node = node.$prevSibling;
-      nOrg.root.cursorTo(node);
-      expect(node.$propertiesCollapsed).toBeTruthy();
       node.toggleProperties();
       expect(node.$propertiesCollapsed).toBeTruthy();
     });

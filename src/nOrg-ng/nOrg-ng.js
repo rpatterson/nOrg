@@ -20,13 +20,26 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'])
       'shift-right': 'node.applyCursor("demote", $event)',
       'shift-left': 'node.applyCursor("promote", $event)',
 
-      'shift-enter': 'node.applyCursor("newSibling", $event, [{}])'
+      'shift-enter': 'shiftEnter($event)'
     };
 
     $http.get('../nOrg-nodes.json').success(function loadNode(node) {
       // Load the initial nodes JSON
       $scope.node = nOrg.newRoot(node);
     });
+
+    $scope.newProperty = function newProperty() {
+      this.node.$cursorObject.$newProperty(this.property);
+      this.property = '';
+    };
+
+    $scope.shiftEnter = function shiftEnter($event) {
+      if ($scope.node.$cursorIndex) {
+        $scope.newProperty($scope.node.$cursorObject, $scope.property);
+      } else {
+        $scope.node.$cursorObject.newSibling();
+      }
+    };
   })
 
   .directive('norgFocus', function norgFocus() {
