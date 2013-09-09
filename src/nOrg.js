@@ -15,7 +15,6 @@ var nOrg = (function nOrg() {
     this.$prevSibling = undefined;
     this.$collapsed = true;
     this.$headersCollapsed = true;
-    this['NOrg-User-Headers'] = [];
 
     if (object) {
       this.extend(object);
@@ -140,9 +139,11 @@ var nOrg = (function nOrg() {
   };
 
 
-  Node.prototype.pushHeader = function pushHeader(key, value) {
-    this[key] = value;
-    this['NOrg-User-Headers'].push(key);
+  Node.prototype.$headerKeys = function $headerKeys() {
+    var required = this['NOrg-Required-Keys'];
+    return Object.keys(this).filter(function filterHeaders(key) {
+      return (key[0] !== '$') && (required.indexOf(key) === -1);
+      }).sort();
   };
 
 
@@ -280,11 +281,11 @@ var nOrg = (function nOrg() {
     }
 
     if ((object.$cursorIndex !== undefined) &&
-        object['NOrg-User-Headers'][this.$cursorIndex + 1] !== undefined) {
+        object.$headerKeys()[this.$cursorIndex + 1] !== undefined) {
       // next header
       return this.cursorTo(object, this.$cursorIndex + 1);
     } else if ((object.$cursorIndex === undefined) &&
-               object['NOrg-User-Headers'].length &&
+               object.$headerKeys().length &&
                (! object.$headersCollapsed)) {
       // first expanded header
       return this.cursorTo(object, 0);
@@ -313,7 +314,7 @@ var nOrg = (function nOrg() {
     }
 
     if (this.$cursorIndex !== undefined) {
-      if (this.$cursorObject['NOrg-User-Headers'][this.$cursorIndex - 1]) {
+      if (this.$cursorObject.$headerKeys()[this.$cursorIndex - 1]) {
         // previous header
         return this.cursorTo(this.$cursorObject, this.$cursorIndex - 1);
       } else {
@@ -335,9 +336,9 @@ var nOrg = (function nOrg() {
       return false;
     }
     if ((! node.$headersCollapsed) &&
-        node['NOrg-User-Headers'].length) {
+        node.$headerKeys().length) {
       return this.cursorTo(node,
-                           node['NOrg-User-Headers'].length - 1);
+                           node.$headerKeys().length - 1);
     } else {
       return this.cursorTo(node);
     }
@@ -353,7 +354,7 @@ var nOrg = (function nOrg() {
 
     if (this.$cursorObject &&
         (! this.$cursorObject.$headersCollapsed) &&
-        this.$cursorObject['NOrg-User-Headers'].length) {
+        this.$cursorObject.$headerKeys().length) {
       // first expanded header
       return this.cursorTo(this.$cursorObject, 0);
     } else if (this.$cursorObject.$length) {
@@ -398,7 +399,7 @@ var nOrg = (function nOrg() {
       event.stopPropagation();
     }
 
-    if (this.$cursorObject['NOrg-User-Headers'].length) {
+    if (this.$cursorObject.$headerKeys().length) {
       if (this.$cursorIndex !== undefined) {
         this.cursorTo(this.$cursorObject);
       }

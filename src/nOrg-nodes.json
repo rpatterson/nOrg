@@ -5,13 +5,11 @@
   {"$basename": "bar",
    "Subject": "Bar Project",
    "Message-ID": "<2@foo.com>",
-   "NOrg-User-Headers": ["Bar-Property"],
    "Bar-Property": "Bar Property",
    "$children": [
      {"$basename": "corge",
       "Subject": "Corge Node",
       "Message-ID": "<3@foo.com>",
-      "NOrg-User-Headers": ["Corge-Property"],
       "Corge-Property": "Corge Property"},
      {"$basename": "grault",
       "Subject": "Grault Node",

@@ -19,13 +19,11 @@ describe('nOrg', function() {
         {"$basename": "bar",
          "Subject": "Bar Subject",
          "Message-ID": "<2@foo.com>",
-         "NOrg-User-Headers": ["Bar-Property"],
          "Bar-Property": "Bar Property",
          "$children": [
            {"$basename": "corge",
             "Subject": "Corge Node",
             "Message-ID": "<3@foo.com>",
-            "NOrg-User-Headers": ["Corge-Property"],
             "Corge-Property": "Corge Property"},
            {"$basename": "grault",
             "Subject": "Grault Node",
@@ -57,9 +55,11 @@ describe('nOrg', function() {
     it('child nodes have headers', function () {
       expect(node.hasOwnProperty("Subject")).toBeTruthy();
     });
-    it('lists headers to include in UI', function () {
-      expect(node['NOrg-User-Headers'])
-        .toEqual(json.$children[1]['NOrg-User-Headers']);
+    it('sorts headers by key', function () {
+      // added after bar but sorts before
+      node['Bah-Property'] = 'Bah Property';
+      expect(node.$headerKeys()).toEqual(
+        ['Bah-Property', 'Bar-Property']);
     });
     it('generates valid, CSS select-able ids for nodes', function () {
       expect((/[<@\.>]/).test(node.toId())).toBeFalsy();
@@ -723,7 +723,7 @@ describe('nOrg', function() {
   describe("headers cursor:", function () {
     beforeEach(function() {
       node.$headersCollapsed = false;
-      node.pushHeader('Bah-Property', 'Bah Property');
+      node['Bah-Property'] = 'Bah Property';
     });
 
     it('is not initially at a header', function () {
@@ -733,16 +733,16 @@ describe('nOrg', function() {
       nOrg.root.cursorTo(node);
       nOrg.root.cursorRight();
 
-      expect(node.$cursorObject[node.$cursorObject['NOrg-User-Headers'][
-        node.$cursorIndex]]).toBe("Bar Property");
+      expect(node.$cursorObject[node.$cursorObject.$headerKeys()[
+        node.$cursorIndex]]).toBe("Bah Property");
       expect(node.isCursor(node, 0)).toBeTruthy();
     });
     it('can move down into expanded headers', function () {
       nOrg.root.cursorTo(node);
       nOrg.root.cursorDown();
 
-      expect(node.$cursorObject[node.$cursorObject['NOrg-User-Headers'][
-        node.$cursorIndex]]).toBe("Bar Property");
+      expect(node.$cursorObject[node.$cursorObject.$headerKeys()[
+        node.$cursorIndex]]).toBe("Bah Property");
       expect(node.isCursor(node, 0)).toBeTruthy();
     });
     it('can move left out of headers', function () {
@@ -760,16 +760,16 @@ describe('nOrg', function() {
       nOrg.root.cursorDown();
 
       expect(node.isCursor(node, 1)).toBeTruthy();
-      expect(node.$cursorObject[node.$cursorObject['NOrg-User-Headers'][
-        node.$cursorIndex]]).toBe("Bah Property");
+      expect(node.$cursorObject[node.$cursorObject.$headerKeys()[
+        node.$cursorIndex]]).toBe("Bar Property");
     });
     it('can move up within headers', function () {
       nOrg.root.cursorTo(node, 1);
 
       nOrg.root.cursorUp();
 
-      expect(node.$cursorObject[node.$cursorObject['NOrg-User-Headers'][
-        node.$cursorIndex]]).toBe("Bar Property");
+      expect(node.$cursorObject[node.$cursorObject.$headerKeys()[
+        node.$cursorIndex]]).toBe("Bah Property");
       expect(node.isCursor(node, 0)).toBeTruthy();
       expect(node.$cursorObject[1]).toBeUndefined();
     });
@@ -817,16 +817,16 @@ describe('nOrg', function() {
 
       expect(node.isCursor(node, 1)).toBeTruthy();
       expect(node.$childHead.isCursor()).toBeFalsy();
-      expect(node.$cursorObject['NOrg-User-Headers'])
-        .toBe(node['NOrg-User-Headers']);
+      expect(node.$cursorObject.$headerKeys())
+        .toEqual(node.$headerKeys());
     });
     it('can not move right within headers', function () {
       nOrg.root.cursorTo(node, 0);
 
       nOrg.root.cursorRight();
 
-      expect(node.$cursorObject[node.$cursorObject['NOrg-User-Headers'][
-        node.$cursorIndex]]).toBe("Bar Property");
+      expect(node.$cursorObject[node.$cursorObject.$headerKeys()[
+        node.$cursorIndex]]).toBe("Bah Property");
       expect(node.isCursor(node, 0)).toBeTruthy();
       expect(node.$cursorIndex).toBeDefined();
     });

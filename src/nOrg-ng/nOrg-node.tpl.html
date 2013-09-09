@@ -25,12 +25,12 @@
       <button type="button"
               class="btn btn-default norg-headers-expand"
               title="Expand/Collapse headers/fields"
-              ng:disabled="! node['NOrg-User-Headers'].length"
+              ng:disabled="! node.$headerKeys().length"
               ng:click="node.$headersCollapsed = !node.$headersCollapsed"
               ng:focus="node.cursorTo()">
         <span class="icon-th-list"
               ng:class="{'text-muted':
-                        ! node['NOrg-User-Headers'].length}">
+                        ! node.$headerKeys().length}">
         </span>
       </button>
       <button type="button"
@@ -98,7 +98,7 @@
        class="norg-headers"
        collapse="node.$headersCollapsed">
     <div class="row-fluid"
-         ng:repeat="(index, key) in node['NOrg-User-Headers']">
+         ng:repeat="(index, key) in node.$headerKeys()">
       <div class="input-prepend">
         <button type="button"
                 class="btn norg-cursor-button"
