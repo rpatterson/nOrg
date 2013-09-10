@@ -125,13 +125,13 @@ var nOrg = (function nOrg() {
     return results;
   };
   Node.prototype.extend = function extend(object) {
-    for (var key in object) {
-      if (key === 'properties') {
-      } else if (key === '$children') {
-        object.$children.forEach(this.newChildEach, this);
-      } else {
-        this[key] = object[key];
+    for (var property in object) {
+      if (property !== '$children') {
+        this[property] = object[property];
       }
+    }
+    if (object.$children) {
+      object.$children.forEach(this.newChildEach, this);
     }
   };
   Node.prototype.toId = function toId() {
