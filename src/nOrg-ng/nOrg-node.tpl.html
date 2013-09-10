@@ -131,14 +131,14 @@
         <button type="button"
                 class="btn btn-default norg-add-property"
                 title="Add a new property"
-                ng:click="newProperty()">
+                ng:click="newProperty($event)">
           <span class="icon-plus-sign"></span>
         </button>
         <input type="text"
                class="norg-property"
                name="Message-ID-{{node.toId()}}-new-property"
                ng:model="property"
-               ui:keydown="{'enter': 'newProperty()'}" />
+               ui:keydown="{'enter': 'newProperty($event)'}" />
       </div>
     </div>
   </div>
