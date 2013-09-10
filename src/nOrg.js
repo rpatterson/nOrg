@@ -277,7 +277,7 @@ var nOrg = (function nOrg() {
       });
     }
     try {
-      return this[method].apply(this, params);
+      return this.$cursorObject[method].apply(this, params);
     } catch (exception) {
       return false;
     }
