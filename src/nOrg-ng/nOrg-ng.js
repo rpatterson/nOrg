@@ -28,16 +28,17 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'])
       $scope.node = nOrg.newRoot(node);
     });
 
-    $scope.newProperty = function newProperty() {
+    $scope.newProperty = function newProperty($event) {
       this.node.$cursorObject.$newProperty(this.property);
       this.property = '';
     };
 
     $scope.shiftEnter = function shiftEnter($event) {
-      if ($scope.node.$cursorIndex) {
-        $scope.newProperty($scope.node.$cursorObject, $scope.property);
+      if (this.node.$cursorIndex !== undefined) {
+        $event.target.parentElement.parentElement.parentElement
+          .lastElementChild.firstElementChild.lastElementChild.focus();
       } else {
-        $scope.node.$cursorObject.newSibling();
+        this.node.$cursorObject.newSibling();
       }
     };
   })
