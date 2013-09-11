@@ -446,6 +446,23 @@ var nOrg = (function nOrg() {
   return {
     Node: Node,
     newRoot: newRoot,
-    root: newRoot()
+    root: newRoot(),
+
+    keydown: {
+      'tab': 'node.toggle($event)',
+      'shift-tab': 'node.toggleProperties($event)',
+
+      'down': 'node.cursorDown($event)',
+      'up': 'node.cursorUp($event)',    
+      'right': 'node.cursorRight($event)', 
+      'left': 'node.cursorLeft($event)',   
+
+      'shift-down': 'node.applyCursor("moveDown", $event)',
+      'shift-up': 'node.applyCursor("moveUp", $event)',
+      'shift-right': 'node.applyCursor("demote", $event)',
+      'shift-left': 'node.applyCursor("promote", $event)',
+
+      'shift-enter': 'newSibling($event)'
+    }
   };
 }());
