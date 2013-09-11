@@ -31,6 +31,27 @@
         <span class="badge badge-inverse"
               ng:bind="{{node.$length || ''}}"></span>
       </button>
+      <div class="btn-group norg-state">
+        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+          <span class="caret"></span>
+          <span class="badge"
+                ng:class="node['Node-State-Classes'][node['Node-State']]
+                          && 'badge-' +
+                          node['Node-State-Classes'][node['Node-State']]"
+                ng:bind="node['Node-State']"></span>
+        </a>
+        <ul class="dropdown-menu">
+          <li ng:repeat="state in node.$nextStates()">
+            <a href="#"
+               ng:click="node['Node-State'] = state">
+              <span class="badge"
+                    ng:class="node['Node-State-Classes'][state]
+                              && 'badge-' + node['Node-State-Classes'][state]"
+                    ng:bind="state"></span>
+            </a>
+          </li>
+        </ul>
+      </div>
       <button type="button"
               class="btn btn-default norg-properties-expand"
               title="Expand/Collapse properties/fields"

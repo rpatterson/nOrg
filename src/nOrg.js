@@ -155,6 +155,14 @@ var nOrg = (function nOrg() {
     this.$propertiesCollapsed = false;
     this.cursorTo(this, this.$properties().indexOf(property));
   };
+  Node.prototype.$nextStates = function $nextStates(state) {
+    if (! state) {
+      state = this['Node-State'];
+    }
+    return this['Node-State-All'].filter(function filterState(next) {
+      return next != state;
+    });
+  };
 
 
   // Moving nodes
@@ -422,6 +430,14 @@ var nOrg = (function nOrg() {
       'NOrg-Required-Properties'] || ['Message-ID',
                                       'Subject',
                                       'Node-State'];
+    object['Node-State-Classes'] = object['Node-State-Classes'] || {
+      'TODO': 'warning',
+      'DONE': 'success',
+      'CANCELED': 'success'};
+    object['Node-State-All'] = object['Node-State-All'] || [
+      'TODO',
+      'DONE',
+      'CANCELED'];
     var root = new Node(object);
     return root;
   }

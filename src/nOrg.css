@@ -7,6 +7,9 @@ body.norg {
 .norg-nodes {
     list-style: none;
 }
+.norg-nodes.in {
+    overflow: initial;
+}
 .norg-nodes .norg-nodes {
     margin-left: 38px;
 }
@@ -17,10 +20,10 @@ body.norg {
 }
 
 .norg-properties {
-    margin-left: 314px;
+    margin-left: 326px;
 }
 .norg-properties-value {
-    width: 309px;
+    width: 306px;
 }
 input.norg-properties-key {
     width: 203px;
