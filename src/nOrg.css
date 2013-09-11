@@ -1,4 +1,9 @@
 /* norg css stylesheet */
+
+body.norg {
+    padding-top: 40px;
+}
+
 .norg-nodes {
     list-style: none;
 }
