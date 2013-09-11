@@ -6,22 +6,7 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'])
   .controller('NOrgCtrl', function NOrgCtrl($scope, $http, $log) {
     $scope.controlName = 'NOrgCtrl';
 
-    $scope.keydown = {
-      'tab': 'node.toggle($event)',
-      'shift-tab': 'node.toggleProperties($event)', // h
-
-      'down': 'node.cursorDown($event)', // j, s
-      'up': 'node.cursorUp($event)',     // k, w
-      'right': 'node.cursorRight($event)',  // d
-      'left': 'node.cursorLeft($event)',    // a
-
-      'shift-down': 'node.applyCursor("moveDown", $event)',
-      'shift-up': 'node.applyCursor("moveUp", $event)',
-      'shift-right': 'node.applyCursor("demote", $event)',
-      'shift-left': 'node.applyCursor("promote", $event)',
-
-      'shift-enter': 'shiftEnter($event)'
-    };
+    $scope.keydown = nOrg.keydown;
 
     $http.get('../nOrg-nodes.json').success(function loadNode(node) {
       // Load the initial nodes JSON
@@ -33,7 +18,7 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'])
       this.property = '';
     };
 
-    $scope.shiftEnter = function shiftEnter($event) {
+    $scope.newSibling = function newSibling($event) {
       if (this.node.$cursorIndex !== undefined) {
         $event.target.parentElement.parentElement.parentElement
           .lastElementChild.firstElementChild.lastElementChild.focus();
@@ -41,6 +26,12 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'])
         this.node.$cursorObject.newSibling();
       }
     };
+  })
+
+  .controller('NOrgKeyMap', function NOrgCtrl($scope, $http, $log) {
+    $scope.controlName = 'NOrgCtrl';
+
+    $scope.keydown = nOrg.keydown;
   })
 
   .directive('norgFocus', function norgFocus() {

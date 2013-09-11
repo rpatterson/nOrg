@@ -32,6 +32,26 @@
       </ol>
     </form>
 
+    <div class="container-fluid well well-large">
+      <table class="table table-striped" ng:controller="NOrgKeyMap">
+        <caption>Keyboard shortcuts operate on the item the cursor,
+          hightlighted left-most button.
+        </caption>
+        <thead>
+          <tr>
+            <th>Action</th>
+            <th>Keyboard Shortcut</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng:repeat="(key, action) in keydown">
+            <td ng:bind="action"></td>
+            <td ng:bind="key"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
     <!-- In production use:
          <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
          -->
