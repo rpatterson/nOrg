@@ -6,6 +6,7 @@
    "Subject": "Bar Project",
    "Message-ID": "<2@foo.com>",
    "Bar-Property": "Bar Property",
+   "Node-State": "TODO",
    "$children": [
      {"$basename": "corge",
       "Subject": "Corge Node",

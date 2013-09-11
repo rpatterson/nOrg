@@ -20,6 +20,7 @@ describe('nOrg', function() {
          "Subject": "Bar Subject",
          "Message-ID": "<2@foo.com>",
          "Bar-Property": "Bar Property",
+         "Node-State": "TODO",
          "$children": [
            {"$basename": "corge",
             "Subject": "Corge Node",
@@ -175,6 +176,18 @@ describe('nOrg', function() {
       var children = node.children();
       expect(children.length).toBe(3);
       expect(children[0].$basename).toBe(node.$childHead.$basename);
+    });
+  });
+
+  describe('node state:', function () {
+    it("doesn't inherit node state", function () {
+      // node without state
+      node = nOrg.root.$childHead.$nextSibling; // node with state and children
+      expect(node.$childHead["Node-State"]).toBeUndefined();
+    });
+    it("has default states", function () {
+      expect(node["Node-State"]).toBe('TODO');
+      expect(node.$nextStates()).toEqual(['DONE', 'CANCELED']);
     });
   });
 
