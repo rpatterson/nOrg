@@ -19,6 +19,16 @@ body.norg {
     opacity: 0.25;
 }
 
+.norg-node-collapse-button {
+    width: 83px;
+    text-align: left;
+}
+
+.norg-state .btn {
+    width: 110px;
+    text-align: left;
+}
+
 .norg-properties {
     margin-left: 326px;
 }

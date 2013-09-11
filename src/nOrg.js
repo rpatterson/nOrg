@@ -21,7 +21,7 @@ var nOrg = (function nOrg() {
     }
 
     if (! this.hasOwnProperty("$basename")) {
-      this["$basename"] = '';
+      this["$basename"] = undefined;
     }
     if (this['NOrg-Required-Properties']) {
       this['NOrg-Required-Properties'].forEach(function setRequired(property) {
