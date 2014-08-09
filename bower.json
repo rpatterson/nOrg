@@ -10,7 +10,7 @@
   "homepage": "https://github.com/rpatterson/forgit",
   "dependencies": {
     "angular": "angular/angular.js#master",
-    "bootstrap": "bowerjs/bootstrap#2.3.2"
+    "bootstrap": "*"
   },
   "devDependencies": {
     "jasmine": "1.3.1"

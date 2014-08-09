@@ -3,7 +3,8 @@
   <head>
     <meta charset="utf-8">
     <title>N-Org Demo</title>
-    <link href="../../vendor/bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <link href="../../vendor/bootstrap/dist/css/bootstrap.css"
+          rel="stylesheet" />
     <link href="../nOrg.css" rel="stylesheet" />
 
     <link href="../../vendor/jasmine/lib/jasmine-core/jasmine.css" rel="stylesheet"
@@ -12,11 +13,11 @@
   <body class="norg" ui:keydown="keydown">
     <form class="form-inline container-fluid well well-large">
 
-      <div class="navbar navbar-fixed-top navbar-inverse">
-        <div class="navbar-inner">
-          <ul class="nav">
-            <a class="brand" href="#">nOrg Demo</a>
-          </ul>
+      <div class="navbar navbar-fixed-top navbar-inverse" role="navigation">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="#">nOrg Demo</a>
+          </div>
         </div>
       </div>
       

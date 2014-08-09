@@ -23,14 +23,20 @@ body.norg {
     width: 83px;
     text-align: left;
 }
-
+#norg-edit .btn input[type="radio"], #norg-edit .btn input[type="checkbox"] {
+    margin: 0em;
+}
+                          
 .norg-state .btn {
     width: 110px;
     text-align: left;
+    color: #333;
+    background-color: #fff;
+    border-color: #ccc;
 }
 
 .norg-properties {
-    margin-left: 326px;
+    margin-left: 346px;
 }
 .norg-properties-value {
     width: 306px;

@@ -433,7 +433,7 @@ var nOrg = (function nOrg() {
     object['Node-State-Classes'] = object['Node-State-Classes'] || {
       'TODO': 'warning',
       'DONE': 'success',
-      'CANCELED': 'success'};
+      'CANCELED': 'info'};
     object['Node-State-All'] = object['Node-State-All'] || [
       'TODO',
       'DONE',
