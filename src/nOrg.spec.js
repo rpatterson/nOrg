@@ -1,9 +1,11 @@
 // Globals
+var jasmine = jasmine;
 var describe = describe;
 var beforeEach = beforeEach;
 var afterEach = afterEach;
 var it = it;
 var expect = expect;
+var getJSONFixture = getJSONFixture;
 
 var nOrg = nOrg;
 describe('nOrg', function() {
@@ -11,31 +13,8 @@ describe('nOrg', function() {
   var json;
 
   beforeEach(function () {
-    json = {
-      "$children": [
-        {"$basename": "foo",
-         "Subject": "Foo Subject",
-         "Message-ID": "<1@foo.com>"},
-        {"$basename": "bar",
-         "Subject": "Bar Subject",
-         "Message-ID": "<2@foo.com>",
-         "Bar-Property": "Bar Property",
-         "Node-State": "TODO",
-         "$children": [
-           {"$basename": "corge",
-            "Subject": "Corge Node",
-            "Message-ID": "<3@foo.com>",
-            "Corge-Property": "Corge Property"},
-           {"$basename": "grault",
-            "Subject": "Grault Node",
-            "Message-ID": "<4@foo.com>"},
-           {"$basename": "garply",
-            "Subject": "Garply Node",
-            "Message-ID": "<5@foo.com>"}]},
-        {"$basename": "qux",
-         "Subject": "Qux Subject",
-         "Message-ID": "<6@foo.com>"}
-      ]};
+    jasmine.getJSONFixtures().fixturesPath = '..';
+    json = getJSONFixture('nOrg-nodes.json');
     nOrg.root = nOrg.newRoot(json);
     node = nOrg.root.$childHead.$nextSibling;
   });

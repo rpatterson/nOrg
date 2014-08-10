@@ -10,9 +10,9 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'])
 
     $scope.keydown = nOrg.keydown;
 
-    $http.get('../nOrg-nodes.json').success(function loadNode(node) {
+    $http.get('../nOrg-nodes.json').success(function loadNode(object) {
       // Load the initial nodes JSON
-      $scope.node = nOrg.newRoot(node);
+      $scope.node = nOrg.newRoot(object);
     });
 
     $scope.newProperty = function newProperty($event) {
