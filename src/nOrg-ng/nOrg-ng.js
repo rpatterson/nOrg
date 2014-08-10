@@ -51,11 +51,15 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'])
     };
   })
 
-  .directive('norgFocus', function norgFocus() {
+  .directive('norgFocus', function norgFocus($timeout) {
     return function (scope, element, attrs) {
       attrs.$observe('norgFocus', function (newValue) {
         if (newValue === 'true') {
-          element[0].focus();
+          // Use $timeout to avoid triggering a digest while one is in progress
+          // https://docs.angularjs.org/error/$rootScope/inprog#triggering-events-programmatically
+          $timeout(function setFocus() {
+            element[0].focus();
+          });
         }
       });
     };
