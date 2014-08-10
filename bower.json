@@ -9,7 +9,7 @@
   "license": "GPLv3",
   "homepage": "https://github.com/rpatterson/forgit",
   "dependencies": {
-    "angular": "angular/angular.js#master",
+    "angular": "*",
     "bootstrap": "*"
   },
   "devDependencies": {
