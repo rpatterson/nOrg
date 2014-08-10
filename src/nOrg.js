@@ -31,6 +31,11 @@ var nOrg = (function nOrg() {
       }, this);
     }
   };
+  Node.prototype.$$hashKey = function $$hashKey() {
+    // Use the UUID as a node hash, used in AngularJS
+    // Needed so that nodes don't inherit ancestor node $$hashKey
+    return this["Message-ID"];
+  };
   Node.prototype.newNode = function newNode(object) {
     if (! this.$root) {
       // root initialization
