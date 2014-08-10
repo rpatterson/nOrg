@@ -16,8 +16,14 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'])
     });
 
     $scope.newProperty = function newProperty($event) {
-      this.node.$cursorObject.$newProperty(this.property);
-      this.property = '';
+      var property = prompt('New property name', '');
+      if ($event) {
+        $event.stopPropagation();
+      }
+      if (! property) {
+        return;
+      }
+      this.node.$cursorObject.$newProperty(property, '', $event);
     };
 
     $scope.newSibling = function newSibling($event) {

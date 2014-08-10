@@ -71,6 +71,8 @@
               ng:class="{'text-muted':
                         ! node.$properties().length}">
         </span>
+        <span class="glyphicon glyphicon-plus-sign"
+              ng:click="newProperty($event)"></span>
         <span class="badge"
               ng:if="node.$properties().length"
               ng:bind="node.$properties().length"></span>
@@ -157,21 +159,6 @@
                ng:focus="node.cursorTo(node, index)"
                norg:focus="{{node.isCursor(node, index)}}" />
       </span>
-    </div>
-    <div class="row-fluid">
-      <div class="input-prepend">
-        <button type="button"
-                class="btn btn-default norg-add-property"
-                title="Add a new property"
-                ng:click="newProperty($event)">
-          <span class="glyphicon glyphicon-plus-sign"></span>
-        </button>
-        <input type="text"
-               class="norg-property"
-               name="Message-ID-{{node.toId()}}-new-property"
-               ng:model="property"
-               ui:keydown="{'enter': 'newProperty($event)'}" />
-      </div>
     </div>
   </div>
 

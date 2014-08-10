@@ -176,7 +176,7 @@ var nOrg = (function nOrg() {
       return (property[0] !== '$') && (required.indexOf(property) === -1);
       }).sort();
   };
-  Node.prototype.$newProperty = function $newProperty(property, value) {
+  Node.prototype.$newProperty = function $newProperty(property, value, event) {
     if (! property) {
       throw new Error("Must provide a property name!");
     }
@@ -499,6 +499,7 @@ var nOrg = (function nOrg() {
       'shift-left': 'node.applyCursor("promote", $event)',
 
       'shift-enter': 'newSibling($event)',
+      'ctrl-shift-enter': 'newProperty($event)',
       
       'ctrl-shift-191': 'openHelp()'
     }
