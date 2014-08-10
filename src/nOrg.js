@@ -313,6 +313,7 @@ var nOrg = (function nOrg() {
     var params = [event];
     if (event) {
       event.stopPropagation();
+      event.preventDefault();
     }
     if (args) {
       args.forEach(function pushParam(arg) {
