@@ -1,0 +1,29 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal">
+    <span aria-hidden="true">&times;</span>
+    <span class="sr-only">Close</span>
+  </button>
+  <h4 class="modal-title" id="norg-help-label">
+    Keyboard shortcuts
+  </h4>
+</div>
+<div class="modal-body">
+  <table class="table table-striped">
+    <caption>
+      Keyboard shortcuts operate on the item the cursor,
+      hightlighted left-most button.
+    </caption>
+    <thead>
+      <tr>
+        <th>Action</th>
+        <th>Keyboard Shortcut</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng:repeat="(key, action) in keydown">
+        <td ng:bind="action"></td>
+        <td ng:bind="key"></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -462,7 +462,9 @@ var nOrg = (function nOrg() {
       'shift-right': 'node.applyCursor("demote", $event)',
       'shift-left': 'node.applyCursor("promote", $event)',
 
-      'shift-enter': 'newSibling($event)'
+      'shift-enter': 'newSibling($event)',
+      
+      'ctrl-shift-191': 'openHelp()'
     }
   };
 }());

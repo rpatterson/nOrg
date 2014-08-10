@@ -10,7 +10,8 @@
     <link href="../../vendor/jasmine/lib/jasmine-core/jasmine.css"
           rel="stylesheet" />
   </head>
-  <body class="norg" ui:keydown="keydown">
+  <body class="norg" ng:controller="NOrgCtrl" ui:keydown="keydown">
+
     <form class="form-inline container-fluid well well-large">
 
       <div class="navbar navbar-fixed-top navbar-inverse" role="navigation">
@@ -18,13 +19,16 @@
           <div class="navbar-header">
             <a class="navbar-brand" href="#">nOrg Demo</a>
           </div>
+          <button
+             type="button" class="btn btn-default navbar-btn navbar-right"
+             ng:click="openHelp()">
+            Help
+          </button>
         </div>
       </div>
       
-      <ol id="norg-edit" class="norg-nodes"
-          ng:controller="NOrgCtrl">
+      <ol id="norg-edit" class="norg-nodes">
         <li ng:repeat="node in node.children()"
-            ui:keydown="keydown"
             id="Message-ID-{{node.toId()}}"
             class="norg-node row-fluid">
           <span ng:include="'nOrg-node.tpl.html'">
@@ -32,26 +36,6 @@
         </li>
       </ol>
     </form>
-
-    <div class="container-fluid well well-large">
-      <table class="table table-striped" ng:controller="NOrgKeyMap">
-        <caption>Keyboard shortcuts operate on the item the cursor,
-          hightlighted left-most button.
-        </caption>
-        <thead>
-          <tr>
-            <th>Action</th>
-            <th>Keyboard Shortcut</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr ng:repeat="(key, action) in keydown">
-            <td ng:bind="action"></td>
-            <td ng:bind="key"></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
 
     <!-- In production use:
          <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>

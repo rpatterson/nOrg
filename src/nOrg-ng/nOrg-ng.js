@@ -3,7 +3,9 @@ var angular = angular;
 var nOrg = nOrg;
 angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'])
 
-  .controller('NOrgCtrl', function NOrgCtrl($scope, $http, $log) {
+  .controller('NOrgCtrl', function NOrgCtrl($scope, $http, $modal, $log) {
+    var help;
+    
     $scope.controlName = 'NOrgCtrl';
 
     $scope.keydown = nOrg.keydown;
@@ -26,12 +28,21 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'])
         this.node.$cursorObject.newSibling();
       }
     };
-  })
-
-  .controller('NOrgKeyMap', function NOrgCtrl($scope, $http, $log) {
-    $scope.controlName = 'NOrgCtrl';
 
     $scope.keydown = nOrg.keydown;
+
+    $scope.openHelp = function openHelp() {
+      if (typeof help == "undefined") {
+        help = $modal.open({
+          templateUrl: 'nOrg-help.tpl.html',
+          controller: NOrgCtrl});
+        help.result.finally(function closeHelp() {
+          help = undefined;
+        });
+      } else {
+        help.dismiss();
+      };
+    };
   })
 
   .directive('norgFocus', function norgFocus() {
