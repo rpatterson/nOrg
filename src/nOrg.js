@@ -321,7 +321,7 @@ var nOrg = (function nOrg() {
       });
     }
     try {
-      return this.$cursorObject[method].apply(this, params);
+      return this.$cursorObject[method].apply(this.$cursorObject, params);
     } catch (exception) {
       return false;
     }
