@@ -44,8 +44,8 @@
                 ng:bind="node['Node-State']"></span>
         </a>
         <ul class="dropdown-menu">
-          <li ng:repeat="state in node.$nextStates()">
-            <a href="#"
+          <li role="presentation" ng:repeat="state in node.$nextStates()">
+            <a href="#" role="menuitem" tabindex="-1"
                ng:click="node['Node-State'] = state">
               <span class="badge"
                     ng:class="node['Node-State-Classes'][state]
