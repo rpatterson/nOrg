@@ -311,7 +311,9 @@ var nOrg = (function nOrg() {
   };
   Node.prototype.applyCursor = function applyCursor(method, event, args) {
     var params = [event];
-    event.stopPropagation();
+    if (event) {
+      event.stopPropagation();
+    }
     if (args) {
       args.forEach(function pushParam(arg) {
         params.push(arg);
