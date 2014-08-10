@@ -574,13 +574,15 @@ describe('nOrg', function() {
       var sibling = node.$childHead.newSibling();
       expect(sibling.$basename).toBeUndefined();
       expect(sibling['Subject']).toBeUndefined();
-      expect(sibling['Message-ID']).toBeUndefined();
+      expect(sibling['Message-ID']).toBeDefined();
+      expect(sibling['Message-ID']).toMatch(/<[^@]+@[^@]+>/);
       expect(sibling['Node-State']).toBeUndefined();
 
       var child = node.newChild();
       expect(child.$basename).toBeUndefined();
       expect(child['Subject']).toBeUndefined();
-      expect(child['Message-ID']).toBeUndefined();
+      expect(child['Message-ID']).toBeDefined();
+      expect(child['Message-ID']).toMatch(/<[^@]+@[^@]+>/);
       expect(child['Node-State']).toBeUndefined();
     });
   });

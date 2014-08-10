@@ -2,6 +2,18 @@ var nOrg = (function nOrg() {
   // Properties prefixed with '$' are considered internal to the
   // UI/porcelain and will not be written back to the server.
 
+  function generateMessageID() {
+    // Generate a globally unique Message-ID
+    var email = 'TODO@TODO.org'.split('@', 2);
+    var now = new Date();
+    var random = Math.random();
+    // From http://www.jwz.org/doc/mid.html#3
+    return (
+      "<" + email[0] + "+" +
+        now.toISOString() + "+" + random.toString(36).slice(2) +
+        "@" + email[1] + ">");
+  }
+
   function Node(object) {
     this.init(object);
   }
@@ -20,6 +32,9 @@ var nOrg = (function nOrg() {
       this.extend(object);
     }
 
+    if (! this.hasOwnProperty("Message-ID")) {
+      this["Message-ID"] = generateMessageID();
+    }
     if (! this.hasOwnProperty("$basename")) {
       this["$basename"] = undefined;
     }
@@ -453,6 +468,7 @@ var nOrg = (function nOrg() {
 
 
   return {
+    generateMessageID: generateMessageID,
     Node: Node,
     newRoot: newRoot,
     root: newRoot(),
