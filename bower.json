@@ -10,7 +10,9 @@
   "homepage": "https://github.com/rpatterson/forgit",
   "dependencies": {
     "angular": "*",
-    "bootstrap": "*"
+    "bootstrap": "*",
+    "angular-bootstrap": "*",
+    "angular-ui-utils": "bower-keypress"
   },
   "devDependencies": {
     "jasmine": "1.3.1"
