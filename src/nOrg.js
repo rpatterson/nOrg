@@ -155,6 +155,10 @@ var nOrg = (function nOrg() {
     this.$propertiesCollapsed = false;
     this.cursorTo(this, this.$properties().indexOf(property));
   };
+  Node.prototype.$changeState = function $changeState(state) {
+    this['Node-State'] = state;
+    this.$stateOpened = false;
+  };
   Node.prototype.$nextStates = function $nextStates(state) {
     if (! state) {
       state = this['Node-State'];

@@ -34,8 +34,9 @@
         <span class="badge"
               ng:bind="{{node.$length || ''}}"></span>
       </button>
-      <div class="btn-group norg-state">
-        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+      <div class="btn-group norg-state"
+           dropdown="dropdown" is-open="node.$stateOpened">
+        <a class="btn dropdown-toggle" href="#">
           <span class="caret"></span>
           <span class="badge"
                 ng:class="node['Node-State-Classes'][node['Node-State']]
@@ -46,7 +47,7 @@
         <ul class="dropdown-menu">
           <li role="presentation" ng:repeat="state in node.$nextStates()">
             <a href="#" role="menuitem" tabindex="-1"
-               ng:click="node['Node-State'] = state">
+               ng:click="node.$changeState(state)">
               <span class="badge"
                     ng:class="node['Node-State-Classes'][state]
                               && 'alert-' + node['Node-State-Classes'][state]"
