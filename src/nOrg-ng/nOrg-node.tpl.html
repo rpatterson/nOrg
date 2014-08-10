@@ -54,6 +54,11 @@
                     ng:bind="state"></span>
             </a>
           </li>
+          <li role="presentation" class="divider"></li>
+          <li role="presentation">
+            <a role="menuitem" tabindex="-1" href="#"
+               ng:click="node.$changeState(state)"><em>No State</em></a>
+          </li>
         </ul>
       </div>
       <button type="button"
