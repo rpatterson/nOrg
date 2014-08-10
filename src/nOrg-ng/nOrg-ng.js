@@ -25,7 +25,7 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'])
         $event.target.parentElement.parentElement.parentElement
           .lastElementChild.firstElementChild.lastElementChild.focus();
       } else {
-        this.node.$cursorObject.newSibling();
+        this.node.$cursorObject.newSibling({}, $event);
       }
     };
 

@@ -88,6 +88,11 @@ var nOrg = (function nOrg() {
   };
   Node.prototype.newChild = function newChild(object, event) {
     var child = this.newNode(object);
+
+    if (event) {
+      event.stopPropagation();
+    }
+
     this.pushChild(child);
     if (event) {
       this.cursorTo(child);
@@ -97,8 +102,12 @@ var nOrg = (function nOrg() {
   Node.prototype.newChildEach = function newChildEach(object, index, array) {
     this.newChild(object);
   };
-  Node.prototype.newSibling = function newSibling(event, object) {
+  Node.prototype.newSibling = function newSibling(object, event) {
     var child = this.$parent.newNode(object);
+
+    if (event) {
+      event.stopPropagation();
+    }
 
     child.$nextSibling = this.$nextSibling;
     child.$prevSibling = this;

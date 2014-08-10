@@ -539,7 +539,8 @@ describe('nOrg', function() {
     it('adds a sibling to the middle', function () {
       var nextSibling = node.$nextSibling;
       var prevSibling = node;
-      node = prevSibling.newSibling({$basename: "baz"}, {});
+      node = prevSibling.newSibling(
+        {$basename: "baz"}, new KeyboardEvent("keydown"));
 
       expect(node.$parent.$basename).toBe(prevSibling.$parent.$basename);
 
@@ -555,7 +556,8 @@ describe('nOrg', function() {
     });
     it('adds a sibling to the end', function () {
       var prevSibling = node.$parent.$childTail;
-      node = prevSibling.newSibling({$basename: "baz"}, {});
+      node = prevSibling.newSibling(
+        {$basename: "baz"}, new KeyboardEvent("keydown"));
 
       expect(node.$parent.$basename).toBe(prevSibling.$parent.$basename);
 
