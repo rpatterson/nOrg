@@ -537,12 +537,14 @@ describe('nOrg', function() {
 
   describe('adding nodes:', function () {
     it('adds a sibling to the middle', function () {
+      var length = node.$parent.$length;
       var nextSibling = node.$nextSibling;
       var prevSibling = node;
       node = prevSibling.newSibling(
         {$basename: "baz"}, new KeyboardEvent("keydown"));
 
       expect(node.$parent.$basename).toBe(prevSibling.$parent.$basename);
+      expect(node.$parent.$length).toBe(length + 1);
 
       expect(node.$nextSibling.$basename).toBe(nextSibling.$basename);
       expect(nextSibling.$prevSibling.$basename).toBe(node.$basename);

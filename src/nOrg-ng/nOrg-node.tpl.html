@@ -32,7 +32,8 @@
                         'muted': ! node.$length}">
         </span>
         <span class="badge"
-              ng:bind="{{node.$length || ''}}"></span>
+              ng:if="node.$length"
+              ng:bind="node.$length"></span>
       </button>
       <div class="btn-group norg-state"
            dropdown="dropdown" is-open="node.$stateOpened">
@@ -71,7 +72,8 @@
                         ! node.$properties().length}">
         </span>
         <span class="badge"
-              ng:bind="{{node.$properties().length || ''}}"></span>
+              ng:if="node.$properties().length"
+              ng:bind="node.$properties().length"></span>
       </button>
     </span>
 
