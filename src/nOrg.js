@@ -309,23 +309,6 @@ var nOrg = (function nOrg() {
 
     return object;
   };
-  Node.prototype.applyCursor = function applyCursor(method, event, args) {
-    var params = [event];
-    if (event) {
-      event.stopPropagation();
-      event.preventDefault();
-    }
-    if (args) {
-      args.forEach(function pushParam(arg) {
-        params.push(arg);
-      });
-    }
-    try {
-      return this.$cursorObject[method].apply(this.$cursorObject, params);
-    } catch (exception) {
-      return false;
-    }
-  };
   Node.prototype.cursorDown = function cursorDown(event) {
     var object = this.$cursorObject;
     if (event) {
@@ -483,26 +466,6 @@ var nOrg = (function nOrg() {
     generateMessageID: generateMessageID,
     Node: Node,
     newRoot: newRoot,
-    root: newRoot(),
-
-    keydown: {
-      'tab': 'node.toggle($event)',
-      'shift-tab': 'node.toggleProperties($event)',
-
-      'down': 'node.cursorDown($event)',
-      'up': 'node.cursorUp($event)',    
-      'right': 'node.cursorRight($event)', 
-      'left': 'node.cursorLeft($event)',   
-
-      'shift-down': 'node.applyCursor("moveDown", $event)',
-      'shift-up': 'node.applyCursor("moveUp", $event)',
-      'shift-right': 'node.applyCursor("demote", $event)',
-      'shift-left': 'node.applyCursor("promote", $event)',
-
-      'shift-enter': 'newSibling($event)',
-      'ctrl-shift-enter': 'newProperty($event)',
-      
-      'ctrl-shift-191': 'openHelp()'
-    }
+    root: newRoot()
   };
 }());

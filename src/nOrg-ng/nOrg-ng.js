@@ -8,8 +8,6 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'])
     
     $scope.controlName = 'NOrgCtrl';
 
-    $scope.keydown = nOrg.keydown;
-
     $http.get('../nOrg-nodes.json').success(function loadNode(object) {
       // Load the initial nodes JSON
       $scope.node = nOrg.newRoot(object);
@@ -32,10 +30,45 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'])
           .lastElementChild.firstElementChild.lastElementChild.focus();
       } else {
         this.node.$cursorObject.newSibling({}, $event);
+ 
+    $scope.applyCursor = function applyCursor(method, $event, args) {
+      var params = [$event];
+      if ($event) {
+        $event.stopPropagation();
+        $event.preventDefault();
       }
+      if (args) {
+        args.forEach(function pushParam(arg) {
+          params.push(arg);
+        });
+      }
+      try {
+        this.node.$cursorObject[method].apply(this.node.$cursorObject, params);
+      } catch (exception) {
+        return false;
+      }
+      return true;
     };
 
-    $scope.keydown = nOrg.keydown;
+    $scope.keydown = {
+      'tab': 'node.toggle($event)',
+      'shift-tab': 'node.toggleProperties($event)',
+
+      'down': 'node.cursorDown($event)',
+      'up': 'node.cursorUp($event)',    
+      'right': 'node.cursorRight($event)', 
+      'left': 'node.cursorLeft($event)',   
+
+      'shift-down': 'applyCursor("moveDown", $event)',
+      'shift-up': 'applyCursor("moveUp", $event)',
+      'shift-right': 'applyCursor("demote", $event)',
+      'shift-left': 'applyCursor("promote", $event)',
+
+      'shift-enter': 'newSibling($event)',
+      'ctrl-shift-enter': 'newProperty($event)',
+      
+      'ctrl-shift-191': 'openHelp()'
+    };
 
     $scope.openHelp = function openHelp() {
       if (typeof help == "undefined") {
