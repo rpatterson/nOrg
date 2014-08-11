@@ -1,5 +1,6 @@
 /** nOrg module */
 var nOrg = (function nOrg() {
+  var defaults;
 
   /** Generate a globally unique Message-ID */
   function generateMessageID() {
@@ -58,12 +59,6 @@ var nOrg = (function nOrg() {
   };
   /** Create a new node as a child of this node and initialize from object */
   Node.prototype.newNode = function newNode(object) {
-    if (! this.$root) {
-      // root initialization
-      // Trees require a root, so the first node without a root *is* root
-      this.$root = this;
-    }
-
     function Node(object) {
       this.init(object);
     }
@@ -73,7 +68,7 @@ var nOrg = (function nOrg() {
     child.$parent = this;
 
     // Cursor initialization
-    if (! this.$cursorObject) {
+    if (typeof this.$root != "undefined" && ! this.$cursorObject) {
       // Cursor defaults to first node
       this.cursorTo(child);
     }
@@ -132,6 +127,13 @@ var nOrg = (function nOrg() {
       this.cursorTo(child);
     }
     return child;
+  };
+  /** Root a tree of nodes that inherit from this node as defaults */
+  Node.prototype.newRoot = function newRoot(object) {
+    var root = this.newNode(object);
+    root.$root = root;
+    root.cursorTo(root.$childHead);
+    return root;
   };
   /** Remove this node from it's parent */
   Node.prototype.popFromParent = function popFromParent() {
@@ -238,7 +240,7 @@ var nOrg = (function nOrg() {
   /** Promote this node to the next sibling of the parent if appropriate */
   Node.prototype.promote = function promote() {
     var $prevSibling = this.$parent;
-    if (! $prevSibling.$parent) {
+    if ($prevSibling == this.$root) {
       throw new Error("Cannot promote nodes without parents!");
     }
 
@@ -405,7 +407,7 @@ var nOrg = (function nOrg() {
              (! node.$collapsed)) {
         node = node.$childTail;
       }
-    } else if (node.$parent.$parent) {
+    } else if (node.$parent !== node.$root) {
       node = node.$parent;
     } else {
       return false;
@@ -450,7 +452,7 @@ var nOrg = (function nOrg() {
 
     if (this.$cursorIndex !== undefined) {
       return this.cursorTo(this.$cursorObject);
-    } else if (this.$cursorObject.$parent.$parent) {
+    } else if (this.$cursorObject.$parent != this.$cursorObject.$root) {
       return this.cursorTo(this.$cursorObject.$parent);
     }
     return false;
@@ -484,29 +486,21 @@ var nOrg = (function nOrg() {
   };
 
 
-  function newRoot(object) {
-    object = object || {};
-    object['NOrg-Required-Properties'] = object[
-      'NOrg-Required-Properties'] || ['Message-ID',
-                                      'Subject',
-                                      'Node-State'];
-    object['Node-State-Classes'] = object['Node-State-Classes'] || {
+  defaults = new Node({
+    'NOrg-Required-Properties': ['Message-ID', 'Subject', 'Node-State'],
+    'Node-State-Classes': {
       'TODO': 'warning',
       'DONE': 'success',
-      'CANCELED': 'info'};
-    object['Node-State-All'] = object['Node-State-All'] || [
+      'CANCELED': 'info'},
+    'Node-State-All': [
       'TODO',
       'DONE',
-      'CANCELED'];
-    var root = new Node(object);
-    return root;
-  }
-
+      'CANCELED']
+  });
 
   return {
     generateMessageID: generateMessageID,
     Node: Node,
-    newRoot: newRoot,
-    root: newRoot()
+    defaults: defaults
   };
 }());

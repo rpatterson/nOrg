@@ -10,7 +10,7 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'])
 
     $http.get('../nOrg-nodes.json').success(function loadNode(object) {
       // Load the initial nodes JSON
-      $scope.node = nOrg.newRoot(object);
+      $scope.node = nOrg.defaults.newRoot(object);
     });
 
     $scope.newSibling = function newSibling($event) {
