@@ -99,5 +99,3 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'])
       });
     };
   });
-
-//NOrgCtrl.$inject = ['$scope', '$http'];

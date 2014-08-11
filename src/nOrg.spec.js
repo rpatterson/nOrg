@@ -162,7 +162,7 @@ describe('nOrg', function() {
   describe('node state:', function () {
     it("doesn't inherit node state", function () {
       // node without state
-      node = root.$childHead.$nextSibling; // node with state and children
+      node = root.$childHead.$nextSibling;
       expect(node.$childHead["Node-State"]).toBeUndefined();
     });
     it("has default states", function () {
