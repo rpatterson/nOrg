@@ -162,8 +162,7 @@
     </div>
   </div>
 
-  <ol id="children" class="norg-nodes" collapse="node.$collapsed"
-      ng:class="{'in': ! node.$collapsed}">
+  <ol id="children" class="norg-nodes" collapse="node.$collapsed">
     <li ng:repeat="node in node.children()"
         ui:keydown="keydown"
         id="Message-ID-{{node.toId()}}"

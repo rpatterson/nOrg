@@ -208,8 +208,8 @@ var nOrg = (function nOrg() {
     }
 
     this.popFromParent();
-    parent.$collapsed = false;
     parent.pushChild(this);
+    parent.$collapsed = false;
   };
 
   Node.prototype.promote = function promote() {
