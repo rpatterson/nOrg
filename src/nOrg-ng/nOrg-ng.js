@@ -13,6 +13,15 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'])
       $scope.node = nOrg.newRoot(object);
     });
 
+    $scope.newSibling = function newSibling($event) {
+      if (this.node.$cursorIndex !== undefined) {
+        $event.target.parentElement.parentElement.parentElement
+          .lastElementChild.firstElementChild.lastElementChild.focus();
+      } else {
+        this.node.$cursorObject.newSibling({}, $event);
+      }
+    };
+
     $scope.newProperty = function newProperty($event) {
       var property = prompt('New property name', '');
       if ($event) {
@@ -23,13 +32,6 @@ angular.module('nOrg', ['ui.bootstrap', 'ui.keypress'])
       }
       this.node.$cursorObject.$newProperty(property, '', $event);
     };
-
-    $scope.newSibling = function newSibling($event) {
-      if (this.node.$cursorIndex !== undefined) {
-        $event.target.parentElement.parentElement.parentElement
-          .lastElementChild.firstElementChild.lastElementChild.focus();
-      } else {
-        this.node.$cursorObject.newSibling({}, $event);
  
     $scope.applyCursor = function applyCursor(method, $event, args) {
       var params = [$event];
