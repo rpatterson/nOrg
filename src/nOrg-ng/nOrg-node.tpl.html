@@ -7,7 +7,7 @@
               ng:class="{'btn-primary': node.isCursor(),
                         'btn-default': ! node.isCursor()}"
               ng:focus="node.cursorTo()">
-        <span class="icon-th">
+        <span class="glyphicon glyphicon-th">
         </span>
       </button>
       <button type="button"
@@ -23,32 +23,42 @@
               ng:disabled="! node.$length"
               ng:click="node.$collapsed = !node.$collapsed"
               ng:focus="node.cursorTo()">
-        <span ng:class="{'icon-chevron-down': node.$length && node.$collapsed,
-                        'icon-chevron-up': !(node.$length && node.$collapsed),
-                        'icon-chevron-up': !(node.$length && node.$collapsed),
+        <span ng:class="{'glyphicon glyphicon-chevron-down':
+                        node.$length && node.$collapsed,
+                        'glyphicon glyphicon-chevron-up':
+                        !(node.$length && node.$collapsed),
+                        'glyphicon glyphicon-chevron-up':
+                        !(node.$length && node.$collapsed),
                         'muted': ! node.$length}">
         </span>
-        <span class="badge badge-inverse"
-              ng:bind="{{node.$length || ''}}"></span>
+        <span class="badge"
+              ng:if="node.$length"
+              ng:bind="node.$length"></span>
       </button>
-      <div class="btn-group norg-state">
-        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+      <div class="btn-group norg-state"
+           dropdown="dropdown" is-open="node.$stateOpened">
+        <a class="btn dropdown-toggle" href="#">
           <span class="caret"></span>
           <span class="badge"
                 ng:class="node['Node-State-Classes'][node['Node-State']]
-                          && 'badge-' +
+                          && 'alert-' +
                           node['Node-State-Classes'][node['Node-State']]"
                 ng:bind="node['Node-State']"></span>
         </a>
         <ul class="dropdown-menu">
-          <li ng:repeat="state in node.$nextStates()">
-            <a href="#"
-               ng:click="node['Node-State'] = state">
+          <li role="presentation" ng:repeat="state in node.$nextStates()">
+            <a href="#" role="menuitem" tabindex="-1"
+               ng:click="node.$changeState(state)">
               <span class="badge"
                     ng:class="node['Node-State-Classes'][state]
-                              && 'badge-' + node['Node-State-Classes'][state]"
+                              && 'alert-' + node['Node-State-Classes'][state]"
                     ng:bind="state"></span>
             </a>
+          </li>
+          <li role="presentation" class="divider"></li>
+          <li role="presentation">
+            <a role="menuitem" tabindex="-1" href="#"
+               ng:click="node.$changeState(state)"><em>No State</em></a>
           </li>
         </ul>
       </div>
@@ -57,12 +67,15 @@
               title="Expand/Collapse properties/fields"
               ng:click="node.$propertiesCollapsed = !node.$propertiesCollapsed"
               ng:focus="node.cursorTo()">
-        <span class="icon-th-list"
+        <span class="glyphicon glyphicon-th-list"
               ng:class="{'text-muted':
                         ! node.$properties().length}">
         </span>
+        <span class="glyphicon glyphicon-plus-sign"
+              ng:click="newProperty($event)"></span>
         <span class="badge"
-              ng:bind="{{node.$properties().length || ''}}"></span>
+              ng:if="node.$properties().length"
+              ng:bind="node.$properties().length"></span>
       </button>
     </span>
 
@@ -76,8 +89,8 @@
       <button type="button"
               class="btn btn-default norg-add-node"
               title="Add a new node"
-              ng:click="node.newSibling($event, {})">
-        <span class="icon-plus"></span>
+              ng:click="node.newSibling({}, $event)">
+        <span class="glyphicon glyphicon-plus"></span>
       </button>
       <button type="button"
               class="btn btn-default promote"
@@ -85,7 +98,7 @@
               ng:disabled="! node.$parent.$parent"
               ng:click="node.promote()"
               ng:focus="node.cursorTo()">
-        <span class="icon-arrow-left"
+        <span class="glyphicon glyphicon-arrow-left"
               ng:class="{'muted': ! node.$parent.$parent}"></span>
       </button>
       <button type="button"
@@ -94,7 +107,7 @@
               ng:disabled="! node.$prevSibling"
               ng:click="node.demote()"
               ng:focus="node.cursorTo()">
-        <span class="icon-arrow-right"
+        <span class="glyphicon glyphicon-arrow-right"
               ng:class="{'muted': ! node.$prevSibling}"></span>
       </button>
       <button type="button"
@@ -103,7 +116,7 @@
               ng:disabled="! node.$prevSibling"
               ng:click="node.moveUp()"
               ng:focus="node.cursorTo()">
-        <span class="icon-arrow-up"
+        <span class="glyphicon glyphicon-arrow-up"
               ng:class="{'muted': ! node.$prevSibling}"></span>
       </button>
       <button type="button"
@@ -112,7 +125,7 @@
               ng:disabled="! node.$nextSibling"
               ng:click="node.moveDown()"
               ng:focus="node.cursorTo()">
-        <span class="icon-arrow-down"
+        <span class="glyphicon glyphicon-arrow-down"
               ng:class="{'muted': ! node.$nextSibling}"></span>
       </button>
     </span>
@@ -123,14 +136,14 @@
        collapse="node.$propertiesCollapsed">
     <div class="row-fluid"
          ng:repeat="(index, property) in node.$properties()">
-      <div class="input-prepend">
+      <span class="input-prepend">
         <button type="button"
                 class="btn norg-cursor-button"
                 ng:class="{'btn-primary': node.isCursor(node, index),
                           'btn-default': ! node.isCursor(node, index)}"
                 title="Node cursor"
                 ng:click="node.cursorTo(node, index)">
-          <span class="icon-th">
+          <span class="glyphicon glyphicon-th">
           </span>
         </button>
         <input type="text" required="true" disabled="true"
@@ -138,34 +151,18 @@
                name="Message-ID-{{node.toId()}}-property-name-{{property}}"
                ng:disabled="property"
                ng:model="property" />
-      </div>
-      <div class="input-prepend input-append">
+      </span>
+      <span class="input-prepend input-append">
         <input type="text" class="norg-properties-value input-xlarge"
                name="Message-ID-{{node.toId()}}-property-{{property}}"
                ng:model="node[property]"
                ng:focus="node.cursorTo(node, index)"
                norg:focus="{{node.isCursor(node, index)}}" />
-      </div>
-    </div>
-    <div class="row-fluid">
-      <div class="input-prepend">
-        <button type="button"
-                class="btn btn-default norg-add-property"
-                title="Add a new property"
-                ng:click="newProperty($event)">
-          <span class="icon-plus-sign"></span>
-        </button>
-        <input type="text"
-               class="norg-property"
-               name="Message-ID-{{node.toId()}}-new-property"
-               ng:model="property"
-               ui:keydown="{'enter': 'newProperty($event)'}" />
-      </div>
+      </span>
     </div>
   </div>
 
-  <ol id="children" class="norg-nodes" collapse="node.$collapsed"
-      ng:class="{'in': ! node.$collapsed}">
+  <ol id="children" class="norg-nodes" collapse="node.$collapsed">
     <li ng:repeat="node in node.children()"
         ui:keydown="keydown"
         id="Message-ID-{{node.toId()}}"

@@ -20,8 +20,4 @@ describe('N-Org', function() {
   it('should exist', inject(function () {
     expect(NOrgNodeCtrl).toBeTruthy();
   }));
-
-  describe('cursor:', function () {
-
-  });
 });
