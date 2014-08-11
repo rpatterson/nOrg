@@ -133,7 +133,7 @@
 
   <div id="Message-ID-{{node.toId()}}-properties"
        class="norg-properties"
-       collapse="node.$propertiesCollapsed">
+       ng:hide="node.$propertiesCollapsed">
     <div class="row-fluid"
          ng:repeat="(index, property) in node.$properties()">
       <span class="input-prepend">
@@ -162,7 +162,7 @@
     </div>
   </div>
 
-  <ol id="children" class="norg-nodes" collapse="node.$collapsed">
+  <ol id="children" class="norg-nodes" ng:hide="node.$collapsed">
     <li ng:repeat="node in node.children()"
         ui:keydown="keydown"
         id="Message-ID-{{node.toId()}}"
