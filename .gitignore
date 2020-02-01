@@ -1,22 +1,20 @@
-lib-cov
-*.seed
-*.log
-*.csv
-*.dat
-*.out
-*.pid
-*.gz
+## editors
+/.idea
+/.vscode
 
-pids
-logs
-results
+## system files
+.DS_Store
 
-npm-debug.log
+## npm
+/node_modules/
+/npm-debug.log
 
-*.sw*
-*~
-build/
-bin/
-node_modules/
-vendor/
-npm-debug.log
+## testing
+/coverage/
+
+## temp folders
+/.tmp/
+
+# build
+/_site/
+/dist/

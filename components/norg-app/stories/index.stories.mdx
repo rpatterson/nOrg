@@ -1,0 +1,55 @@
+import { Story, Preview, Meta, Props, html } from '@open-wc/demoing-storybook';
+
+import '../norg-app.js';
+
+<Meta 
+  title="NorgApp"
+  parameters={{
+    component: "norg-app",
+    options: { selectedPanel: "storybookjs/knobs/panel" }
+  }}
+/>
+
+# NorgApp
+
+A component for...
+
+## Features:
+
+- a
+- b
+- ...
+
+## How to use
+
+### Installation
+
+```bash
+yarn add norg-app
+```
+
+```js
+import 'norg-app/norg-app.js';
+```
+
+<Preview withToolbar>
+  <Story name="Simple">
+    {html`
+      <norg-app></norg-app>
+    `}
+  </Story>
+</Preview>
+
+## API
+
+<Props of="norg-app" />
+
+## Variations
+
+###### Custom Title
+
+<Story name="Custom Title">
+  {html`
+    <norg-app .title=${'Hello World'}></norg-app>
+  `}
+</Story>

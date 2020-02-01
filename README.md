@@ -1,12 +1,24 @@
-nOrg
-====
+<p align="center">
+  <img width="200" src="https://open-wc.org/hero.png"></img>
+</p>
 
-Task outline organizing tool based on org-node
+## Open-wc Starter App
 
-So far there are the beginnings of a well-tested JS library for
-manipulating a node tree and a prototype UI built on
-[AngularJS](http://angularjs.org/).  The UX is very rough at the
-moment and mostly just serves to verify model manipulations.
+[![Built with open-wc recommendations](https://img.shields.io/badge/built%20with-open--wc-blue.svg)](https://github.com/open-wc)
 
-See the [demo](http://rpatterson.github.io/nOrg/src/nOrg-ng/) on
-[github pages](https://help.github.com/categories/20/articles).
+## Quickstart
+
+To get started:
+
+```sh
+npm init @open-wc
+# requires node 10 & npm 6 or higher
+```
+
+## Scripts
+
+- `start` runs your app for development, reloading on file changes
+- `start:build` runs your app after it has been built using the build command
+- `build` builds your app and outputs it in your `dist` directory
+- `test` runs your test suite with Karma
+- `lint` runs the linter for your project

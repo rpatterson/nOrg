@@ -17,6 +17,11 @@ all: var/log/yarn-install.log
 run: all
 	. ~/.nvm/nvm.sh && nvm exec yarn start
 
+.PHONY: test
+test: all
+	yarn run format
+	yarn run test --color
+
 .PHONY: clean
 clean:
 	rm -r node_modules
@@ -26,8 +31,8 @@ clean:
 var/log/yarn-install.log: package.json
 	. ~/.nvm/nvm.sh && nvm exec yarn install | tee "$(@)"
 
-var/log/yarn-install.log: package.json
-	. ~/.nvm/nvm.sh && nvm exec yarn install | tee "$(@)"
+package.json: ~/.nvm/versions/node/$(NODE_VERSION)/bin/npm
+	. ~/.nvm/nvm.sh && nvm exec npm init @open-wc
 
 ~/.nvm/nvm.sh:
 	curl -o- \
