@@ -1,22 +1,18 @@
 /** nOrg module */
-var nOrg = (function nOrg() {
-  var defaults;
-
+// eslint-disable-next-line no-unused-vars
+const nOrg = (function nOrg() {
   /** Generate a globally unique Message-ID */
   function generateMessageID() {
-    var email = 'TODO@TODO.org'.split('@', 2);
-    var now = new Date();
-    var random = Math.random();
+    const email = 'TODO@TODO.org'.split('@', 2);
+    const now = new Date();
+    const random = Math.random();
     // From http://www.jwz.org/doc/mid.html#3
-    return (
-      "<" + email[0] + "+" +
-        now.toISOString() + "+" + random.toString(36).slice(2) +
-        "@" + email[1] + ">");
+    return `<${email[0]}+${now.toISOString()}+${random.toString(36).slice(2)}@${email[1]}>`;
   }
 
   /**
    * Construct a new node, optionally initialize properties from an object.
-   * 
+   *
    * Properties prefixed with '$' are considered internal to the UI/porcelain
    * and will not be written back to the server.
    */
@@ -37,15 +33,15 @@ var nOrg = (function nOrg() {
       this.extend(object);
     }
 
-    if (! this.hasOwnProperty("Message-ID")) {
-      this["Message-ID"] = generateMessageID();
+    if (!{}.hasOwnProperty.call(this, 'Message-ID')) {
+      this['Message-ID'] = generateMessageID();
     }
-    if (! this.hasOwnProperty("$basename")) {
-      this["$basename"] = undefined;
+    if (!{}.hasOwnProperty.call(this, '$basename')) {
+      this.$basename = undefined;
     }
     if (this['NOrg-Required-Properties']) {
       this['NOrg-Required-Properties'].forEach(function setRequired(property) {
-        if (! this.hasOwnProperty(property)) {
+        if (!{}.hasOwnProperty.call(this, property)) {
           this[property] = undefined;
         }
       }, this);
@@ -55,20 +51,20 @@ var nOrg = (function nOrg() {
   Node.prototype.$$hashKey = function $$hashKey() {
     // Used in AngularJS
     // Needed so that nodes don't inherit ancestor node $$hashKey
-    return this["Message-ID"];
+    return this['Message-ID'];
   };
   /** Create a new node as a child of this node and initialize from object */
   Node.prototype.newNode = function newNode(object) {
+    // eslint-disable-next-line no-shadow
     function Node(object) {
       this.init(object);
     }
-    var child;
     Node.prototype = this;
-    child = new Node(object);
+    const child = new Node(object);
     child.$parent = this;
 
     // Cursor initialization
-    if (typeof this.$root != "undefined" && ! this.$cursorObject) {
+    if (typeof this.$root !== 'undefined' && !this.$cursorObject) {
       // Cursor defaults to first node
       this.cursorTo(child);
     }
@@ -77,19 +73,21 @@ var nOrg = (function nOrg() {
   };
   /** Append the child node to this parent node as the last child */
   Node.prototype.pushChild = function pushChild(child) {
+    // eslint-disable-next-line no-param-reassign
     child.$parent = this;
     if (this.$childHead) {
+      // eslint-disable-next-line no-param-reassign
       child.$prevSibling = this.$childTail;
       this.$childTail.$nextSibling = child;
     } else {
       this.$childHead = child;
     }
     this.$childTail = child;
-    this.$length++;
+    this.$length += 1;
   };
   /** Create a new node and append it as a child to this parent node */
   Node.prototype.newChild = function newChild(object, event) {
-    var child = this.newNode(object);
+    const child = this.newNode(object);
 
     if (event) {
       event.stopPropagation();
@@ -102,12 +100,12 @@ var nOrg = (function nOrg() {
     return child;
   };
   /** Array.forEach function for creating multiple children for this parent */
-  Node.prototype.newChildEach = function newChildEach(object, index, array) {
+  Node.prototype.newChildEach = function newChildEach(object) {
     this.newChild(object);
   };
   /** Create a new node and add it as the next sibling to this node */
   Node.prototype.newSibling = function newSibling(object, event) {
-    var child = this.$parent.newNode(object);
+    const child = this.$parent.newNode(object);
 
     if (event) {
       event.stopPropagation();
@@ -121,7 +119,7 @@ var nOrg = (function nOrg() {
       this.$parent.$childTail = child;
     }
     this.$nextSibling = child;
-    this.$parent.$length++;
+    this.$parent.$length += 1;
 
     if (event) {
       this.cursorTo(child);
@@ -130,14 +128,14 @@ var nOrg = (function nOrg() {
   };
   /** Root a tree of nodes that inherit from this node as defaults */
   Node.prototype.newRoot = function newRoot(object) {
-    var root = this.newNode(object);
+    const root = this.newNode(object);
     root.$root = root;
     root.cursorTo(root.$childHead);
     return root;
   };
   /** Remove this node from it's parent */
   Node.prototype.popFromParent = function popFromParent() {
-    this.$parent.$length--;
+    this.$parent.$length -= 1;
 
     if (this.$prevSibling) {
       this.$prevSibling.$nextSibling = this.$nextSibling;
@@ -154,15 +152,15 @@ var nOrg = (function nOrg() {
     this.$prevSibling = undefined;
     this.$nextSibling = undefined;
   };
-  /** 
+  /**
    * Return this node's children as an array
    *
    * If possible, use the $childHead and $nextSibling directly
    * to iterate over the children in order instead of this method.
    */
   Node.prototype.children = function children() {
-    var results = [];
-    var child = this.$childHead;
+    const results = [];
+    let child = this.$childHead;
     while (child) {
       results.push(child);
       child = child.$nextSibling;
@@ -171,37 +169,36 @@ var nOrg = (function nOrg() {
   };
   /** Set this node's properties from the object */
   Node.prototype.extend = function extend(object) {
-    for (var property in object) {
+    for (const [property, value] of Object.entries(object)) {
       if (property !== '$children') {
-        this[property] = object[property];
+        this[property] = value;
       }
     }
     if (object.$children) {
       object.$children.forEach(this.newChildEach, this);
     }
   };
-  /** 
-   * Generate a valid HTML ID and CSS selector from the Message-ID 
+  /**
+   * Generate a valid HTML ID and CSS selector from the Message-ID
    *
    * The leading and trailing "<>" characters are stripped from the Message-ID
    * and encoded using base64.
    */
   Node.prototype.toId = function toId() {
-    return window.btoa(this["Message-ID"]).slice(0, -1);
+    return window.btoa(this['Message-ID']).slice(0, -1);
   };
-
 
   /** Return an array of all this node's non-required property names */
   Node.prototype.$properties = function $properties() {
-    var required = this['NOrg-Required-Properties'];
-    return Object.keys(this).filter(function filterProperties(property) {
-      return (property[0] !== '$') && (required.indexOf(property) === -1);
-      }).sort();
+    const required = this['NOrg-Required-Properties'];
+    return Object.keys(this)
+      .filter(property => property[0] !== '$' && required.indexOf(property) === -1)
+      .sort();
   };
   /** Add a new property to this node */
-  Node.prototype.$newProperty = function $newProperty(property, value, event) {
-    if (! property) {
-      throw new Error("Must provide a property name!");
+  Node.prototype.$newProperty = function $newProperty(property, value) {
+    if (!property) {
+      throw new Error('Must provide a property name!');
     }
     this[property] = value;
     this.$propertiesCollapsed = false;
@@ -214,22 +211,20 @@ var nOrg = (function nOrg() {
   };
   /** Return an array of all the states that can be set for this node */
   Node.prototype.$nextStates = function $nextStates(state) {
-    if (! state) {
-      state = this['Node-State'];
+    let thisState = state;
+    if (!thisState) {
+      thisState = this['Node-State'];
     }
-    return this['Node-State-All'].filter(function filterState(next) {
-      return next != state;
-    });
+    return this['Node-State-All'].filter(next => next !== thisState);
   };
-
 
   // Moving nodes
 
   /** Demote this node to a child of the previous sibling if appropriate */
   Node.prototype.demote = function demote() {
-    var parent = this.$prevSibling;
-    if (! parent) {
-      throw new Error("Cannot demote first sibling!");
+    const parent = this.$prevSibling;
+    if (!parent) {
+      throw new Error('Cannot demote first sibling!');
     }
 
     this.popFromParent();
@@ -239,13 +234,13 @@ var nOrg = (function nOrg() {
 
   /** Promote this node to the next sibling of the parent if appropriate */
   Node.prototype.promote = function promote() {
-    var $prevSibling = this.$parent;
-    if ($prevSibling == this.$root) {
-      throw new Error("Cannot promote nodes without parents!");
+    const $prevSibling = this.$parent;
+    if ($prevSibling === this.$root) {
+      throw new Error('Cannot promote nodes without parents!');
     }
 
     this.popFromParent();
-    if (! $prevSibling.$childHead) {
+    if (!$prevSibling.$childHead) {
       $prevSibling.collapsed = true;
     }
 
@@ -258,14 +253,14 @@ var nOrg = (function nOrg() {
       this.$parent.$childTail = this;
     }
     $prevSibling.$nextSibling = this;
-    this.$parent.$length++;
+    this.$parent.$length += 1;
   };
 
   /** Move this node up above it's previous sibling if appropriate */
   Node.prototype.moveUp = function moveUp() {
-    var $nextSibling = this.$prevSibling; 
-    if (! $nextSibling) {
-      throw new Error("Cannot move first nodes up!");
+    const $nextSibling = this.$prevSibling;
+    if (!$nextSibling) {
+      throw new Error('Cannot move first nodes up!');
     }
 
     $nextSibling.$nextSibling = this.$nextSibling;
@@ -292,9 +287,9 @@ var nOrg = (function nOrg() {
 
   /** Move this node below it's next sibling if appropriate */
   Node.prototype.moveDown = function moveDown() {
-    var $prevSibling = this.$nextSibling; 
-    if (! $prevSibling) {
-      throw new Error("Cannot move last nodes down!");
+    const $prevSibling = this.$nextSibling;
+    if (!$prevSibling) {
+      throw new Error('Cannot move last nodes down!');
     }
 
     $prevSibling.$prevSibling = this.$prevSibling;
@@ -308,66 +303,72 @@ var nOrg = (function nOrg() {
     this.$prevSibling = $prevSibling;
 
     this.$nextSibling = $prevSibling.$nextSibling;
-    if (! this.$nextSibling) {
+    if (!this.$nextSibling) {
       // now last child
       this.$parent.$childTail = this;
     } else {
-          this.$nextSibling.$prevSibling = this;
+      this.$nextSibling.$prevSibling = this;
     }
     $prevSibling.$nextSibling = this;
   };
-
 
   // Root cursor state
 
   /** Return true if the cursor is on this node */
   Node.prototype.isCursor = function isCursor(object, index) {
-    if (typeof object == "undefined") {
-      object = this;
+    let thisObject = object;
+    if (typeof thisObject === 'undefined') {
+      thisObject = this;
     }
-    return object === object.$cursorObject && index === object.$cursorIndex;
+    return thisObject === thisObject.$cursorObject && index === thisObject.$cursorIndex;
   };
 
   /** Move the cursor to this node */
   Node.prototype.cursorTo = function cursorTo(object, index) {
-    if (typeof object == "undefined") {
-      object = this;
+    let thisObject = object;
+    if (typeof thisObject === 'undefined') {
+      thisObject = this;
     }
-    this.$root.$cursorObject = object;
+    this.$root.$cursorObject = thisObject;
     this.$root.$cursorIndex = index;
 
-    return object;
+    return thisObject;
   };
 
-  /** 
+  /**
    * Move the cursor down to the next expanded node
    *
    * Descend into this node's first property or child if they are expanded.
    */
   Node.prototype.cursorDown = function cursorDown(event) {
-    var object = this.$cursorObject;
+    let object = this.$cursorObject;
     if (event) {
       event.stopPropagation();
       event.preventDefault();
     }
 
-    if ((object.$cursorIndex !== undefined) &&
-        object.$properties()[this.$cursorIndex + 1] !== undefined) {
+    if (
+      object.$cursorIndex !== undefined &&
+      object.$properties()[this.$cursorIndex + 1] !== undefined
+    ) {
       // next property
       return this.cursorTo(object, this.$cursorIndex + 1);
-    } else if ((object.$cursorIndex === undefined) &&
-               object.$properties().length &&
-               (! object.$propertiesCollapsed)) {
+    }
+    if (
+      object.$cursorIndex === undefined &&
+      object.$properties().length &&
+      !object.$propertiesCollapsed
+    ) {
       // first expanded property
       return this.cursorTo(object, 0);
     }
 
     // no more property cases
-    if (object.$length && (! object.$collapsed)) {
+    if (object.$length && !object.$collapsed) {
       // first expanded child
       return this.cursorTo(object.$childHead);
     }
-    while ((! object.$nextSibling) && object.$parent.$parent) {
+    while (!object.$nextSibling && object.$parent.$parent) {
       object = object.$parent;
     }
     if (object.$nextSibling) {
@@ -377,14 +378,14 @@ var nOrg = (function nOrg() {
     return false;
   };
 
-  /** 
+  /**
    * Move the cursor up to the previous node or property
    *
    * Ascend to the parent's first property or the parent
    * if this node is the first child.
    */
   Node.prototype.cursorUp = function cursorUp(event) {
-    var node = this.$cursorObject;
+    let node = this.$cursorObject;
     if (event) {
       event.stopPropagation();
       event.preventDefault();
@@ -394,17 +395,15 @@ var nOrg = (function nOrg() {
       if (this.$cursorObject.$properties()[this.$cursorIndex - 1]) {
         // previous property
         return this.cursorTo(this.$cursorObject, this.$cursorIndex - 1);
-      } else {
-        // property node
-        return this.cursorTo(this.$cursorObject);
       }
+      // property node
+      return this.cursorTo(this.$cursorObject);
     }
 
     // find the last/deepest expanded ancestor/property
     if (node.$prevSibling) {
       node = node.$prevSibling;
-      while (node.$length &&
-             (! node.$collapsed)) {
+      while (node.$length && !node.$collapsed) {
         node = node.$childTail;
       }
     } else if (node.$parent !== node.$root) {
@@ -412,15 +411,10 @@ var nOrg = (function nOrg() {
     } else {
       return false;
     }
-    if ((! node.$propertiesCollapsed) &&
-        node.$properties().length) {
-      return this.cursorTo(node,
-                           node.$properties().length - 1);
-    } else {
-      return this.cursorTo(node);
+    if (!node.$propertiesCollapsed && node.$properties().length) {
+      return this.cursorTo(node, node.$properties().length - 1);
     }
-
-    return false;
+    return this.cursorTo(node);
   };
 
   /** Move the cursor down to the first expanded property or child */
@@ -430,12 +424,15 @@ var nOrg = (function nOrg() {
       event.preventDefault();
     }
 
-    if (this.$cursorObject &&
-        (! this.$cursorObject.$propertiesCollapsed) &&
-        this.$cursorObject.$properties().length) {
+    if (
+      this.$cursorObject &&
+      !this.$cursorObject.$propertiesCollapsed &&
+      this.$cursorObject.$properties().length
+    ) {
       // first expanded property
       return this.cursorTo(this.$cursorObject, 0);
-    } else if (this.$cursorObject.$length) {
+    }
+    if (this.$cursorObject.$length) {
       // expand and move to first child
       this.$cursorObject.$collapsed = false;
       return this.cursorTo(this.$cursorObject.$childHead);
@@ -452,12 +449,12 @@ var nOrg = (function nOrg() {
 
     if (this.$cursorIndex !== undefined) {
       return this.cursorTo(this.$cursorObject);
-    } else if (this.$cursorObject.$parent != this.$cursorObject.$root) {
+    }
+    if (this.$cursorObject.$parent !== this.$cursorObject.$root) {
       return this.cursorTo(this.$cursorObject.$parent);
     }
     return false;
   };
-
 
   /** Expand or Collapse this node's children */
   Node.prototype.toggle = function toggle(event) {
@@ -467,12 +464,12 @@ var nOrg = (function nOrg() {
     }
 
     if (this.$cursorObject.$length) {
-      this.$cursorObject.$collapsed = ! this.$cursorObject.$collapsed;
-    }};
+      this.$cursorObject.$collapsed = !this.$cursorObject.$collapsed;
+    }
+  };
 
   /** Expand or Collapse this node's properties */
   Node.prototype.toggleProperties = function toggleProperties(event) {
-    var properties;
     if (event) {
       event.preventDefault();
       event.stopPropagation();
@@ -481,26 +478,22 @@ var nOrg = (function nOrg() {
     if (this.$cursorIndex !== undefined) {
       this.cursorTo(this.$cursorObject);
     }
-    this.$cursorObject.$propertiesCollapsed = (
-      ! this.$cursorObject.$propertiesCollapsed);
+    this.$cursorObject.$propertiesCollapsed = !this.$cursorObject.$propertiesCollapsed;
   };
 
-
-  defaults = new Node({
+  const defaults = new Node({
     'NOrg-Required-Properties': ['Message-ID', 'Subject', 'Node-State'],
     'Node-State-Classes': {
-      'TODO': 'warning',
-      'DONE': 'success',
-      'CANCELED': 'info'},
-    'Node-State-All': [
-      'TODO',
-      'DONE',
-      'CANCELED']
+      TODO: 'warning',
+      DONE: 'success',
+      CANCELED: 'info',
+    },
+    'Node-State-All': ['TODO', 'DONE', 'CANCELED'],
   });
 
   return {
-    generateMessageID: generateMessageID,
-    Node: Node,
-    defaults: defaults
+    generateMessageID,
+    Node,
+    defaults,
   };
-}());
+})();
