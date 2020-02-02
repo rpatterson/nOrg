@@ -2,8 +2,8 @@
   "scripts": {
     "lint:eslint": "eslint --ext .js,.html . --ignore-path .gitignore --color",
     "format:eslint": "eslint --ext .js,.html . --fix --ignore-path .gitignore --color",
-    "lint:prettier": "prettier \"**/*.js\" --check --ignore-path .gitignore --color",
-    "format:prettier": "prettier \"**/*.js\" --write --ignore-path .gitignore --color",
+    "lint:prettier": "prettier \"**.js\" --check --ignore-path .gitignore --color",
+    "format:prettier": "prettier \"**.js\" --write --ignore-path .gitignore --color",
     "lint": "npm run lint:eslint && npm run lint:prettier",
     "format": "npm run format:eslint && npm run format:prettier",
     "test": "karma start --coverage",
