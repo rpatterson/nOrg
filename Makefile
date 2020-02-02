@@ -6,12 +6,12 @@ CHECKOUT_DIR = $(dir $(realpath $(firstword $(MAKEFILE_LIST))))
 
 # Project variables
 NODE_VERSION = $(shell . ~/.nvm/nvm.sh && nvm version)
-
+export PIPENV_VENV_IN_PROJECT=1
 
 ## Top-level targets
 
 .PHONY: all
-all: var/log/yarn-install.log
+all: var/log/yarn-install.log .git/hooks/pre-commit .git/hooks/pre-push
 
 .PHONY: run
 run: all
@@ -42,3 +42,20 @@ package.json: ~/.nvm/versions/node/$(NODE_VERSION)/bin/npm
 ~/.nvm/versions/node/$(NODE_VERSION)/bin/npm: ~/.nvm/nvm.sh .nvmrc
 	cd && . ~/.nvm/nvm.sh && cd "$(CHECKOUT_DIR)" && nvm install
 	touch "$(@)"
+
+.venv/bin/python:
+	pipenv --python 3.7
+	touch "$(@)"
+
+.venv/bin/pre-commit: .venv/bin/python
+	pipenv install -d --skip-lock
+	touch "$(@)"
+
+Pipfile.lock: .venv/bin/pre-commit Pipfile
+	pipenv lock
+	touch "$(@)"
+
+.git/hooks/pre-commit: Pipfile.lock
+	pipenv run pre-commit install
+.git/hooks/pre-push: Pipfile.lock
+	pipenv run pre-commit install --hook-type pre-push

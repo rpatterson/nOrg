@@ -1,0 +1,17 @@
+repos:
+
+  # UI Hooks
+  - repo: local
+    hooks:
+    - id: ui-style
+      name: ui-style
+      entry: bash -c '. ~/.nvm/nvm.sh && CI=true nvm exec yarn run format'
+      language: system
+      pass_filenames: false
+  - repo: local
+    hooks:
+    - id: ui-test
+      name: ui-test
+      entry: bash -c '. ~/.nvm/nvm.sh && CI=true nvm exec yarn run test'
+      language: system
+      pass_filenames: false
