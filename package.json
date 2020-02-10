@@ -54,7 +54,7 @@
   },
   "name": "norg-app",
   "version": "0.0.0",
-  "description": "Webcomponent norg-app following open-wc recommendations",
+  "description": "Task outline organizing tool based on org-node",
   "author": "norg-app",
   "license": "MIT",
   "dependencies": {

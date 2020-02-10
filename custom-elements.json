@@ -3,7 +3,7 @@
   "tags": [
     {
       "name": "norg-app",
-      "description": "An application with a title and an action counter",
+      "description": "Task outline organizing tool based on org-node",
       "properties": [],
       "events": [],
       "slots": [],
