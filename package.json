@@ -58,6 +58,7 @@
   "author": "norg-app",
   "license": "MIT",
   "dependencies": {
+    "@material/mwc-top-app-bar-fixed": "^0.13.0",
     "lit-element": "^2.0.1",
     "lit-html": "^1.0.0",
     "normalize.css": "^8.0.1"

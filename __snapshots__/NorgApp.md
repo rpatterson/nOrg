@@ -3,8 +3,26 @@
 #### `matches the snapshot`
 
 ```html
-<main>
-</main>
+<mwc-top-app-bar-fixed
+  dense=""
+  id="bar"
+>
+  <mwc-icon-button
+    icon="menu"
+    slot="navigationIcon"
+  >
+  </mwc-icon-button>
+  <div
+    id="title"
+    slot="title"
+  >
+    nOrg
+  </div>
+  <div id="content">
+    <main>
+    </main>
+  </div>
+</mwc-top-app-bar-fixed>
 
 ```
 
