@@ -19,8 +19,8 @@ run: all
 
 .PHONY: test
 test: all
-	yarn run format
-	yarn run test --color
+	. ~/.nvm/nvm.sh && nvm exec yarn run format
+	. ~/.nvm/nvm.sh && nvm exec yarn run test --color
 
 .PHONY: clean
 clean:
