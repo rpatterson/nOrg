@@ -22,6 +22,11 @@ test: all
 	. ~/.nvm/nvm.sh && nvm exec yarn run format
 	. ~/.nvm/nvm.sh && nvm exec yarn run test --color
 
+.PHONY: update-snapshots
+update-snapshots: all
+	. ~/.nvm/nvm.sh && nvm exec yarn run test:update-snapshots
+	. ~/.nvm/nvm.sh && nvm exec yarn run test:prune-snapshots
+
 .PHONY: clean
 clean:
 	rm -r node_modules
