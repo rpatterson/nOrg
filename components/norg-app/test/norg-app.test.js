@@ -8,10 +8,7 @@ describe('NorgApp', () => {
       <norg-app></norg-app>
     `);
 
-    expect(el.page).to.equal('main');
-    expect(el.shadowRoot.querySelector('main')).lightDom.to.equal(`
-      <page-main></page-main>
-    `);
+    expect(el.shadowRoot.querySelector('main')).lightDom.to.equal(``);
   });
 
   it('renders default fallback content', async () => {
@@ -20,28 +17,7 @@ describe('NorgApp', () => {
     `);
     el.page = undefined;
 
-    expect(el.page).to.equal(undefined);
-    expect(el.shadowRoot.querySelector('main')).lightDom.to.equal(`
-      <page-main></page-main>
-    `);
-  });
-
-  it('renders page-one if page property is set to pageOne', async () => {
-    const el = await fixture(html`
-      <norg-app page="pageOne"></norg-app>
-    `);
-    expect(el.shadowRoot.querySelector('main')).lightDom.to.equal(`
-      <page-one></page-one>
-    `);
-  });
-
-  it('changes the page if a menu link gets clicked', async () => {
-    const el = await fixture(html`
-      <norg-app></norg-app>
-    `);
-    el.shadowRoot.querySelectorAll('header a')[2].click();
-
-    expect(el.page).to.equal('about');
+    expect(el.shadowRoot.querySelector('main')).lightDom.to.equal(``);
   });
 
   it('matches the snapshot', async () => {

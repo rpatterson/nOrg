@@ -19,8 +19,21 @@ module.exports = config => {
 
       esm: {
         nodeResolve: true,
+        coverageExclude: ['context.html'],
       },
       // you can overwrite/extend the config further
+
+      coverageIstanbulReporter: {
+        reports: ['text'],
+        thresholds: {
+          global: {
+            statements: 100,
+            branches: 100,
+            functions: 100,
+            lines: 100,
+          },
+        },
+      },
     }),
   );
   return config;
