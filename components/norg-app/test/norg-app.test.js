@@ -20,6 +20,19 @@ describe('NorgApp', () => {
     expect(el.shadowRoot.querySelector('main')).lightDom.to.equal(``);
   });
 
+  it('changes the page if a menu link gets clicked', async () => {
+    const el = await fixture(html`
+      <norg-app></norg-app>
+    `);
+    const drawer = el.shadowRoot.querySelector('mwc-drawer');
+    const button = drawer.querySelector('mwc-icon-button');
+
+    expect(drawer.open).to.be.false;
+
+    button.click();
+    expect(drawer.open).to.be.true;
+  });
+
   it('matches the snapshot', async () => {
     const el = await fixture(html`
       <norg-app></norg-app>
