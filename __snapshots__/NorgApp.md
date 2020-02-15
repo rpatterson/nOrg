@@ -3,6 +3,11 @@
 #### `matches the snapshot`
 
 ```html
+<link
+  href="node_modules/@material/top-app-bar/dist/mdc.top-app-bar.css"
+  rel="stylesheet"
+  type="text/css"
+>
 <mwc-top-app-bar-fixed
   dense=""
   id="bar"
