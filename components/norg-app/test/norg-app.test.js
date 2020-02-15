@@ -33,6 +33,6 @@ describe('NorgApp', () => {
       <norg-app></norg-app>
     `);
 
-    await expect(el).shadowDom.to.be.accessible();
+    await expect(el).shadowDom.to.be.accessible({ignoredRules: ['aria-allowed-role']});
   });
 });

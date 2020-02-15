@@ -1,5 +1,7 @@
 import { LitElement, html } from 'lit-element';
 
+import '@material/mwc-top-app-bar-fixed/mwc-top-app-bar-fixed';
+
 
 export class NorgApp extends LitElement {
   render() {
