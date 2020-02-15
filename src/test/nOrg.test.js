@@ -47,6 +47,9 @@ describe('nOrg', () => {
       expect(node.$propertiesCollapsed).to.be.false;
       expect(root.isCursor(node, 1)).to.be.true;
     });
+    it('Throws an error for empty property names', () => {
+      expect(() => node.$newProperty('')).to.throw('Must provide a property name');
+    });
   });
 
   describe('node inheritance:', () => {
@@ -55,7 +58,7 @@ describe('nOrg', () => {
       expect(node.$parent).to.equal(root);
     });
     it('inherits properties from parent', () => {
-      const child = node.newChild();
+      const child = node.newChild(new Event('keydown'));
       expect(child.$basename).to.be.undefined;
       expect(child['Bar-Property']).to.equal(json.$children[1]['Bar-Property']);
     });
@@ -160,13 +163,19 @@ describe('nOrg', () => {
     it('has default states', () => {
       expect(node['Node-State']).to.equal('TODO');
       expect(node.$nextStates()).to.deep.equal(['DONE', 'CANCELED']);
+      expect(node.$nextStates('DONE')).to.deep.equal(['TODO', 'CANCELED']);
+    });
+    it('can be changed', () => {
+      node.$changeState('DONE');
+      expect(node['Node-State']).to.equal('DONE');
     });
   });
 
   describe('nodes from objects:', () => {
     it('nodes may be created from objects', () => {
       const object = { $basename: 'bar', Subject: 'Bar Subject' };
-      let child = node.newChild(object);
+      root.$cursorObject = null;
+      let child = node.newChild(object, new Event('keydown'));
 
       expect(child.$basename).to.equal(object.$basename);
       expect(child.Subject).to.equal(object.Subject);
@@ -541,12 +550,14 @@ describe('nOrg', () => {
       expect(sibling.$basename).to.be.undefined;
       expect(sibling.Subject).to.be.undefined;
       expect(sibling['Message-ID']).to.match(/<[^@]+@[^@]+>/);
+      expect(sibling.$$hashKey()).to.equal(sibling['Message-ID']);
       expect(sibling['Node-State']).to.be.undefined;
 
       const child = node.newChild();
       expect(child.$basename).to.be.undefined;
       expect(child.Subject).to.be.undefined;
       expect(child['Message-ID']).to.match(/<[^@]+@[^@]+>/);
+      expect(child.$$hashKey()).to.equal(child['Message-ID']);
       expect(child['Node-State']).to.be.undefined;
     });
   });
@@ -577,12 +588,22 @@ describe('nOrg', () => {
       expect(node.isCursor()).to.be.true;
       expect(oldCursor.isCursor()).to.be.false;
     });
+    it('may be changed to this node', () => {
+      const oldCursor = node.$cursorObject;
+      // Switch to the next node
+      node = node.$nextSibling;
+
+      node.cursorTo();
+      expect(node.$cursorObject.$basename).to.equal(node.$basename);
+      expect(node.isCursor()).to.be.true;
+      expect(oldCursor.isCursor()).to.be.false;
+    });
     it('can be moved down to next sibling', () => {
       const oldCursor = node.$cursorObject;
       // Switch to the next node
       node = node.$nextSibling;
 
-      root.cursorDown();
+      root.cursorDown(new Event('keydown'));
       expect(node.$cursorObject.$basename).to.equal(node.$basename);
       expect(node.isCursor()).to.be.true;
       expect(oldCursor.isCursor()).to.be.false;
@@ -623,7 +644,7 @@ describe('nOrg', () => {
       node = node.$nextSibling;
 
       root.cursorTo(node);
-      root.cursorUp();
+      root.cursorUp(new Event('keydown'));
       expect(node.$cursorObject.$basename).to.equal(oldCursor.$basename);
       expect(node.isCursor()).to.be.false;
       expect(oldCursor.isCursor()).to.be.true;
@@ -664,7 +685,7 @@ describe('nOrg', () => {
 
       node = node.$childHead;
 
-      root.cursorRight();
+      root.cursorRight(new Event('keydown'));
       expect(node.$cursorObject.$basename).to.equal(node.$basename);
       expect(node.isCursor()).to.be.true;
       expect(oldCursor.isCursor()).to.be.false;
@@ -696,7 +717,7 @@ describe('nOrg', () => {
       node = node.$childHead;
       root.cursorTo(node);
 
-      root.cursorLeft();
+      root.cursorLeft(new Event('keydown'));
       expect(node.$cursorObject.$basename).to.equal(oldCursor.$basename);
       expect(node.isCursor()).to.be.false;
       expect(oldCursor.isCursor()).to.be.true;
@@ -852,7 +873,7 @@ describe('nOrg', () => {
     });
     it('can toggle nodes with children', () => {
       root.cursorTo(node);
-      node.toggle();
+      node.toggle(new Event('keydown'));
       expect(node.$collapsed).to.be.false;
       node.toggle();
       expect(node.$collapsed).to.be.true;
@@ -868,8 +889,9 @@ describe('nOrg', () => {
     });
     it('can toggle nodes with properties', () => {
       root.cursorTo(node);
-      node.toggleProperties();
+      node.toggleProperties(new Event('keydown'));
       expect(node.$propertiesCollapsed).to.be.false;
+      root.cursorRight();
       node.toggleProperties();
       expect(node.$propertiesCollapsed).to.be.true;
     });
