@@ -1,4 +1,4 @@
-{"$children": [
+const nodes = {"$children": [
   {"$basename": "foo",
    "Subject": "Foo Project",
    "Message-ID": "<1@foo.com>"},
@@ -22,4 +22,6 @@
   {"$basename": "qux",
    "Subject": "Qux Project",
    "Message-ID": "<6@foo.com>"}
-]}
+]};
+
+export default nodes;
