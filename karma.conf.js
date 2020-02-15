@@ -15,6 +15,9 @@ module.exports = config => {
           pattern: config.grep ? config.grep : 'components/*/test/**/*.test.js',
           type: 'module',
         },
+        {
+          pattern: config.grep ? config.grep : 'src/**/test/**/*.test.js',
+        },
       ],
 
       esm: {
