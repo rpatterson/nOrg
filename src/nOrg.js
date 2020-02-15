@@ -1,25 +1,26 @@
 /** nOrg module */
-// eslint-disable-next-line no-unused-vars
-const nOrg = (function nOrg() {
-  /** Generate a globally unique Message-ID */
-  function generateMessageID() {
-    const email = 'TODO@TODO.org'.split('@', 2);
-    const now = new Date();
-    const random = Math.random();
-    // From http://www.jwz.org/doc/mid.html#3
-    return `<${email[0]}+${now.toISOString()}+${random.toString(36).slice(2)}@${email[1]}>`;
-  }
 
-  /**
-   * Construct a new node, optionally initialize properties from an object.
-   *
-   * Properties prefixed with '$' are considered internal to the UI/porcelain
-   * and will not be written back to the server.
-   */
-  function Node(object) {
+/** Generate a globally unique Message-ID */
+export function generateMessageID() {
+  const email = 'TODO@TODO.org'.split('@', 2);
+  const now = new Date();
+  const random = Math.random();
+  // From http://www.jwz.org/doc/mid.html#3
+  return `<${email[0]}+${now.toISOString()}+${random.toString(36).slice(2)}@${email[1]}>`;
+}
+
+/**
+ * Construct a new node, optionally initialize properties from an object.
+   n *
+ * Properties prefixed with '$' are considered internal to the UI/porcelain
+ * and will not be written back to the server.
+ */
+export default class Node {
+  constructor(object) {
     this.init(object);
   }
-  Node.prototype.init = function init(object) {
+
+  init(object) {
     // child nodes must override parent to avoid scope inheritance leaking
     this.$length = 0;
     this.$childHead = undefined;
@@ -46,15 +47,17 @@ const nOrg = (function nOrg() {
         }
       }, this);
     }
-  };
+  }
+
   /** Use the globally unique ID as a node hash. */
-  Node.prototype.$$hashKey = function $$hashKey() {
+  $$hashKey() {
     // Used in AngularJS
     // Needed so that nodes don't inherit ancestor node $$hashKey
     return this['Message-ID'];
-  };
+  }
+
   /** Create a new node as a child of this node and initialize from object */
-  Node.prototype.newNode = function newNode(object) {
+  newNode(object) {
     // eslint-disable-next-line no-shadow
     function Node(object) {
       this.init(object);
@@ -70,9 +73,10 @@ const nOrg = (function nOrg() {
     }
 
     return child;
-  };
+  }
+
   /** Append the child node to this parent node as the last child */
-  Node.prototype.pushChild = function pushChild(child) {
+  pushChild(child) {
     // eslint-disable-next-line no-param-reassign
     child.$parent = this;
     if (this.$childHead) {
@@ -84,9 +88,10 @@ const nOrg = (function nOrg() {
     }
     this.$childTail = child;
     this.$length += 1;
-  };
+  }
+
   /** Create a new node and append it as a child to this parent node */
-  Node.prototype.newChild = function newChild(object, event) {
+  newChild(object, event) {
     const child = this.newNode(object);
 
     if (event) {
@@ -98,13 +103,15 @@ const nOrg = (function nOrg() {
       this.cursorTo(child);
     }
     return child;
-  };
+  }
+
   /** Array.forEach function for creating multiple children for this parent */
-  Node.prototype.newChildEach = function newChildEach(object) {
+  newChildEach(object) {
     this.newChild(object);
-  };
+  }
+
   /** Create a new node and add it as the next sibling to this node */
-  Node.prototype.newSibling = function newSibling(object, event) {
+  newSibling(object, event) {
     const child = this.$parent.newNode(object);
 
     if (event) {
@@ -125,16 +132,18 @@ const nOrg = (function nOrg() {
       this.cursorTo(child);
     }
     return child;
-  };
+  }
+
   /** Root a tree of nodes that inherit from this node as defaults */
-  Node.prototype.newRoot = function newRoot(object) {
+  newRoot(object) {
     const root = this.newNode(object);
     root.$root = root;
     root.cursorTo(root.$childHead);
     return root;
-  };
+  }
+
   /** Remove this node from it's parent */
-  Node.prototype.popFromParent = function popFromParent() {
+  popFromParent() {
     this.$parent.$length -= 1;
 
     if (this.$prevSibling) {
@@ -151,14 +160,15 @@ const nOrg = (function nOrg() {
     this.$parent = undefined;
     this.$prevSibling = undefined;
     this.$nextSibling = undefined;
-  };
+  }
+
   /**
    * Return this node's children as an array
    *
    * If possible, use the $childHead and $nextSibling directly
    * to iterate over the children in order instead of this method.
    */
-  Node.prototype.children = function children() {
+  children() {
     const results = [];
     let child = this.$childHead;
     while (child) {
@@ -166,9 +176,10 @@ const nOrg = (function nOrg() {
       child = child.$nextSibling;
     }
     return results;
-  };
+  }
+
   /** Set this node's properties from the object */
-  Node.prototype.extend = function extend(object) {
+  extend(object) {
     for (const [property, value] of Object.entries(object)) {
       if (property !== '$children') {
         this[property] = value;
@@ -177,51 +188,55 @@ const nOrg = (function nOrg() {
     if (object.$children) {
       object.$children.forEach(this.newChildEach, this);
     }
-  };
+  }
+
   /**
    * Generate a valid HTML ID and CSS selector from the Message-ID
    *
    * The leading and trailing "<>" characters are stripped from the Message-ID
    * and encoded using base64.
    */
-  Node.prototype.toId = function toId() {
+  toId() {
     return window.btoa(this['Message-ID']).slice(0, -1);
-  };
+  }
 
   /** Return an array of all this node's non-required property names */
-  Node.prototype.$properties = function $properties() {
+  $properties() {
     const required = this['NOrg-Required-Properties'];
     return Object.keys(this)
-      .filter(property => property[0] !== '$' && required.indexOf(property) === -1)
-      .sort();
-  };
+                 .filter(property => property[0] !== '$' && required.indexOf(property) === -1)
+                 .sort();
+  }
+
   /** Add a new property to this node */
-  Node.prototype.$newProperty = function $newProperty(property, value) {
+  $newProperty(property, value) {
     if (!property) {
       throw new Error('Must provide a property name!');
     }
     this[property] = value;
     this.$propertiesCollapsed = false;
     this.cursorTo(this, this.$properties().indexOf(property));
-  };
+  }
+
   /** Set this node's state and close the state menu if open */
-  Node.prototype.$changeState = function $changeState(state) {
+  $changeState(state) {
     this['Node-State'] = state;
     this.$stateOpened = false;
-  };
+  }
+
   /** Return an array of all the states that can be set for this node */
-  Node.prototype.$nextStates = function $nextStates(state) {
+  $nextStates(state) {
     let thisState = state;
     if (!thisState) {
       thisState = this['Node-State'];
     }
     return this['Node-State-All'].filter(next => next !== thisState);
-  };
+  }
 
   // Moving nodes
 
   /** Demote this node to a child of the previous sibling if appropriate */
-  Node.prototype.demote = function demote() {
+  demote() {
     const parent = this.$prevSibling;
     if (!parent) {
       throw new Error('Cannot demote first sibling!');
@@ -230,10 +245,10 @@ const nOrg = (function nOrg() {
     this.popFromParent();
     parent.pushChild(this);
     parent.$collapsed = false;
-  };
+  }
 
   /** Promote this node to the next sibling of the parent if appropriate */
-  Node.prototype.promote = function promote() {
+  promote() {
     const $prevSibling = this.$parent;
     if ($prevSibling === this.$root) {
       throw new Error('Cannot promote nodes without parents!');
@@ -254,10 +269,10 @@ const nOrg = (function nOrg() {
     }
     $prevSibling.$nextSibling = this;
     this.$parent.$length += 1;
-  };
+  }
 
   /** Move this node up above it's previous sibling if appropriate */
-  Node.prototype.moveUp = function moveUp() {
+  moveUp() {
     const $nextSibling = this.$prevSibling;
     if (!$nextSibling) {
       throw new Error('Cannot move first nodes up!');
@@ -283,10 +298,10 @@ const nOrg = (function nOrg() {
       this.$parent.$childHead = this;
     }
     $nextSibling.$prevSibling = this;
-  };
+  }
 
   /** Move this node below it's next sibling if appropriate */
-  Node.prototype.moveDown = function moveDown() {
+  moveDown() {
     const $prevSibling = this.$nextSibling;
     if (!$prevSibling) {
       throw new Error('Cannot move last nodes down!');
@@ -310,21 +325,21 @@ const nOrg = (function nOrg() {
       this.$nextSibling.$prevSibling = this;
     }
     $prevSibling.$nextSibling = this;
-  };
+  }
 
   // Root cursor state
 
   /** Return true if the cursor is on this node */
-  Node.prototype.isCursor = function isCursor(object, index) {
+  isCursor(object, index) {
     let thisObject = object;
     if (typeof thisObject === 'undefined') {
       thisObject = this;
     }
     return thisObject === thisObject.$cursorObject && index === thisObject.$cursorIndex;
-  };
+  }
 
   /** Move the cursor to this node */
-  Node.prototype.cursorTo = function cursorTo(object, index) {
+  cursorTo(object, index) {
     let thisObject = object;
     if (typeof thisObject === 'undefined') {
       thisObject = this;
@@ -333,14 +348,14 @@ const nOrg = (function nOrg() {
     this.$root.$cursorIndex = index;
 
     return thisObject;
-  };
+  }
 
   /**
    * Move the cursor down to the next expanded node
    *
    * Descend into this node's first property or child if they are expanded.
    */
-  Node.prototype.cursorDown = function cursorDown(event) {
+  cursorDown(event) {
     let object = this.$cursorObject;
     if (event) {
       event.stopPropagation();
@@ -376,7 +391,7 @@ const nOrg = (function nOrg() {
       return this.cursorTo(object.$nextSibling);
     }
     return false;
-  };
+  }
 
   /**
    * Move the cursor up to the previous node or property
@@ -384,7 +399,7 @@ const nOrg = (function nOrg() {
    * Ascend to the parent's first property or the parent
    * if this node is the first child.
    */
-  Node.prototype.cursorUp = function cursorUp(event) {
+  cursorUp(event) {
     let node = this.$cursorObject;
     if (event) {
       event.stopPropagation();
@@ -415,10 +430,10 @@ const nOrg = (function nOrg() {
       return this.cursorTo(node, node.$properties().length - 1);
     }
     return this.cursorTo(node);
-  };
+  }
 
   /** Move the cursor down to the first expanded property or child */
-  Node.prototype.cursorRight = function cursorRight(event) {
+  cursorRight(event) {
     if (event) {
       event.stopPropagation();
       event.preventDefault();
@@ -438,10 +453,10 @@ const nOrg = (function nOrg() {
       return this.cursorTo(this.$cursorObject.$childHead);
     }
     return false;
-  };
+  }
 
   /** Move the cursor up to the parent */
-  Node.prototype.cursorLeft = function cursorLeft(event) {
+  cursorLeft(event) {
     if (event) {
       event.stopPropagation();
       event.preventDefault();
@@ -454,10 +469,10 @@ const nOrg = (function nOrg() {
       return this.cursorTo(this.$cursorObject.$parent);
     }
     return false;
-  };
+  }
 
   /** Expand or Collapse this node's children */
-  Node.prototype.toggle = function toggle(event) {
+  toggle(event) {
     if (event) {
       event.stopPropagation();
       event.preventDefault();
@@ -466,10 +481,10 @@ const nOrg = (function nOrg() {
     if (this.$cursorObject.$length) {
       this.$cursorObject.$collapsed = !this.$cursorObject.$collapsed;
     }
-  };
+  }
 
   /** Expand or Collapse this node's properties */
-  Node.prototype.toggleProperties = function toggleProperties(event) {
+  toggleProperties(event) {
     if (event) {
       event.preventDefault();
       event.stopPropagation();
@@ -479,22 +494,16 @@ const nOrg = (function nOrg() {
       this.cursorTo(this.$cursorObject);
     }
     this.$cursorObject.$propertiesCollapsed = !this.$cursorObject.$propertiesCollapsed;
-  };
+  }
+}
 
-  const defaults = new Node({
-    'NOrg-Required-Properties': ['Message-ID', 'Subject', 'Node-State'],
-    'Node-State-Classes': {
-      TODO: 'warning',
-      DONE: 'success',
-      CANCELED: 'info',
-    },
-    'Node-State-All': ['TODO', 'DONE', 'CANCELED'],
-  });
-
-  return {
-    generateMessageID,
-    Node,
-    defaults,
-  };
-})();
-export default nOrg;
+const defaults = new Node({
+  'NOrg-Required-Properties': ['Message-ID', 'Subject', 'Node-State'],
+  'Node-State-Classes': {
+    TODO: 'warning',
+    DONE: 'success',
+    CANCELED: 'info',
+  },
+  'Node-State-All': ['TODO', 'DONE', 'CANCELED'],
+});
+export { defaults };

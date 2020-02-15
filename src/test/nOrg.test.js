@@ -1,6 +1,6 @@
 import { expect } from '@open-wc/testing';
 
-import nOrg from '../nOrg.js';
+import Node, {defaults} from '../nOrg.js';
 import json from '../nOrg-nodes.js';
 
 
@@ -9,7 +9,7 @@ describe('nOrg', () => {
   let node;
 
   beforeEach(() => {
-    root = nOrg.defaults.newRoot(json);
+    root = defaults.newRoot(json);
     node = root.$childHead.$nextSibling;
   });
 
@@ -21,7 +21,7 @@ describe('nOrg', () => {
   });
 
   it('exports module contents', () => {
-    expect(nOrg.Node).to.be.an('function');
+    expect(Node).to.be.an('function');
     expect(Boolean(root)).to.be.true;
   });
 
@@ -88,7 +88,7 @@ describe('nOrg', () => {
       expect(Boolean(node.$prevSibling.$prevSibling)).to.be.false;
     });
     it('accepts a node to append as a child', () => {
-      const child = new nOrg.Node();
+      const child = new Node();
       child.$basename = 'baz';
       node.pushChild(child);
 
@@ -100,7 +100,7 @@ describe('nOrg', () => {
       expect(node.$length).to.equal(4);
 
       node = node.$prevSibling;
-      const only = new nOrg.Node();
+      const only = new Node();
       only.$basename = 'baz';
       node.pushChild(only);
 
