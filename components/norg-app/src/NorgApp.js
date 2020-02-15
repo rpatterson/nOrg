@@ -4,6 +4,9 @@ import '@material/mwc-drawer/mwc-drawer';
 import '@material/mwc-icon-button/mwc-icon-button';
 import '@material/mwc-top-app-bar-fixed/mwc-top-app-bar-fixed';
 
+import {defaults} from '../../../src/nOrg.js';
+import json from '../../../src/nOrg-nodes.js';
+
 
 function __onMenuClicked(event) {
   const drawer = event.target.closest('mwc-drawer');
@@ -12,6 +15,12 @@ function __onMenuClicked(event) {
 
 
 export class NorgApp extends LitElement {
+
+  constructor() {
+    super();
+
+    this.root = defaults.newRoot(json);
+  }
 
   render() {
     return html`
@@ -34,7 +43,7 @@ export class NorgApp extends LitElement {
                 icon="menu" slot="navigationIcon"
                 @click=${__onMenuClicked}>
             </mwc-icon-button>
-            <div slot="title" id="title">nOrg</div>
+            <div slot="title" id="title">${this.root.Subject}</div>
           </mwc-top-app-bar-fixed>
           <div id="content">
             <main>

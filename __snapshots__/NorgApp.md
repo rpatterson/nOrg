@@ -42,7 +42,7 @@
         id="title"
         slot="title"
       >
-        nOrg
+        nOrg Root Node
       </div>
     </mwc-top-app-bar-fixed>
     <div id="content">
