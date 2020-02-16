@@ -12,7 +12,7 @@ describe('NorgApp', () => {
       'norg-nodes-table');
   });
 
-  it('changes the page if a menu link gets clicked', async () => {
+  it('controls the drawer menu', async () => {
     const el = await fixture(html`
       <norg-app></norg-app>
     `);
