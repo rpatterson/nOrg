@@ -1255,6 +1255,11 @@
     "@material/theme" "5.0.0-canary.a1a0deb3e.0"
     tslib "^1.9.3"
 
+"@material/layout-grid@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@material/layout-grid/-/layout-grid-5.0.0.tgz#8cb404819a8fddba620366f6e14350ab38853062"
+  integrity sha512-C5xcFhl/sa3JYkiImP9/ZkFncsGe06TSMDZ/eG6U7KZKoSlwU1GjNPEeHTZQ8RC4PfsQ1K1oUA9nMebEC/htwQ==
+
 "@material/list@5.0.0-canary.a1a0deb3e.0":
   version "5.0.0-canary.a1a0deb3e.0"
   resolved "https://registry.yarnpkg.com/@material/list/-/list-5.0.0-canary.a1a0deb3e.0.tgz#3ae31a223abbff562cbfea9292abbc2bd6a210ab"

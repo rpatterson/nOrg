@@ -30,6 +30,9 @@ export class NorgApp extends LitElement {
   render() {
     return html`
       <link
+           href="node_modules/@material/layout-grid/dist/mdc.layout-grid.css"
+           rel="stylesheet" type="text/css" />
+      <link
            href="node_modules/@material/icon-button/dist/mdc.icon-button.css"
            rel="stylesheet" type="text/css" />
       <link
@@ -52,10 +55,16 @@ export class NorgApp extends LitElement {
           </mwc-top-app-bar-fixed>
           <div id="content">
             <main>
-              <norg-nodes-table
-                .parentNode="${this.root}"
-                .firstNode="${this.root.$childHead}">
-              </norg-nodes-table>
+              <div class="mdc-layout-grid">
+                <div class="mdc-layout-grid__inner">
+                  <div class="mdc-layout-grid__cell">
+                    <norg-nodes-table
+                      .parentNode="${this.root}"
+                      .firstNode="${this.root.$childHead}">
+                    </norg-nodes-table>
+                  </div>
+                </div>
+              </div>
             </main>
           </div>
         </div>

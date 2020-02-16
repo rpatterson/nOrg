@@ -8,9 +8,9 @@ describe('NorgApp', () => {
         <norg-app></norg-app>
       `);
 
-      expect(el.shadowRoot.querySelector('main')).lightDom.to.equal(
-        '<norg-nodes-table>\n</norg-nodes-table>\n');
-    });
+    expect(el.shadowRoot.querySelector('main')).lightDom.to.contain(
+      'norg-nodes-table');
+  });
 
   it('changes the page if a menu link gets clicked', async () => {
     const el = await fixture(html`
