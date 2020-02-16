@@ -1,6 +1,8 @@
-import { LitElement, html } from 'lit-element';
+import { classMap } from 'lit-html/directives/class-map';
+import { LitElement, html, css } from 'lit-element';
 
 import {MDCDataTable} from '@material/data-table';
+import '@material/mwc-button/mwc-button';
 
 import Node from '../../../src/nOrg.js';
 
@@ -21,8 +23,23 @@ export class NorgNodesTable extends LitElement {
     return {
       parentNode: { type: Node },
       firstNode: { type: Node },
-     };
+    };
   }
+
+  static get styles() {
+    return css`
+      .norg-node-state-TODO .norg-node-state {
+        --mdc-theme-primary: red;
+      }
+      .norg-node-state-DONE .norg-node-state {
+        --mdc-theme-primary: green;
+      }
+      .norg-node-state-CANCELLED .norg-node-state {
+        --mdc-theme-primary: green;
+      }
+    `;
+  }
+
 
   render() {
     return html`
@@ -74,8 +91,12 @@ export class NorgNodesTable extends LitElement {
     let node = this.firstNode;
     while (node) {
       const depth = node.depth(this.parentNode);
+      const nodeClasses = {
+        [`norg-node-state-${node['Node-State']}`]: true,
+      };
       yield html`
-        <tr data-row-id="${node['Message-ID']}" class="mdc-data-table__row">
+        <tr data-row-id="${node['Message-ID']}"
+            class="mdc-data-table__row ${classMap(nodeClasses)}">
           <td class="mdc-data-table__cell mdc-data-table__cell--checkbox">
             <div class="mdc-checkbox mdc-data-table__row-checkbox">
               <input type="checkbox" class="mdc-checkbox__native-control"
@@ -85,7 +106,13 @@ export class NorgNodesTable extends LitElement {
           <td class="mdc-data-table__cell">
             ${__expandCell(node)}
           </td>
-          <td class="mdc-data-table__cell">${node["Node-State"]}</td>
+          <td class="mdc-data-table__cell">
+            ${node["Node-State"] ? html`
+              <mwc-button dense label="${node['Node-State']}" class="norg-node-state">
+              </mwc-button>
+            ` : null
+            }
+          </td>
           <td class="mdc-data-table__cell" id="${node['Message-ID']}">
             ${Array.from(Array(depth)).map(() => html`&bull;`)}
             ${node.Subject}

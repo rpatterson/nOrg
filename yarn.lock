@@ -1138,6 +1138,21 @@
   dependencies:
     tslib "^1.9.3"
 
+"@material/button@=5.0.0-canary.a1a0deb3e.0":
+  version "5.0.0-canary.a1a0deb3e.0"
+  resolved "https://registry.yarnpkg.com/@material/button/-/button-5.0.0-canary.a1a0deb3e.0.tgz#b588ddd57be5afa407a9966da049719d4ff560ba"
+  integrity sha512-3KSfbc1N5zBI8IJrjB6WOIe82xXTWEr5lnKZz0gpY3yiemlY9PrIyCnN3GBRfCnhlAtM6Z+T4ipMyt5QpxvPZQ==
+  dependencies:
+    "@material/density" "5.0.0-canary.a1a0deb3e.0"
+    "@material/elevation" "5.0.0-canary.a1a0deb3e.0"
+    "@material/feature-targeting" "5.0.0-canary.a1a0deb3e.0"
+    "@material/ripple" "5.0.0-canary.a1a0deb3e.0"
+    "@material/rtl" "5.0.0-canary.a1a0deb3e.0"
+    "@material/shape" "5.0.0-canary.a1a0deb3e.0"
+    "@material/theme" "5.0.0-canary.a1a0deb3e.0"
+    "@material/touch-target" "5.0.0-canary.a1a0deb3e.0"
+    "@material/typography" "5.0.0-canary.a1a0deb3e.0"
+
 "@material/checkbox@^5.0.0":
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/@material/checkbox/-/checkbox-5.0.0.tgz#6c84012e91dbd52631fc422eca48fa54c0dc38d4"
@@ -1287,6 +1302,19 @@
     lit-element "^2.2.1"
     tslib "^1.10.0"
 
+"@material/mwc-button@^0.13.0":
+  version "0.13.0"
+  resolved "https://registry.yarnpkg.com/@material/mwc-button/-/mwc-button-0.13.0.tgz#750da7b519663daaf42809cb7674e6b1372b614b"
+  integrity sha512-2ru+nkt9zHFZdtEBseba51BjPL3k1CHnn+px0YYy6o7CY5tJgJMysMVQL7L9cVbE0WyxVr59bgEN4lMedFi0/Q==
+  dependencies:
+    "@material/button" "=5.0.0-canary.a1a0deb3e.0"
+    "@material/mwc-base" "^0.13.0"
+    "@material/mwc-icon" "^0.13.0"
+    "@material/mwc-ripple" "^0.13.0"
+    lit-element "^2.2.1"
+    lit-html "^1.1.2"
+    tslib "^1.10.0"
+
 "@material/mwc-drawer@^0.13.0":
   version "0.13.0"
   resolved "https://registry.yarnpkg.com/@material/mwc-drawer/-/mwc-drawer-0.13.0.tgz#a08e3d73fd95c94c95d88e3d1a8a003961d82a28"
@@ -1433,6 +1461,14 @@
     "@material/theme" "5.0.0-canary.a1a0deb3e.0"
     "@material/typography" "5.0.0-canary.a1a0deb3e.0"
     tslib "^1.9.3"
+
+"@material/touch-target@5.0.0-canary.a1a0deb3e.0":
+  version "5.0.0-canary.a1a0deb3e.0"
+  resolved "https://registry.yarnpkg.com/@material/touch-target/-/touch-target-5.0.0-canary.a1a0deb3e.0.tgz#4595f13186f41bcc7d10868e1ff3541743f57feb"
+  integrity sha512-Tu3e7OR1F2jSrgrWSGwhJpI0ICn2T8dJcSNYEWPaYbo2iULsi4HKIfDivCZys0jVAwGQVV6xmwVhLB5hPZq7Ag==
+  dependencies:
+    "@material/base" "5.0.0-canary.a1a0deb3e.0"
+    "@material/feature-targeting" "5.0.0-canary.a1a0deb3e.0"
 
 "@material/touch-target@^5.0.0":
   version "5.0.0"
