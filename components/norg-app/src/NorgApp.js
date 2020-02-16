@@ -28,11 +28,11 @@ export class NorgApp extends LitElement {
            href="node_modules/@material/icon-button/dist/mdc.icon-button.css"
            rel="stylesheet" type="text/css" />
       <link
-        href="node_modules/@material/drawer/dist/mdc.drawer.css"
-        rel="stylesheet" type="text/css" />
+           href="node_modules/@material/drawer/dist/mdc.drawer.css"
+           rel="stylesheet" type="text/css" />
       <link
-        href="node_modules/@material/top-app-bar/dist/mdc.top-app-bar.css"
-        rel="stylesheet" type="text/css" />
+           href="node_modules/@material/top-app-bar/dist/mdc.top-app-bar.css"
+           rel="stylesheet" type="text/css" />
 
       <mwc-drawer hasheader type="dismissible">
         <span slot="title">nOrg Menu</span>
