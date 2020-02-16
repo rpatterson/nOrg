@@ -229,6 +229,8 @@ describe('nOrg', () => {
       expect(parent.children().indexOf(node)).to.equal(0);
       expect(parent.$parent.children().length).to.equal(2);
       expect(parent.children().length).to.equal(1);
+
+      expect(node.depth()).to.equal(2);
     });
     it('demotes a last node with previous siblings', () => {
       const parent = root.$childHead.$nextSibling.$childHead.$nextSibling;
@@ -314,6 +316,8 @@ describe('nOrg', () => {
       expect(parent.children().indexOf(node)).to.equal(2);
       expect(parent.children().length).to.equal(4);
       expect(prevSibling.children().length).to.equal(2);
+
+      expect(node.depth(parent)).to.equal(1);
     });
     it('promotes a first child to the middle', () => {
       // Switch to a first child

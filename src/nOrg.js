@@ -163,6 +163,23 @@ export default class Node {
   }
 
   /**
+   * Return this node's depth based on the given root node.
+   */
+  depth(root) {
+    let rootNode = root;
+    if (!rootNode) {
+      rootNode = this.$root;
+    }
+    let node = this;
+    let depth = 1;
+    while (node.$parent !== rootNode) {
+      depth += 1;
+      node = node.$parent;
+    }
+    return depth
+  }
+
+  /**
    * Return this node's children as an array
    *
    * If possible, use the $childHead and $nextSibling directly
