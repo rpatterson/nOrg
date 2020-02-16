@@ -1,5 +1,5 @@
 const nodes = {
-  "Subject": "nOrg Root Node",
+  "Subject": "My Projects",
   "$children": [
     {"$basename": "foo",
      "Subject": "Foo Project",
@@ -11,14 +11,14 @@ const nodes = {
      "Node-State": "TODO",
      "$children": [
        {"$basename": "corge",
-        "Subject": "Corge Node",
+        "Subject": "Corge project task",
         "Message-ID": "<3@foo.com>",
         "Corge-Property": "Corge Property"},
        {"$basename": "grault",
-        "Subject": "Grault Node",
+        "Subject": "Grault project task",
         "Message-ID": "<4@foo.com>"},
        {"$basename": "garply",
-        "Subject": "Garply Node",
+        "Subject": "Garply project task",
         "Message-ID": "<5@foo.com>"}
    ]},
   {"$basename": "qux",
