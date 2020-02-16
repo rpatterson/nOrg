@@ -5,6 +5,17 @@ import {MDCDataTable} from '@material/data-table';
 import Node from '../../../src/nOrg.js';
 
 
+function __expandCell(node) {
+  if (node.$childHead) {
+    const icon = node.$collapsed ? 'expand_more' : 'expand_less';
+    return html`
+      <mwc-icon-button icon="${icon}">
+      </mwc-icon-button>
+    `
+  }
+  return null;
+}
+
 export class NorgNodesTable extends LitElement {
   static get properties() {
     return {
@@ -33,6 +44,10 @@ export class NorgNodesTable extends LitElement {
                         class="mdc-checkbox__native-control"
                         aria-label="Select/unselect al children"/>
                 </div>
+              </th>
+              <th class="mdc-data-table__header-cell" role="columnheader" scope="col">
+                <mwc-icon-button icon="unfold_more">
+                </mwc-icon-button>
               </th>
               <th class="mdc-data-table__header-cell" role="columnheader" scope="col">
                 State
@@ -65,6 +80,9 @@ export class NorgNodesTable extends LitElement {
               <input type="checkbox" class="mdc-checkbox__native-control"
                      aria-labelledby="${node['Message-ID']}"/>
             </div>
+          </td>
+          <td class="mdc-data-table__cell">
+            ${__expandCell(node)}
           </td>
           <td class="mdc-data-table__cell">${node["Node-State"]}</td>
           <td class="mdc-data-table__cell" id="${node['Message-ID']}">
