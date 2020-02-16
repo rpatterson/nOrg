@@ -3,22 +3,14 @@ import { html, fixture, expect } from '@open-wc/testing';
 import '../norg-app.js';
 
 describe('NorgApp', () => {
-  it('has page "main" by default', async () => {
-    const el = await fixture(html`
-      <norg-app></norg-app>
-    `);
+  it('renders the nodes table', async () => {
+      const el = await fixture(html`
+        <norg-app></norg-app>
+      `);
 
-    expect(el.shadowRoot.querySelector('main')).lightDom.to.equal(``);
-  });
-
-  it('renders default fallback content', async () => {
-    const el = await fixture(html`
-      <norg-app></norg-app>
-    `);
-    el.page = undefined;
-
-    expect(el.shadowRoot.querySelector('main')).lightDom.to.equal(``);
-  });
+      expect(el.shadowRoot.querySelector('main')).lightDom.to.equal(
+        '<norg-nodes-table>\n</norg-nodes-table>\n');
+    });
 
   it('changes the page if a menu link gets clicked', async () => {
     const el = await fixture(html`

@@ -58,6 +58,7 @@
   "author": "norg-app",
   "license": "MIT",
   "dependencies": {
+    "@material/data-table": "^5.0.0",
     "@material/mwc-drawer": "^0.13.0",
     "@material/mwc-icon-button": "^0.13.0",
     "@material/mwc-top-app-bar-fixed": "^0.13.0",

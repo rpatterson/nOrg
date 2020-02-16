@@ -4,7 +4,7 @@ import '@material/mwc-drawer/mwc-drawer';
 import '@material/mwc-icon-button/mwc-icon-button';
 import '@material/mwc-top-app-bar-fixed/mwc-top-app-bar-fixed';
 
-import {defaults} from '../../../src/nOrg.js';
+import Node, {defaults} from '../../../src/nOrg.js';
 import json from '../../../src/nOrg-nodes.js';
 
 
@@ -15,6 +15,11 @@ function __onMenuClicked(event) {
 
 
 export class NorgApp extends LitElement {
+  static get properties() {
+    return {
+      root: { type: Node },
+     };
+  }
 
   constructor() {
     super();
@@ -47,10 +52,15 @@ export class NorgApp extends LitElement {
           </mwc-top-app-bar-fixed>
           <div id="content">
             <main>
+              <norg-nodes-table
+                .parentNode="${this.root}"
+                .firstNode="${this.root.$childHead}">
+              </norg-nodes-table>
             </main>
           </div>
         </div>
       </mwc-drawer>
     `;
   }
+
 }

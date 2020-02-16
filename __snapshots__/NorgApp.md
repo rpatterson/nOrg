@@ -42,11 +42,13 @@
         id="title"
         slot="title"
       >
-        nOrg Root Node
+        My Projects
       </div>
     </mwc-top-app-bar-fixed>
     <div id="content">
       <main>
+        <norg-nodes-table>
+        </norg-nodes-table>
       </main>
     </div>
   </div>
