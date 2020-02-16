@@ -73,6 +73,7 @@ export class NorgNodesTable extends LitElement {
   * __iterateNodes() {
     let node = this.firstNode;
     while (node) {
+      const depth = node.depth(this.parentNode);
       yield html`
         <tr data-row-id="${node['Message-ID']}" class="mdc-data-table__row">
           <td class="mdc-data-table__cell mdc-data-table__cell--checkbox">
@@ -86,11 +87,20 @@ export class NorgNodesTable extends LitElement {
           </td>
           <td class="mdc-data-table__cell">${node["Node-State"]}</td>
           <td class="mdc-data-table__cell" id="${node['Message-ID']}">
+            ${Array.from(Array(depth)).map(() => html`&bull;`)}
             ${node.Subject}
           </td>
         </tr>
       `
-      node = node.$nextSibling
+      if (node.$childHead && !node.$collapsed) {
+        node = node.$childHead;
+      } else if (node.$nextSibling) {
+        node = node.$nextSibling;
+      } else if (node.$parent !== this.parentNode) {
+        node = node.$parent.$nextSibling;
+      } else {
+        node = null;
+      }
     }
   }
   
