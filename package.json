@@ -66,6 +66,7 @@
     "@material/mwc-top-app-bar-fixed": "^0.13.0",
     "lit-element": "^2.0.1",
     "lit-html": "^1.0.0",
+    "material-colors": "^1.2.6",
     "normalize.css": "^8.0.1"
   }
 }

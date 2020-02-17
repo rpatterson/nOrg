@@ -4,6 +4,7 @@ import { LitElement, html, css } from 'lit-element';
 import {MDCDataTable} from '@material/data-table';
 import '@material/mwc-button/mwc-button';
 
+import COLOR_VARIANT_ORDER from '../../../src/colors.js';
 import Node from '../../../src/nOrg.js';
 
 
@@ -23,6 +24,8 @@ export class NorgNodesTable extends LitElement {
     return {
       parentNode: { type: Node },
       firstNode: { type: Node },
+
+      colorOrder: { type: Array },
     };
   }
 
@@ -40,6 +43,11 @@ export class NorgNodesTable extends LitElement {
     `;
   }
 
+  constructor() {
+    super();
+
+    this.colorOrder = COLOR_VARIANT_ORDER;
+  }
 
   render() {
     return html`
@@ -93,6 +101,7 @@ export class NorgNodesTable extends LitElement {
       const depth = node.depth(this.parentNode);
       const nodeClasses = {
         [`norg-node-state-${node['Node-State']}`]: true,
+        [`norg-node-depth-${depth}`]: true,
       };
       yield html`
         <tr data-row-id="${node['Message-ID']}"
@@ -113,7 +122,8 @@ export class NorgNodesTable extends LitElement {
             ` : null
             }
           </td>
-          <td class="mdc-data-table__cell" id="${node['Message-ID']}">
+          <td class="mdc-data-table__cell" id="${node['Message-ID']}"
+              style="color: ${this.colorOrder[depth - 1]};">
             ${Array.from(Array(depth)).map(() => html`&bull;`)}
             ${node.Subject}
           </td>
