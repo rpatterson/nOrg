@@ -13,7 +13,15 @@ const nodes = {
        {"$basename": "corge",
         "Subject": "Corge project task",
         "Message-ID": "<3@foo.com>",
-        "Corge-Property": "Corge Property"},
+        "Corge-Property": "Corge Property",
+        "$children": [
+          {"$basename": "waldo",
+           "Subject": "Waldo task note",
+           "Message-ID": "<7@foo.com>",
+           "$children": [
+             {"$basename": "fred",
+              "Subject": "Fred note detail",
+              "Message-ID": "<8@foo.com>"}]}]},
        {"$basename": "grault",
         "Subject": "Grault project task",
         "Message-ID": "<4@foo.com>"},

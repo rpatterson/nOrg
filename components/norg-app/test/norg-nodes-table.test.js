@@ -20,6 +20,8 @@ describe('NorgNodesTable', () => {
 
   it('renders the expand button conditionally', async () => {
     root.$childHead.$nextSibling.$collapsed = false;
+    root.$childHead.$nextSibling.$childHead.$collapsed = false;
+    root.$childHead.$nextSibling.$childHead.$childHead.$collapsed = false;
     const el = await fixture(html`
       <norg-nodes-table
         .parentNode="${root}"

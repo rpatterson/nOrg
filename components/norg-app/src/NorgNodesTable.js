@@ -133,10 +133,16 @@ export class NorgNodesTable extends LitElement {
         node = node.$childHead;
       } else if (node.$nextSibling) {
         node = node.$nextSibling;
-      } else if (node.$parent !== this.parentNode) {
-        node = node.$parent.$nextSibling;
       } else {
+        let parent = node.$parent;
         node = null;
+        while (parent !== this.parentNode) {
+          if (parent.$nextSibling) {
+            node = parent.$nextSibling;
+            break;
+          }
+          parent = parent.$parent;
+        }
       }
     }
   }

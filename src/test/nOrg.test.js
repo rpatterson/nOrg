@@ -83,7 +83,7 @@ describe('nOrg', () => {
       expect(root.$length).to.equal(3);
       expect(Boolean(root.$nextSibling)).to.be.false;
       expect(Boolean(root.$prevSibling)).to.be.false;
-      expect(node.$childHead.$length).to.equal(0);
+      expect(node.$childHead.$childHead.$childHead.$length).to.equal(0);
       expect(node.$length).to.equal(3);
       expect(Boolean(node.$nextSibling.$nextSibling)).to.be.false;
       expect(Boolean(node.$prevSibling.$childHead)).to.be.false;
@@ -337,8 +337,8 @@ describe('nOrg', () => {
       expect(prevSibling.$childHead.$nextSibling.$basename).to.equal(prevSibling.$childTail.$basename);
       expect(prevSibling.$childTail.$prevSibling.$basename).to.equal(prevSibling.$childHead.$basename);
 
-      expect(Boolean(node.$childHead)).to.be.false;
-      expect(Boolean(node.$childTail)).to.be.false;
+      expect(Boolean(node.$childHead.$childHead.$childHead)).to.be.false;
+      expect(Boolean(node.$childTail.$childTail.$childTail)).to.be.false;
 
       expect(parent.$length).to.equal(4);
       expect(prevSibling.$length).to.equal(2);
