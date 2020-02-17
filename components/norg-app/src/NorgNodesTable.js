@@ -19,7 +19,7 @@ function __expandCell(node) {
   return null;
 }
 
-export class NorgNodesTable extends LitElement {
+export default class NorgNodesTable extends LitElement {
   static get properties() {
     return {
       parentNode: { type: Node },

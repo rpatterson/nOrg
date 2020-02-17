@@ -14,11 +14,11 @@ function __onMenuClicked(event) {
 }
 
 
-export class NorgApp extends LitElement {
+export default class NorgApp extends LitElement {
   static get properties() {
     return {
       root: { type: Node },
-     };
+    };
   }
 
   constructor() {
