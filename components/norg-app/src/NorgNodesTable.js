@@ -124,7 +124,7 @@ export class NorgNodesTable extends LitElement {
           </td>
           <td class="mdc-data-table__cell" id="${node['Message-ID']}"
               style="color: ${this.colorOrder[depth - 1]};">
-            ${Array.from(Array(depth)).map(() => html`&bull;`)}
+            &bull;${Array.from(Array(depth - 1)).map(() => html` &bull;`)}
             ${node.Subject}
           </td>
         </tr>
