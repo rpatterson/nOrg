@@ -5,24 +5,24 @@ import json from '../nOrg-nodes.js';
 
 
 describe('nOrg', () => {
-  let root;
+  let top;
   let node;
 
   beforeEach(() => {
-    root = defaults.newRoot(json);
-    node = root.$childHead.$nextSibling;
+    top = defaults.newTop(json);
+    node = top.$childHead.$nextSibling;
   });
 
   afterEach(() => {
-    if (root.$cursorObject) {
-      root.$cursorObject.cursor = undefined;
+    if (top.$cursorObject) {
+      top.$cursorObject.cursor = undefined;
     }
-    root.$cursorObject = undefined;
+    top.$cursorObject = undefined;
   });
 
   it('exports module contents', () => {
     expect(Node).to.be.an('function');
-    expect(Boolean(root)).to.be.true;
+    expect(Boolean(top)).to.be.true;
   });
 
   describe('node properties:', () => {
@@ -45,7 +45,7 @@ describe('nOrg', () => {
 
       expect(node.$properties()[1]).to.equal('Baz-Property');
       expect(node.$propertiesCollapsed).to.be.false;
-      expect(root.isCursor(node, 1)).to.be.true;
+      expect(top.isCursor(node, 1)).to.be.true;
     });
     it('Throws an error for empty property names', () => {
       expect(() => node.$newProperty('')).to.throw('Must provide a property name');
@@ -55,7 +55,7 @@ describe('nOrg', () => {
   describe('node inheritance:', () => {
     it('has a parent', () => {
       expect(Boolean(node)).to.be.true;
-      expect(node.$parent).to.equal(root);
+      expect(node.$parent).to.equal(top);
     });
     it('inherits properties from parent', () => {
       const child = node.newChild(new Event('keydown'));
@@ -70,19 +70,19 @@ describe('nOrg', () => {
       expect(child.$basename).to.equal('baz');
       expect(child.Subject).to.equal('Baz Subject');
     });
-    it('can inherit root node', () => {
-      expect({}.hasOwnProperty.call(node, '$root')).to.be.false;
-      expect({}.hasOwnProperty.call(node.$root, '$root')).to.be.true;
+    it('can inherit top node', () => {
+      expect({}.hasOwnProperty.call(node, '$top')).to.be.false;
+      expect({}.hasOwnProperty.call(node.$top, '$top')).to.be.true;
     });
   });
 
   describe('node children:', () => {
     it('nodes may have children', () => {
-      expect(root.$childHead.$nextSibling.$basename).to.equal(node.$basename);
-      expect(root.$childTail.$prevSibling.$basename).to.equal(node.$basename);
-      expect(root.$length).to.equal(3);
-      expect(Boolean(root.$nextSibling)).to.be.false;
-      expect(Boolean(root.$prevSibling)).to.be.false;
+      expect(top.$childHead.$nextSibling.$basename).to.equal(node.$basename);
+      expect(top.$childTail.$prevSibling.$basename).to.equal(node.$basename);
+      expect(top.$length).to.equal(3);
+      expect(Boolean(top.$nextSibling)).to.be.false;
+      expect(Boolean(top.$prevSibling)).to.be.false;
       expect(node.$childHead.$childHead.$childHead.$length).to.equal(0);
       expect(node.$length).to.equal(3);
       expect(Boolean(node.$nextSibling.$nextSibling)).to.be.false;
@@ -157,7 +157,7 @@ describe('nOrg', () => {
   describe('node state:', () => {
     it("doesn't inherit node state", () => {
       // node without state
-      node = root.$childHead.$nextSibling;
+      node = top.$childHead.$nextSibling;
       expect(node.$childHead['Node-State']).to.be.undefined;
     });
     it('has default states', () => {
@@ -174,7 +174,7 @@ describe('nOrg', () => {
   describe('nodes from objects:', () => {
     it('nodes may be created from objects', () => {
       const object = { $basename: 'bar', Subject: 'Bar Subject' };
-      root.$cursorObject = null;
+      top.$cursorObject = null;
       let child = node.newChild(object, new Event('keydown'));
 
       expect(child.$basename).to.equal(object.$basename);
@@ -212,7 +212,7 @@ describe('nOrg', () => {
 
   describe('moving nodes:', () => {
     it('demotes a node with previous siblings', () => {
-      const parent = root.$childHead;
+      const parent = top.$childHead;
       node.demote();
 
       expect(parent.$childHead.$basename).to.equal(node.$basename);
@@ -233,8 +233,8 @@ describe('nOrg', () => {
       expect(node.depth()).to.equal(2);
     });
     it('demotes a last node with previous siblings', () => {
-      const parent = root.$childHead.$nextSibling.$childHead.$nextSibling;
-      node = root.$childHead.$nextSibling.$childTail;
+      const parent = top.$childHead.$nextSibling.$childHead.$nextSibling;
+      node = top.$childHead.$nextSibling.$childTail;
       node.demote();
 
       expect(parent.$childHead.$basename).to.equal(node.$basename);
@@ -253,7 +253,7 @@ describe('nOrg', () => {
     });
     it('demotes node into a node with children', () => {
       const parent = node;
-      node = root.$childTail;
+      node = top.$childTail;
       node.demote();
 
       expect(parent.$childTail.$basename).to.equal(node.$basename);
@@ -291,7 +291,7 @@ describe('nOrg', () => {
 
     it('promotes a node with to the middle', () => {
       // Switch to a scope beneath the previous
-      const parent = root;
+      const parent = top;
       const prevSibling = node;
       const nextSibling = prevSibling.$nextSibling;
       node = node.$childHead.$nextSibling;
@@ -421,8 +421,8 @@ describe('nOrg', () => {
       expect(node.$nextSibling.$basename).to.equal(nextSibling.$basename);
       expect(Boolean(node.$prevSibling)).to.be.false;
 
-      expect(root.$childHead.$basename).to.equal(node.$basename);
-      expect(root.$childTail.$prevSibling.$basename).to.equal(root.$childHead.$nextSibling.$basename);
+      expect(top.$childHead.$basename).to.equal(node.$basename);
+      expect(top.$childTail.$prevSibling.$basename).to.equal(top.$childHead.$nextSibling.$basename);
 
       expect(node.$parent.children().indexOf(node)).to.equal(0);
     });
@@ -587,7 +587,7 @@ describe('nOrg', () => {
       // Switch to the next node
       node = node.$nextSibling;
 
-      root.cursorTo(node);
+      top.cursorTo(node);
       expect(node.$cursorObject.$basename).to.equal(node.$basename);
       expect(node.isCursor()).to.be.true;
       expect(oldCursor.isCursor()).to.be.false;
@@ -607,7 +607,7 @@ describe('nOrg', () => {
       // Switch to the next node
       node = node.$nextSibling;
 
-      root.cursorDown(new Event('keydown'));
+      top.cursorDown(new Event('keydown'));
       expect(node.$cursorObject.$basename).to.equal(node.$basename);
       expect(node.isCursor()).to.be.true;
       expect(oldCursor.isCursor()).to.be.false;
@@ -616,19 +616,19 @@ describe('nOrg', () => {
       // Switch to the last node
       node = node.$parent.$childTail;
 
-      root.cursorTo(node);
-      root.cursorDown();
+      top.cursorTo(node);
+      top.cursorDown();
       expect(node.$cursorObject.$basename).to.equal(node.$basename);
       expect(node.isCursor()).to.be.true;
     });
     it('can move down to next expanded child', () => {
       // Switch to node with children
       node = node.$nextSibling;
-      root.cursorTo(node);
+      top.cursorTo(node);
       expect(node.$cursorObject.$collapsed).to.be.true;
       node.$cursorObject.$collapsed = false;
 
-      root.cursorDown();
+      top.cursorDown();
       expect(node.$cursorObject.$basename).to.equal(node.$childHead.$basename);
       expect(node.isCursor()).to.be.false;
       expect(node.$childHead.isCursor()).to.be.true;
@@ -636,8 +636,8 @@ describe('nOrg', () => {
     it('can move down to next parent from last child', () => {
       // Switch to last child node
       node = node.$nextSibling.$childTail;
-      root.cursorTo(node);
-      root.cursorDown();
+      top.cursorTo(node);
+      top.cursorDown();
       expect(node.$cursorObject.$basename).to.equal(node.$parent.$nextSibling.$basename);
       expect(node.isCursor()).to.be.false;
       expect(node.$parent.$nextSibling.isCursor()).to.be.true;
@@ -647,8 +647,8 @@ describe('nOrg', () => {
       // Switch to the next node
       node = node.$nextSibling;
 
-      root.cursorTo(node);
-      root.cursorUp(new Event('keydown'));
+      top.cursorTo(node);
+      top.cursorUp(new Event('keydown'));
       expect(node.$cursorObject.$basename).to.equal(oldCursor.$basename);
       expect(node.isCursor()).to.be.false;
       expect(oldCursor.isCursor()).to.be.true;
@@ -659,23 +659,23 @@ describe('nOrg', () => {
       node.$parent.$collapsed = false;
       node.demote();
       node.$parent.demote();
-      root.cursorTo(root.$childTail);
+      top.cursorTo(top.$childTail);
 
-      root.cursorUp();
-      expect(root.$cursorObject.$basename).to.equal(node.$basename);
+      top.cursorUp();
+      expect(top.$cursorObject.$basename).to.equal(node.$basename);
       expect(node.isCursor()).to.be.true;
-      expect(root.$childTail.isCursor()).to.be.false;
+      expect(top.$childTail.isCursor()).to.be.false;
     });
     it('cannot be moved up above first sibling', () => {
-      root.cursorUp();
+      top.cursorUp();
       expect(node.$cursorObject.$basename).to.equal(node.$basename);
       expect(node.isCursor()).to.be.true;
     });
     it('can move to previous parent from first child', () => {
       // Switch to first child node
       node = node.$nextSibling.$childHead;
-      root.cursorTo(node);
-      root.cursorUp();
+      top.cursorTo(node);
+      top.cursorUp();
       expect(node.$cursorObject.$basename).to.equal(node.$parent.$basename);
       expect(node.isCursor()).to.be.false;
       expect(node.$parent.isCursor()).to.be.true;
@@ -684,28 +684,28 @@ describe('nOrg', () => {
     it('can be moved right to the first child', () => {
       // Create a child
       node = node.$nextSibling;
-      root.cursorTo(node);
+      top.cursorTo(node);
       const oldCursor = node.$cursorObject;
 
       node = node.$childHead;
 
-      root.cursorRight(new Event('keydown'));
+      top.cursorRight(new Event('keydown'));
       expect(node.$cursorObject.$basename).to.equal(node.$basename);
       expect(node.isCursor()).to.be.true;
       expect(oldCursor.isCursor()).to.be.false;
     });
     it('cannot be moved right without children', () => {
-      root.cursorRight();
+      top.cursorRight();
       expect(node.$cursorObject.$basename).to.equal(node.$basename);
       expect(node.isCursor()).to.be.true;
     });
     it('can expand and move into collapsed first child', () => {
       // Switch to the next node
       node = node.$nextSibling;
-      root.cursorTo(node);
+      top.cursorTo(node);
       expect(node.$collapsed).to.be.true;
 
-      root.cursorRight();
+      top.cursorRight();
       expect(node.$cursorObject.$basename).to.equal(node.$childHead.$basename);
       expect(node.isCursor()).to.be.false;
       expect(node.$childHead.isCursor()).to.be.true;
@@ -715,19 +715,19 @@ describe('nOrg', () => {
       // Create a child
       node = node.$nextSibling;
 
-      root.cursorTo(node);
+      top.cursorTo(node);
       const oldCursor = node.$cursorObject;
 
       node = node.$childHead;
-      root.cursorTo(node);
+      top.cursorTo(node);
 
-      root.cursorLeft(new Event('keydown'));
+      top.cursorLeft(new Event('keydown'));
       expect(node.$cursorObject.$basename).to.equal(oldCursor.$basename);
       expect(node.isCursor()).to.be.false;
       expect(oldCursor.isCursor()).to.be.true;
     });
     it('cannot be moved up above first sibling', () => {
-      root.cursorLeft();
+      top.cursorLeft();
       expect(node.$cursorObject.$basename).to.equal(node.$basename);
       expect(node.isCursor()).to.be.true;
     });
@@ -743,8 +743,8 @@ describe('nOrg', () => {
       expect(node.$cursorIndex).to.be.undefined;
     });
     it('can move right into expanded properties', () => {
-      root.cursorTo(node);
-      root.cursorRight();
+      top.cursorTo(node);
+      top.cursorRight();
 
       expect(node.$cursorObject[node.$cursorObject.$properties()[node.$cursorIndex]]).to.equal(
         'Bah Property',
@@ -752,8 +752,8 @@ describe('nOrg', () => {
       expect(node.isCursor(node, 0)).to.be.true;
     });
     it('can move down into expanded properties', () => {
-      root.cursorTo(node);
-      root.cursorDown();
+      top.cursorTo(node);
+      top.cursorDown();
 
       expect(node.$cursorObject[node.$cursorObject.$properties()[node.$cursorIndex]]).to.equal(
         'Bah Property',
@@ -761,18 +761,18 @@ describe('nOrg', () => {
       expect(node.isCursor(node, 0)).to.be.true;
     });
     it('can move left out of properties', () => {
-      root.cursorTo(node, 1);
+      top.cursorTo(node, 1);
 
-      root.cursorLeft();
+      top.cursorLeft();
 
       expect(node.$cursorObject.$basename).to.equal('bar');
       expect(node.isCursor()).to.be.true;
       expect(node.$cursorIndex).to.be.undefined;
     });
     it('can move down within properties', () => {
-      root.cursorTo(node, 0);
+      top.cursorTo(node, 0);
 
-      root.cursorDown();
+      top.cursorDown();
 
       expect(node.isCursor(node, 1)).to.be.true;
       expect(node.$cursorObject[node.$cursorObject.$properties()[node.$cursorIndex]]).to.equal(
@@ -780,9 +780,9 @@ describe('nOrg', () => {
       );
     });
     it('can move up within properties', () => {
-      root.cursorTo(node, 1);
+      top.cursorTo(node, 1);
 
-      root.cursorUp();
+      top.cursorUp();
 
       expect(node.$cursorObject[node.$cursorObject.$properties()[node.$cursorIndex]]).to.equal(
         'Bah Property',
@@ -792,17 +792,17 @@ describe('nOrg', () => {
     });
     it('can move down to next node past last property', () => {
       node.$collapsed = false;
-      root.cursorTo(node, 1);
+      top.cursorTo(node, 1);
 
-      root.cursorDown();
+      top.cursorDown();
 
       expect(node.$childHead.isCursor()).to.be.true;
       expect(node.$cursorIndex).to.be.undefined;
 
       node.$childHead.$propertiesCollapsed = false;
-      root.cursorTo(node.$childHead, 0);
+      top.cursorTo(node.$childHead, 0);
 
-      root.cursorDown();
+      top.cursorDown();
 
       expect(node.$childHead.$nextSibling.isCursor()).to.be.true;
       expect(node.$cursorIndex).to.be.undefined;
@@ -810,17 +810,17 @@ describe('nOrg', () => {
     it('can move up to node past first property', () => {
       node.$collapsed = false;
       node.$propertiesCollapsed = false;
-      root.cursorTo(node, 0);
+      top.cursorTo(node, 0);
 
-      root.cursorUp();
+      top.cursorUp();
 
       expect(node.isCursor()).to.be.true;
       expect(node.$cursorIndex).to.be.undefined;
 
       node.$childHead.$propertiesCollapsed = false;
-      root.cursorTo(node.$childHead, 0);
+      top.cursorTo(node.$childHead, 0);
 
-      root.cursorUp();
+      top.cursorUp();
 
       expect(node.$childHead.isCursor()).to.be.true;
       expect(node.$cursorIndex).to.be.undefined;
@@ -828,18 +828,18 @@ describe('nOrg', () => {
     it('can move up into expanded property', () => {
       node.$collapsed = false;
       node.$propertiesCollapsed = false;
-      root.cursorTo(node.$childHead);
+      top.cursorTo(node.$childHead);
 
-      root.cursorUp();
+      top.cursorUp();
 
       expect(node.isCursor(node, 1)).to.be.true;
       expect(node.$childHead.isCursor()).to.be.false;
       expect(node.$cursorObject.$properties()).to.deep.equal(node.$properties());
     });
     it('can not move right within properties', () => {
-      root.cursorTo(node, 0);
+      top.cursorTo(node, 0);
 
-      root.cursorRight();
+      top.cursorRight();
 
       expect(node.$cursorObject[node.$cursorObject.$properties()[node.$cursorIndex]]).to.equal(
         'Bah Property',
@@ -849,9 +849,9 @@ describe('nOrg', () => {
     });
     it('can not move right into collapsed properties', () => {
       node.$propertiesCollapsed = true;
-      root.cursorTo(node);
+      top.cursorTo(node);
 
-      root.cursorRight();
+      top.cursorRight();
 
       expect(node.$cursorObject.$basename).to.equal(node.$childHead.$basename);
       expect(node.$childHead.isCursor()).to.be.true;
@@ -860,9 +860,9 @@ describe('nOrg', () => {
     });
     it('can not move down into collapsed properties', () => {
       node.$propertiesCollapsed = true;
-      root.cursorTo(node);
+      top.cursorTo(node);
 
-      root.cursorDown();
+      top.cursorDown();
 
       expect(node.$cursorObject.$basename).to.equal(node.$nextSibling.$basename);
       expect(node.$nextSibling.isCursor()).to.be.true;
@@ -876,7 +876,7 @@ describe('nOrg', () => {
       expect(node.$collapsed).to.be.true;
     });
     it('can toggle nodes with children', () => {
-      root.cursorTo(node);
+      top.cursorTo(node);
       node.toggle(new Event('keydown'));
       expect(node.$collapsed).to.be.false;
       node.toggle();
@@ -884,7 +884,7 @@ describe('nOrg', () => {
     });
     it('cannot toggle nodes without children', () => {
       node = node.$prevSibling;
-      root.cursorTo(node);
+      top.cursorTo(node);
       node.toggle();
       expect(node.$collapsed).to.be.true;
     });
@@ -892,10 +892,10 @@ describe('nOrg', () => {
       expect(node.$propertiesCollapsed).to.be.true;
     });
     it('can toggle nodes with properties', () => {
-      root.cursorTo(node);
+      top.cursorTo(node);
       node.toggleProperties(new Event('keydown'));
       expect(node.$propertiesCollapsed).to.be.false;
-      root.cursorRight();
+      top.cursorRight();
       node.toggleProperties();
       expect(node.$propertiesCollapsed).to.be.true;
     });

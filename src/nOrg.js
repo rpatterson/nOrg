@@ -67,7 +67,7 @@ export default class Node {
     child.$parent = this;
 
     // Cursor initialization
-    if (typeof this.$root !== 'undefined' && !this.$cursorObject) {
+    if (typeof this.$top !== 'undefined' && !this.$cursorObject) {
       // Cursor defaults to first node
       this.cursorTo(child);
     }
@@ -135,11 +135,11 @@ export default class Node {
   }
 
   /** Root a tree of nodes that inherit from this node as defaults */
-  newRoot(object) {
-    const root = this.newNode(object);
-    root.$root = root;
-    root.cursorTo(root.$childHead);
-    return root;
+  newTop(object) {
+    const top = this.newNode(object);
+    top.$top = top;
+    top.cursorTo(top.$childHead);
+    return top;
   }
 
   /** Remove this node from it's parent */
@@ -163,16 +163,16 @@ export default class Node {
   }
 
   /**
-   * Return this node's depth based on the given root node.
+   * Return this node's depth based on the given top node.
    */
-  depth(root) {
-    let rootNode = root;
-    if (!rootNode) {
-      rootNode = this.$root;
+  depth(top) {
+    let topNode = top;
+    if (!topNode) {
+      topNode = this.$top;
     }
     let node = this;
     let depth = 1;
-    while (node.$parent !== rootNode) {
+    while (node.$parent !== topNode) {
       depth += 1;
       node = node.$parent;
     }
@@ -267,7 +267,7 @@ export default class Node {
   /** Promote this node to the next sibling of the parent if appropriate */
   promote() {
     const $prevSibling = this.$parent;
-    if ($prevSibling === this.$root) {
+    if ($prevSibling === this.$top) {
       throw new Error('Cannot promote nodes without parents!');
     }
 
@@ -344,7 +344,7 @@ export default class Node {
     $prevSibling.$nextSibling = this;
   }
 
-  // Root cursor state
+  // Top cursor state
 
   /** Return true if the cursor is on this node */
   isCursor(object, index) {
@@ -361,8 +361,8 @@ export default class Node {
     if (typeof thisObject === 'undefined') {
       thisObject = this;
     }
-    this.$root.$cursorObject = thisObject;
-    this.$root.$cursorIndex = index;
+    this.$top.$cursorObject = thisObject;
+    this.$top.$cursorIndex = index;
 
     return thisObject;
   }
@@ -438,7 +438,7 @@ export default class Node {
       while (node.$length && !node.$collapsed) {
         node = node.$childTail;
       }
-    } else if (node.$parent !== node.$root) {
+    } else if (node.$parent !== node.$top) {
       node = node.$parent;
     } else {
       return false;
@@ -482,7 +482,7 @@ export default class Node {
     if (this.$cursorIndex !== undefined) {
       return this.cursorTo(this.$cursorObject);
     }
-    if (this.$cursorObject.$parent !== this.$cursorObject.$root) {
+    if (this.$cursorObject.$parent !== this.$cursorObject.$top) {
       return this.cursorTo(this.$cursorObject.$parent);
     }
     return false;

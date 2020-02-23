@@ -22,7 +22,7 @@ function __expandCell(node) {
 export default class NorgNodesTable extends LitElement {
   static get properties() {
     return {
-      parentNode: { type: Node },
+      topNode: { type: Node },
       firstNode: { type: Node },
 
       colorOrder: { type: Array },
@@ -56,7 +56,7 @@ export default class NorgNodesTable extends LitElement {
            rel="stylesheet" type="text/css" />
 
       <div class="mdc-data-table">
-        <table class="mdc-data-table__table" aria-label="${this.parentNode.Subject} children">
+        <table class="mdc-data-table__table" aria-label="${this.topNode.Subject} children">
           <thead>
             <tr class="mdc-data-table__header-row">
               <th
@@ -98,7 +98,7 @@ export default class NorgNodesTable extends LitElement {
   * __iterateNodes() {
     let node = this.firstNode;
     while (node) {
-      const depth = node.depth(this.parentNode);
+      const depth = node.depth(this.topNode);
       const nodeClasses = {
         [`norg-node-state-${node['Node-State']}`]: true,
         [`norg-node-depth-${depth}`]: true,
@@ -136,7 +136,7 @@ export default class NorgNodesTable extends LitElement {
       } else {
         let parent = node.$parent;
         node = null;
-        while (parent !== this.parentNode) {
+        while (parent !== this.topNode) {
           if (parent.$nextSibling) {
             node = parent.$nextSibling;
             break;

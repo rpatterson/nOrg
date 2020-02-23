@@ -17,14 +17,14 @@ function __onMenuClicked(event) {
 export default class NorgApp extends LitElement {
   static get properties() {
     return {
-      root: { type: Node },
+      topNode: { type: Node },
     };
   }
 
   constructor() {
     super();
 
-    this.root = defaults.newRoot(json);
+    this.topNode = defaults.newTop(json);
   }
 
   render() {
@@ -51,7 +51,7 @@ export default class NorgApp extends LitElement {
                 icon="menu" slot="navigationIcon"
                 @click=${__onMenuClicked}>
             </mwc-icon-button>
-            <div slot="title" id="title">${this.root.Subject}</div>
+            <div slot="title" id="title">${this.topNode.Subject}</div>
           </mwc-top-app-bar-fixed>
           <div id="content">
             <main>
@@ -59,8 +59,8 @@ export default class NorgApp extends LitElement {
                 <div class="mdc-layout-grid__inner">
                   <div class="mdc-layout-grid__cell">
                     <norg-nodes-table
-                      .parentNode="${this.root}"
-                      .firstNode="${this.root.$childHead}">
+                      .topNode="${this.topNode}"
+                      .firstNode="${this.topNode.$childHead}">
                     </norg-nodes-table>
                   </div>
                 </div>
