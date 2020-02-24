@@ -1,7 +1,7 @@
 {
   "scripts": {
-    "lint": "eslint --ext .js,.html . --ignore-path .gitignore --color",
-    "format": "eslint --ext .js,.html . --fix --ignore-path .gitignore --color",
+    "lint": "eslint --ext .js,.html . .storybook --ignore-path .gitignore --color",
+    "format": "eslint --ext .js,.html . .storybook --fix --ignore-path .gitignore --color",
     "test": "karma start --coverage",
     "test:watch": "karma start --auto-watch=true --single-run=false",
     "test:update-snapshots": "karma start --update-snapshots",
