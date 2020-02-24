@@ -1,11 +1,7 @@
 {
   "scripts": {
-    "lint:eslint": "eslint --ext .js,.html . --ignore-path .gitignore --color",
-    "format:eslint": "eslint --ext .js,.html . --fix --ignore-path .gitignore --color",
-    "lint:prettier": "prettier -l \"**/**.js\" --check --ignore-path .gitignore --color",
-    "format:prettier": "prettier -l --write --ignore-path .gitignore --color \"**/**.js\"",
-    "lint": "npm run lint:eslint && npm run lint:prettier",
-    "format": "npm run format:eslint && npm run format:prettier",
+    "lint": "eslint --ext .js,.html . --ignore-path .gitignore --color",
+    "format": "eslint --ext .js,.html . --fix --ignore-path .gitignore --color",
     "test": "karma start --coverage",
     "test:watch": "karma start --auto-watch=true --single-run=false",
     "test:update-snapshots": "karma start --update-snapshots",
@@ -30,9 +26,11 @@
     "deepmerge": "^3.2.0",
     "es-dev-server": "^1.5.0",
     "eslint": "^6.1.0",
+    "eslint-plugin-prettier": "^3.1.2",
     "husky": "^1.0.0",
     "karma": ">=0.9",
     "lint-staged": "^8.0.0",
+    "prettier": ">= 1.13.0",
     "react": "^16.8.0",
     "react-dom": "*",
     "react-is": "^16.8.0",
@@ -46,7 +44,7 @@
   "eslintConfig": {
     "extends": [
       "@open-wc/eslint-config",
-      "eslint-config-prettier"
+      "plugin:prettier/recommended"
     ]
   },
   "husky": {
