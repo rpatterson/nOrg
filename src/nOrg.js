@@ -2,11 +2,13 @@
 
 /** Generate a globally unique Message-ID */
 export function generateMessageID() {
-  const email = 'TODO@TODO.org'.split('@', 2);
+  const email = "TODO@TODO.org".split("@", 2);
   const now = new Date();
   const random = Math.random();
   // From http://www.jwz.org/doc/mid.html#3
-  return `<${email[0]}+${now.toISOString()}+${random.toString(36).slice(2)}@${email[1]}>`;
+  return `<${email[0]}+${now.toISOString()}+${random.toString(36).slice(2)}@${
+    email[1]
+  }>`;
 }
 
 /**
@@ -34,14 +36,14 @@ export default class Node {
       this.extend(object);
     }
 
-    if (!{}.hasOwnProperty.call(this, 'Message-ID')) {
-      this['Message-ID'] = generateMessageID();
+    if (!{}.hasOwnProperty.call(this, "Message-ID")) {
+      this["Message-ID"] = generateMessageID();
     }
-    if (!{}.hasOwnProperty.call(this, '$basename')) {
+    if (!{}.hasOwnProperty.call(this, "$basename")) {
       this.$basename = undefined;
     }
-    if (this['NOrg-Required-Properties']) {
-      this['NOrg-Required-Properties'].forEach(function setRequired(property) {
+    if (this["NOrg-Required-Properties"]) {
+      this["NOrg-Required-Properties"].forEach(function setRequired(property) {
         if (!{}.hasOwnProperty.call(this, property)) {
           this[property] = undefined;
         }
@@ -53,7 +55,7 @@ export default class Node {
   $$hashKey() {
     // Used in AngularJS
     // Needed so that nodes don't inherit ancestor node $$hashKey
-    return this['Message-ID'];
+    return this["Message-ID"];
   }
 
   /** Create a new node as a child of this node and initialize from object */
@@ -67,7 +69,7 @@ export default class Node {
     child.$parent = this;
 
     // Cursor initialization
-    if (typeof this.$top !== 'undefined' && !this.$cursorObject) {
+    if (typeof this.$top !== "undefined" && !this.$cursorObject) {
       // Cursor defaults to first node
       this.cursorTo(child);
     }
@@ -176,7 +178,7 @@ export default class Node {
       depth += 1;
       node = node.$parent;
     }
-    return depth
+    return depth;
   }
 
   /**
@@ -198,7 +200,7 @@ export default class Node {
   /** Set this node's properties from the object */
   extend(object) {
     for (const [property, value] of Object.entries(object)) {
-      if (property !== '$children') {
+      if (property !== "$children") {
         this[property] = value;
       }
     }
@@ -214,21 +216,23 @@ export default class Node {
    * and encoded using base64.
    */
   toId() {
-    return window.btoa(this['Message-ID']).slice(0, -1);
+    return window.btoa(this["Message-ID"]).slice(0, -1);
   }
 
   /** Return an array of all this node's non-required property names */
   $properties() {
-    const required = this['NOrg-Required-Properties'];
+    const required = this["NOrg-Required-Properties"];
     return Object.keys(this)
-                 .filter(property => property[0] !== '$' && required.indexOf(property) === -1)
-                 .sort();
+      .filter(
+        property => property[0] !== "$" && required.indexOf(property) === -1
+      )
+      .sort();
   }
 
   /** Add a new property to this node */
   $newProperty(property, value) {
     if (!property) {
-      throw new Error('Must provide a property name!');
+      throw new Error("Must provide a property name!");
     }
     this[property] = value;
     this.$propertiesCollapsed = false;
@@ -237,7 +241,7 @@ export default class Node {
 
   /** Set this node's state and close the state menu if open */
   $changeState(state) {
-    this['Node-State'] = state;
+    this["Node-State"] = state;
     this.$stateOpened = false;
   }
 
@@ -245,9 +249,9 @@ export default class Node {
   $nextStates(state) {
     let thisState = state;
     if (!thisState) {
-      thisState = this['Node-State'];
+      thisState = this["Node-State"];
     }
-    return this['Node-State-All'].filter(next => next !== thisState);
+    return this["Node-State-All"].filter(next => next !== thisState);
   }
 
   // Moving nodes
@@ -256,7 +260,7 @@ export default class Node {
   demote() {
     const parent = this.$prevSibling;
     if (!parent) {
-      throw new Error('Cannot demote first sibling!');
+      throw new Error("Cannot demote first sibling!");
     }
 
     this.popFromParent();
@@ -268,7 +272,7 @@ export default class Node {
   promote() {
     const $prevSibling = this.$parent;
     if ($prevSibling === this.$top) {
-      throw new Error('Cannot promote nodes without parents!');
+      throw new Error("Cannot promote nodes without parents!");
     }
 
     this.popFromParent();
@@ -292,7 +296,7 @@ export default class Node {
   moveUp() {
     const $nextSibling = this.$prevSibling;
     if (!$nextSibling) {
-      throw new Error('Cannot move first nodes up!');
+      throw new Error("Cannot move first nodes up!");
     }
 
     $nextSibling.$nextSibling = this.$nextSibling;
@@ -321,7 +325,7 @@ export default class Node {
   moveDown() {
     const $prevSibling = this.$nextSibling;
     if (!$prevSibling) {
-      throw new Error('Cannot move last nodes down!');
+      throw new Error("Cannot move last nodes down!");
     }
 
     $prevSibling.$prevSibling = this.$prevSibling;
@@ -349,16 +353,19 @@ export default class Node {
   /** Return true if the cursor is on this node */
   isCursor(object, index) {
     let thisObject = object;
-    if (typeof thisObject === 'undefined') {
+    if (typeof thisObject === "undefined") {
       thisObject = this;
     }
-    return thisObject === thisObject.$cursorObject && index === thisObject.$cursorIndex;
+    return (
+      thisObject === thisObject.$cursorObject &&
+      index === thisObject.$cursorIndex
+    );
   }
 
   /** Move the cursor to this node */
   cursorTo(object, index) {
     let thisObject = object;
-    if (typeof thisObject === 'undefined') {
+    if (typeof thisObject === "undefined") {
       thisObject = this;
     }
     this.$top.$cursorObject = thisObject;
@@ -510,17 +517,18 @@ export default class Node {
     if (this.$cursorIndex !== undefined) {
       this.cursorTo(this.$cursorObject);
     }
-    this.$cursorObject.$propertiesCollapsed = !this.$cursorObject.$propertiesCollapsed;
+    this.$cursorObject.$propertiesCollapsed = !this.$cursorObject
+      .$propertiesCollapsed;
   }
 }
 
 const defaults = new Node({
-  'NOrg-Required-Properties': ['Message-ID', 'Subject', 'Node-State'],
-  'Node-State-Classes': {
-    TODO: 'warning',
-    DONE: 'success',
-    CANCELED: 'info',
+  "NOrg-Required-Properties": ["Message-ID", "Subject", "Node-State"],
+  "Node-State-Classes": {
+    TODO: "warning",
+    DONE: "success",
+    CANCELED: "info"
   },
-  'Node-State-All': ['TODO', 'DONE', 'CANCELED'],
+  "Node-State-All": ["TODO", "DONE", "CANCELED"]
 });
 export { defaults };

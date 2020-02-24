@@ -1,23 +1,21 @@
-import { LitElement, html } from 'lit-element';
+import { LitElement, html } from "lit-element";
 
-import '@material/mwc-drawer/mwc-drawer';
-import '@material/mwc-icon-button/mwc-icon-button';
-import '@material/mwc-top-app-bar-fixed/mwc-top-app-bar-fixed';
+import "@material/mwc-drawer/mwc-drawer";
+import "@material/mwc-icon-button/mwc-icon-button";
+import "@material/mwc-top-app-bar-fixed/mwc-top-app-bar-fixed";
 
-import Node, {defaults} from '../../../src/nOrg.js';
-import json from '../../../src/nOrg-nodes.js';
-
+import Node, { defaults } from "../../../src/nOrg.js";
+import json from "../../../src/nOrg-nodes.js";
 
 function __onMenuClicked(event) {
-  const drawer = event.target.closest('mwc-drawer');
+  const drawer = event.target.closest("mwc-drawer");
   drawer.open = !drawer.open;
 }
-
 
 export default class NorgApp extends LitElement {
   static get properties() {
     return {
-      topNode: { type: Node },
+      topNode: { type: Node }
     };
   }
 
@@ -30,17 +28,25 @@ export default class NorgApp extends LitElement {
   render() {
     return html`
       <link
-           href="node_modules/@material/layout-grid/dist/mdc.layout-grid.css"
-           rel="stylesheet" type="text/css" />
+        href="node_modules/@material/layout-grid/dist/mdc.layout-grid.css"
+        rel="stylesheet"
+        type="text/css"
+      />
       <link
-           href="node_modules/@material/icon-button/dist/mdc.icon-button.css"
-           rel="stylesheet" type="text/css" />
+        href="node_modules/@material/icon-button/dist/mdc.icon-button.css"
+        rel="stylesheet"
+        type="text/css"
+      />
       <link
-           href="node_modules/@material/drawer/dist/mdc.drawer.css"
-           rel="stylesheet" type="text/css" />
+        href="node_modules/@material/drawer/dist/mdc.drawer.css"
+        rel="stylesheet"
+        type="text/css"
+      />
       <link
-           href="node_modules/@material/top-app-bar/dist/mdc.top-app-bar.css"
-           rel="stylesheet" type="text/css" />
+        href="node_modules/@material/top-app-bar/dist/mdc.top-app-bar.css"
+        rel="stylesheet"
+        type="text/css"
+      />
 
       <mwc-drawer hasheader type="dismissible">
         <span slot="title">nOrg Menu</span>
@@ -48,8 +54,10 @@ export default class NorgApp extends LitElement {
         <div slot="appContent">
           <mwc-top-app-bar-fixed id="bar" dense="">
             <mwc-icon-button
-                icon="menu" slot="navigationIcon"
-                @click=${__onMenuClicked}>
+              icon="menu"
+              slot="navigationIcon"
+              @click=${__onMenuClicked}
+            >
             </mwc-icon-button>
             <div slot="title" id="title">${this.topNode.Subject}</div>
           </mwc-top-app-bar-fixed>
@@ -60,7 +68,8 @@ export default class NorgApp extends LitElement {
                   <div class="mdc-layout-grid__cell">
                     <norg-nodes-table
                       .topNode="${this.topNode}"
-                      .firstNode="${this.topNode.$childHead}">
+                      .firstNode="${this.topNode.$childHead}"
+                    >
                     </norg-nodes-table>
                   </div>
                 </div>
@@ -71,5 +80,4 @@ export default class NorgApp extends LitElement {
       </mwc-drawer>
     `;
   }
-
 }

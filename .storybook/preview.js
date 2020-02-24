@@ -2,12 +2,12 @@ import {
   addParameters,
   addDecorator,
   setCustomElements,
-  withA11y,
-} from '@open-wc/demoing-storybook';
+  withA11y
+} from "@open-wc/demoing-storybook";
 
 async function run() {
   const customElements = await (
-    await fetch(new URL('../custom-elements.json', import.meta.url))
+    await fetch(new URL("../custom-elements.json", import.meta.url))
   ).json();
   setCustomElements(customElements);
 
@@ -17,13 +17,13 @@ async function run() {
     a11y: {
       config: {},
       options: {
-        checks: { 'color-contrast': { options: { noScroll: true } } },
-        restoreScroll: true,
-      },
+        checks: { "color-contrast": { options: { noScroll: true } } },
+        restoreScroll: true
+      }
     },
     docs: {
-      iframeHeight: '200px',
-    },
+      iframeHeight: "200px"
+    }
   });
 }
 

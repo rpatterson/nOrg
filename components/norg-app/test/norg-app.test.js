@@ -1,23 +1,24 @@
-import { html, fixture, expect } from '@open-wc/testing';
+import { html, fixture, expect } from "@open-wc/testing";
 
-import '../norg-app.js';
+import "../norg-app.js";
 
-describe('NorgApp', () => {
-  it('renders the nodes table', async () => {
-      const el = await fixture(html`
-        <norg-app></norg-app>
-      `);
-
-    expect(el.shadowRoot.querySelector('main')).lightDom.to.contain(
-      'norg-nodes-table');
-  });
-
-  it('controls the drawer menu', async () => {
+describe("NorgApp", () => {
+  it("renders the nodes table", async () => {
     const el = await fixture(html`
       <norg-app></norg-app>
     `);
-    const drawer = el.shadowRoot.querySelector('mwc-drawer');
-    const button = drawer.querySelector('mwc-icon-button');
+
+    expect(el.shadowRoot.querySelector("main")).lightDom.to.contain(
+      "norg-nodes-table"
+    );
+  });
+
+  it("controls the drawer menu", async () => {
+    const el = await fixture(html`
+      <norg-app></norg-app>
+    `);
+    const drawer = el.shadowRoot.querySelector("mwc-drawer");
+    const button = drawer.querySelector("mwc-icon-button");
 
     expect(drawer.open).to.be.false;
 
@@ -25,7 +26,7 @@ describe('NorgApp', () => {
     expect(drawer.open).to.be.true;
   });
 
-  it('matches the snapshot', async () => {
+  it("matches the snapshot", async () => {
     const el = await fixture(html`
       <norg-app></norg-app>
     `);
@@ -33,11 +34,13 @@ describe('NorgApp', () => {
     expect(el).shadowDom.to.equalSnapshot();
   });
 
-  it('passes the a11y audit', async () => {
+  it("passes the a11y audit", async () => {
     const el = await fixture(html`
       <norg-app></norg-app>
     `);
 
-    await expect(el).shadowDom.to.be.accessible({ignoredRules: ['aria-allowed-role']});
+    await expect(el).shadowDom.to.be.accessible({
+      ignoredRules: ["aria-allowed-role"]
+    });
   });
 });
