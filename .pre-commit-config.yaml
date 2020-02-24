@@ -5,7 +5,7 @@ repos:
     hooks:
     - id: ui-style
       name: ui-style
-      entry: bash -c '. ~/.nvm/nvm.sh && CI=true nvm exec yarn run format'
+      entry: bash -c '. ~/.nvm/nvm.sh && CI=true nvm exec yarn run lint'
       language: system
       pass_filenames: false
   - repo: local
