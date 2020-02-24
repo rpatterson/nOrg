@@ -17,9 +17,11 @@ all: var/log/yarn-install.log .git/hooks/pre-commit .git/hooks/pre-push
 run: all
 	. ~/.nvm/nvm.sh && nvm exec yarn start
 
-.PHONY: test
-test: all
+.PHONY: format
+format: all
 	. ~/.nvm/nvm.sh && nvm exec yarn run format
+.PHONY: test
+test: all format
 	. ~/.nvm/nvm.sh && nvm exec yarn run test --color
 
 .PHONY: update-snapshots
