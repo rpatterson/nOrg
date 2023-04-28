@@ -2,12 +2,13 @@
 use strict;
 use warnings;
 
-# TODO: Also list submodules.  Unfortunately, we can't use `--recurse-submodules` with
-# `--others` and the later, which lists untracked files that aren't ignored, is almost
-# certainly more important.
 print `
-    git ls-files --cached --others --exclude-standard \'*.norg\' |
-        while read "REPLY"
+    (
+        git ls-files --cached --others --exclude-standard \'*.norg\' &&
+        git submodule foreach --recursive "
+            git ls-files --cached --others --exclude-standard \'*.norg\'
+	"
+     ) | while read "REPLY"
         do
             echo "\$(stat --format="%Y" "\${REPLY}")"\$\'\t\'"\${REPLY}"
         done | sort -nr
