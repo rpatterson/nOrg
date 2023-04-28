@@ -5,19 +5,10 @@ use warnings;
 # TODO: Also list submodules.  Unfortunately, we can't use `--recurse-submodules` with
 # `--others` and the later, which lists untracked files that aren't ignored, is almost
 # certainly more important.
-open(
-    my $cmd,
-    '-|', '
-        git ls-files --cached --others --exclude-standard \'*.norg\' |
-	    while read "REPLY"
-            do
-                echo "$(stat --format="%Y" "${REPLY}")"$\'\t\'"${REPLY}"
-            done | sort -nr
-    ',
-    ) or die $!;
-
-while (my $line = <$cmd>) {
-   print $line;
-}
-
-close $cmd;
+print `
+    git ls-files --cached --others --exclude-standard \'*.norg\' |
+        while read "REPLY"
+        do
+            echo "\$(stat --format="%Y" "\${REPLY}")"\$\'\t\'"\${REPLY}"
+        done | sort -nr
+`
