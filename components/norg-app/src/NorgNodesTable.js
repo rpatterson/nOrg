@@ -117,55 +117,8 @@ export default class NorgNodesTable extends LitElement {
   *__iterateNodes() {
     let node = this.firstNode;
     while (node) {
-      const depth = node.depth(this.topNode);
-      const nodeClasses = {
-        [`norg-node-state-${node["Node-State"]}`]: true,
-        [`norg-node-depth-${depth}`]: true
-      };
-      yield html`
-        <tr
-          data-row-id="${node["Message-ID"]}"
-          class="mdc-data-table__row ${classMap(nodeClasses)}"
-        >
-          <td class="mdc-data-table__cell mdc-data-table__cell--checkbox">
-            <div class="mdc-checkbox mdc-data-table__row-checkbox">
-              <input
-                type="checkbox"
-                class="mdc-checkbox__native-control"
-                aria-labelledby="${node["Message-ID"]}"
-              />
-            </div>
-          </td>
-          <td class="mdc-data-table__cell">
-            ${__expandCell(node)}
-          </td>
-          <td class="mdc-data-table__cell">
-            ${node["Node-State"]
-              ? html`
-                  <mwc-button
-                    dense
-                    label="${node["Node-State"]}"
-                    class="norg-node-state"
-                  >
-                  </mwc-button>
-                `
-              : null}
-          </td>
-          <td
-            class="mdc-data-table__cell"
-            id="${node["Message-ID"]}"
-            style="color: ${this.colorOrder[depth - 1]};"
-          >
-            &bull;${Array.from(Array(depth - 1)).map(
-              () =>
-                html`
-                  &bull;
-                `
-            )}
-            ${node.Subject}
-          </td>
-        </tr>
-      `;
+      yield this.__generateNode(node);
+
       if (node.$childHead && !node.$collapsed) {
         node = node.$childHead;
       } else if (node.$nextSibling) {
@@ -182,5 +135,58 @@ export default class NorgNodesTable extends LitElement {
         }
       }
     }
+  }
+
+  __generateNode(node) {
+    const depth = node.depth(this.topNode);
+    const nodeClasses = {
+      [`norg-node-state-${node["Node-State"]}`]: true,
+      [`norg-node-depth-${depth}`]: true
+    };
+
+    return html`
+      <tr
+        data-row-id="${node["Message-ID"]}"
+        class="mdc-data-table__row ${classMap(nodeClasses)}"
+      >
+        <td class="mdc-data-table__cell mdc-data-table__cell--checkbox">
+          <div class="mdc-checkbox mdc-data-table__row-checkbox">
+            <input
+              type="checkbox"
+              class="mdc-checkbox__native-control"
+              aria-labelledby="${node["Message-ID"]}"
+            />
+          </div>
+        </td>
+        <td class="mdc-data-table__cell">
+          ${__expandCell(node)}
+        </td>
+        <td class="mdc-data-table__cell">
+          ${node["Node-State"]
+            ? html`
+                <mwc-button
+                  dense
+                  label="${node["Node-State"]}"
+                  class="norg-node-state"
+                >
+                </mwc-button>
+              `
+            : null}
+        </td>
+        <td
+          class="mdc-data-table__cell"
+          id="${node["Message-ID"]}"
+          style="color: ${this.colorOrder[depth - 1]};"
+        >
+          &bull;${Array.from(Array(depth - 1)).map(
+            () =>
+              html`
+                &bull;
+              `
+          )}
+          ${node.Subject}
+        </td>
+      </tr>
+    `;
   }
 }
