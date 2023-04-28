@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+
+  ## Minimum required API:
+  api:
+    image: "nginx:perl"
+    container_name: "norg-api"
+    environment:
+      TZ: "${TZ:-Etc/UTC}"
+    volumes:
+      - "./etc/nginx/templates:/etc/nginx/templates"
+    ports:
+      - "127.0.0.1:8080:80"
