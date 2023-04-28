@@ -4,7 +4,8 @@ services:
 
   ## Minimum required API:
   api:
-    image: "nginx:perl"
+    image: "merpatterson/norg:api"
+    build: "./"
     container_name: "norg-api"
     environment:
       TZ: "${TZ:-Etc/UTC}"

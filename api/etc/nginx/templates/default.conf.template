@@ -2,6 +2,7 @@ server {
     listen       80;
     listen  [::]:80;
     server_name  localhost;
+    root   /usr/share/nginx/html;
 
     #access_log  /var/log/nginx/host.access.log  main;
 
@@ -9,8 +10,10 @@ server {
 	perl '
 	    sub {
 		my $r = shift;
+		my $filename = $r->filename;
 		$r->send_http_header("text/plain");
 		$r->print(`
+		    cd "\$(dirname "$filename")" &&
 		    (
 			git ls-files --cached --others --exclude-standard \'*.norg\' &&
 			git submodule foreach --recursive "
@@ -18,7 +21,7 @@ server {
 			"
 		     ) | while read "REPLY"
 		     do
-			 echo "\$(stat --format="%Y" "\${REPLY}")"\$\'\t\'"\${REPLY}"
+			 echo "\$(stat --format="%Y" "\${REPLY}")\t\${REPLY}"
 		     done | sort -nr
 		`);
 		return OK;
@@ -27,7 +30,6 @@ server {
     }
 
     location / {
-        root   /usr/share/nginx/html;
         index  index.html index.htm;
 
 	client_body_temp_path /usr/share/nginx/client_temp;
