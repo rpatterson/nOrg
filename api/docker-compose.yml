@@ -12,5 +12,7 @@ services:
       - "./etc/nginx/nginx.conf:/etc/nginx/nginx.conf"
       - "./etc/nginx/mime.types:/etc/nginx/mime.types"
       - "./etc/nginx/templates:/etc/nginx/templates"
+      - "..:/usr/share/nginx/html"
+      - "./usr/share/nginx/client_temp:/usr/share/nginx/client_temp"
     ports:
       - "127.0.0.1:8080:80"
