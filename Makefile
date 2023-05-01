@@ -36,6 +36,7 @@ clean:
 ## Real targets
 
 var/log/yarn-install.log: package.json
+	mkdir -pv "$(dir $(@))"
 	. ~/.nvm/nvm.sh && nvm exec yarn install | tee "$(@)"
 
 package.json: ~/.nvm/versions/node/$(NODE_VERSION)/bin/npm
